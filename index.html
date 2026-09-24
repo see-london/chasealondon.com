@@ -101,7 +101,7 @@ section:last-of-type{border-bottom:0}
 .cases{display:flex;flex-wrap:wrap;gap:6px;margin:2px 0 4px}
 .case{border:1px solid var(--line);background:var(--surface-2);border-radius:999px;padding:4px 11px;font-size:12px;cursor:pointer;color:var(--muted);font-family:var(--mono);position:relative;overflow:hidden}
 .case[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);color:var(--ink)}
-.case[aria-pressed="true"].timing::after{content:"";position:absolute;left:0;bottom:0;height:2px;background:var(--accent);animation:caseTimer 10s linear forwards}
+.case[aria-pressed="true"].timing::after{content:"";position:absolute;left:0;bottom:0;height:2px;background:var(--accent);animation:caseTimer 14s linear forwards}
 @keyframes caseTimer{from{width:0}to{width:100%}}
 .stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin-top:30px}
 .stat{background:var(--bg);padding:14px 16px}
@@ -925,7 +925,7 @@ function draw(time){
 }
 function refresh(){
   const c = cur();
-  caseBox.querySelectorAll('.case').forEach((b, i) => { b.setAttribute('aria-pressed', i === ci); b.classList.remove('timing'); if (i === ci && auto){ void b.offsetWidth; b.classList.add('timing'); } });
+  caseBox.querySelectorAll('.case').forEach((b, i) => b.setAttribute('aria-pressed', i === ci));
   $('#modeRaw').setAttribute('aria-pressed', mode === 'raw'); $('#modeClean').setAttribute('aria-pressed', mode === 'clean');
   const pp = document.querySelector('.pipe'); pp.classList.toggle('is-before', mode === 'raw'); pp.classList.toggle('is-after', mode === 'clean');
   $('#pipeCap').textContent = c.cap[mode];
@@ -937,7 +937,8 @@ $('#modeRaw').onclick = () => { stopAuto(); setMode('raw'); }; $('#modeClean').o
 $('#pipeLink').onclick = e => { e.preventDefault(); $('#' + cur().tab).click(); $('#projects').scrollIntoView({behavior: reduce ? 'auto' : 'smooth'}); };
 size(); resetParts(); refresh(); requestAnimationFrame(draw);
 function stopAuto(){ auto = false; clearTimeout(timer); caseBox.querySelectorAll('.case').forEach(b => b.classList.remove('timing')); }
-function cycle(){ if (!auto) return; mode = 'raw'; setCase(ci); timer = setTimeout(() => { if (!auto) return; setMode('clean'); timer = setTimeout(() => { if (!auto) return; ci = (ci + 1) % CASES.length; cycle(); }, 6000); }, 4000); }
+function startBar(){ caseBox.querySelectorAll('.case').forEach((b, i) => { b.classList.remove('timing'); if (i === ci){ void b.offsetWidth; b.classList.add('timing'); } }); }
+function cycle(){ if (!auto) return; mode = 'raw'; setCase(ci); startBar(); timer = setTimeout(() => { if (!auto) return; setMode('clean'); timer = setTimeout(() => { if (!auto) return; ci = (ci + 1) % CASES.length; cycle(); }, 8000); }, 6000); }
 if (auto) cycle();
 addEventListener('resize', () => { size(); if (reduce) draw(0); });
 

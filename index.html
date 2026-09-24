@@ -299,6 +299,7 @@ input[type=range]{width:100%;accent-color:var(--accent)}
 .off{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
 .off article{padding-top:14px;border-top:2px solid var(--ink);display:grid;gap:8px;align-content:start}
 .off p{font-size:15px;color:var(--muted)}
+.off-link{font-family:var(--mono);font-size:12px;text-decoration:none}
 @media (max-width:880px){.off{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:520px){.off{grid-template-columns:1fr}}
 
@@ -644,13 +645,14 @@ footer{padding-block:28px;font-size:13px;color:var(--muted);font-family:var(--mo
   <section id="off">
     <div class="sec-head">
       <div class="label">Off the clock</div>
-      <h2>I build things after hours too.</h2>
+      <h2>I like learning by building.</h2>
+      <p>What I do when I'm not at work, including one volunteer role that uses the same skills.</p>
     </div>
     <div class="off">
-      <article><span class="label">E-commerce</span><h3>Runs a Shopify store</h3><p>I own Classic Lollipop end to end: products, email marketing and the analytics behind both. It's where I test marketing ideas with my own money.</p></article>
-      <article><span class="label">Hands-on</span><h3>DIY builds</h3><p>Truck upgrades, home AV and security systems, electronics. If it can be wired, mounted or tuned, I'd rather do it myself.</p></article>
-      <article><span class="label">Craft</span><h3>Miniature painting</h3><p>Patience, steady hands and a lot of layering. Good practice for detail work.</p></article>
-      <article><span class="label">Fuel</span><h3>Coffee and brewing</h3><p>Dialing in a recipe is just another experiment with variables to control.</p></article>
+      <article><span class="label">Volunteer</span><h3>Church Finance Chair</h3><p>I turn accounting exports into a monthly report package our leaders can actually read, and I help plan the budget. Same job as my day job, different data.</p><a class="off-link" href="#projects" data-tab="t-fin">See the project →</a></article>
+      <article><span class="label">Hands-on</span><h3>Building things</h3><p>Furniture from raw lumber, truck mods, yard and landscaping projects, and small Arduino electronics. If I don't know how to do something yet, that's usually why I try it.</p></article>
+      <article><span class="label">Outdoors</span><h3>Mountain biking</h3><p>Time on the trails is how I reset. There's always a cleaner line to find on the next run.</p></article>
+      <article><span class="label">Fuel</span><h3>Coffee</h3><p>Before buying an espresso machine, I built a payoff calculator to see when it would beat the coffee shop. Dialing in a recipe is just another experiment.</p></article>
     </div>
   </section>
 
@@ -1133,6 +1135,8 @@ function pickSkill(s){
 
 /* ---------- HOW I WORK LINKS ---------- */
 document.querySelectorAll('.how-card').forEach(c => c.addEventListener('click', () => { $('#' + c.dataset.tab).click(); $('#projects').scrollIntoView({behavior: reduce ? 'auto' : 'smooth'}); }));
+
+document.querySelectorAll('.off-link').forEach(l => l.addEventListener('click', e => { e.preventDefault(); $('#' + l.dataset.tab).click(); $('#projects').scrollIntoView({behavior: reduce ? 'auto' : 'smooth'}); }));
 
 /* ---------- COPY ---------- */
 $('#copyEmail').onclick = async e => { const b = e.currentTarget; try { await navigator.clipboard.writeText($('#email').textContent); b.textContent = 'Copied'; } catch { const r = document.createRange(); r.selectNodeContents($('#email')); const s = getSelection(); s.removeAllRanges(); s.addRange(r); b.textContent = 'Selected'; } setTimeout(() => b.textContent = 'Copy', 1600); };

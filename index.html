@@ -490,9 +490,9 @@ footer{padding-block:28px;font-size:13px;color:var(--muted);font-family:var(--mo
         <h3>Reporting that runs itself</h3>
         <div class="where">Trane Technologies · 2024–present</div>
         <div class="psa">
-          <div><span class="label">Problem</span><p>Twenty-plus recurring data flows fed the team's Tableau reports. Many still needed someone to pull exports, rerun steps by hand and check the results every cycle, and fragile workflows broke often.</p></div>
-          <div><span class="label">What I did</span><p>Led my team's move from Alteryx to Dataiku for scheduled, more stable pipelines. As part of Trane's Dataiku Champions group I tested new features before company rollout, taught the team the tool and was their go-to contact while they learned. For the heaviest monthly projects I built end-to-end Power Automate → Dataiku processes, so files are collected, prepped and published without anyone touching them.</p></div>
-          <div><span class="label">Result</span><p>Dozens of team hours saved each month on routine updates, about 5 hours a week for me, and some monthly projects went from multiple days of manual work to hands-off runs.</p></div>
+          <div><span class="label">Problem</span><p>Leadership decisions across 6 brands and 4 business units depended on reports that someone rebuilt by hand every cycle: pulling exports, rerunning steps and checking results. The workflows were fragile, and every break delayed the numbers people were waiting on.</p></div>
+          <div><span class="label">What I did</span><p>I mapped each recurring report from source to dashboard, found the manual steps and failure points, and redesigned the process end to end: automated file collection, repeatable prep, built-in checks and scheduled publishing. I led my team's move to a more stable platform and, as part of Trane's Dataiku Champions group, taught the team and was their go-to contact while they learned. Tools: Dataiku, Power Automate, Python.</p></div>
+          <div><span class="label">Result</span><p>20+ pipelines I build and maintain now feed 15+ leadership and decision dashboards on schedule. The team gets back dozens of hours a month (about 5 a week for me), and some monthly projects went from days of manual work to hands-off runs.</p></div>
         </div>
       </div>
       <div class="demo">
@@ -782,10 +782,10 @@ const CASES = [
         clean:'After: a few thousand rotating numbers. The "lost" calls were almost all junk, and average dealer call time doubled to about a minute.'}},
   {id:'auto', name:'Automation', tab:'t-auto',
    src:['Exports','Alteryx flows','Emailed files','Manual QA','Tableau refresh'],
-   hub:{raw:['by hand,','every cycle'], clean:['Dataiku','pipelines']},
+   hub:{raw:['by hand,','every cycle'], clean:['designed to','run itself']},
    out:{raw:['days of work','fragile flows','one-person bottleneck'], clean:['15+ decision dashboards','20+ pipelines','~5 hrs/week back']},
    cap:{raw:'Before: recurring reports rebuilt by hand every cycle, on workflows that broke often.',
-        clean:'After: I led the move to Dataiku and Power Automate. 20+ pipelines across 6 brands and 4 BUs now feed 15+ dashboards leadership uses to make decisions, on schedule instead of by hand.'}},
+        clean:'After: I redesigned recurring reporting end to end, from collecting files to checks and publishing, so it runs on schedule. 20+ pipelines across 6 brands and 4 BUs now feed 15+ dashboards leadership uses to make decisions.'}},
 ];
 let ci = 0, mode = 'clean', W = 0, H = 0, parts = [], auto = !reduce, timer = null;
 const cur = () => CASES[ci];

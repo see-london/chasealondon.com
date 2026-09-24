@@ -70,6 +70,7 @@ button{font:inherit;color:inherit}
 @media (max-width:720px){.nav-links{display:none}}
 
 section{padding-block:72px;border-bottom:1px solid var(--line)}
+section,[id]{scroll-margin-top:64px}
 section:last-of-type{border-bottom:0}
 .sec-head{display:grid;gap:10px;margin-bottom:32px;max-width:680px}
 .sec-head p{color:var(--muted)}
@@ -1191,7 +1192,15 @@ $('#skimSheet').innerHTML = `<h1>Chase London</h1><p class="sub">Senior Data Ass
   `<h4>Skills</h4><p>${Object.values(groups).flat().join(' · ')}</p>
   <h4>Leadership &amp; volunteer</h4><p>Finance Chair, United Methodist church (2024–present): built an audience-segmented monthly reporting system, surfaced account-level overruns and restricted-fund issues hidden by on-track totals, and leading the 2027 move to program-based budgeting.</p>
   <h4>Education &amp; training</h4><p>UNC Charlotte: double major in Marketing and Management, plus Marketing Analytics coursework. Tableau, Alteryx and Dataiku courses; Trane Dataiku Champions group.</p>`;
-$('#skimBtn').onclick = e => { const on = e.currentTarget.getAttribute('aria-pressed') !== 'true'; e.currentTarget.setAttribute('aria-pressed', on); e.currentTarget.textContent = on ? 'Full site' : '60-second version'; $('#explore').hidden = on; $('#skim').hidden = !on; scrollTo(0,0); if (!on){ size(); } };
+function setSkim(on){ const b = $('#skimBtn'); b.setAttribute('aria-pressed', on); b.textContent = on ? 'Full site' : '60-second version'; $('#explore').hidden = on; $('#skim').hidden = !on; if (!on){ size(); wfDraw(); } }
+$('#skimBtn').onclick = () => { setSkim($('#skimBtn').getAttribute('aria-pressed') !== 'true'); scrollTo(0,0); };
+// nav links and the name always return to the full site, then go to their section
+document.querySelectorAll('.nav a[href^="#"]').forEach(a => a.addEventListener('click', e => {
+  if ($('#skimBtn').getAttribute('aria-pressed') !== 'true') return;
+  e.preventDefault(); setSkim(false);
+  const t = document.querySelector(a.getAttribute('href'));
+  requestAnimationFrame(() => t ? t.scrollIntoView() : scrollTo(0,0));
+}));
 })();
 </script>
 </body>

@@ -404,24 +404,24 @@ footer{padding-block:28px;font-size:13px;color:var(--muted);font-family:var(--mo
     <div class="proj" role="tabpanel" id="p-loc" aria-labelledby="t-loc" hidden>
       <div>
         <h3>Tuning the dealer locator</h3>
-        <div class="where">Magenta Technologies (Trane × Red Ventures JV) · 2022–2024</div>
+        <div class="where">Magenta Technologies (a Trane venture) · 2022–2024</div>
         <div class="psa">
-          <div><span class="label">Problem</span><p>Homeowners use the dealer locator to find someone to call. The search radius and ranking decide whether they see a good match or nothing at all.</p></div>
-          <div><span class="label">What I did</span><p>Coordinated locator strategy, analysis, monitoring and testing with the Trane team, dealers and developers.</p></div>
-          <div><span class="label">Result</span><p>A locator tuned with data for both sides: homeowners see relevant dealers and dealers get better-matched leads.</p></div>
+          <div><span class="label">Problem</span><p>Homeowners use the dealer locator to find someone to call. Ranking by distance alone didn't surface the best dealers, and the data suggested lots of frustrated, repeated searching.</p></div>
+          <div><span class="label">What I did</span><p>Designed a dealer score from customer feedback, response speed, Google reviews and dealer level, so the best-fit dealer shows first in each ZIP code. Then I dug into how people actually use the tool and found the site was logging a search on every page load, so thousands of "frustrated searches" weren't real.</p></div>
+          <div><span class="label">Result</span><p>Simpler ranking logic and accurate reporting. It also set the locator strategy: always show three choices, and when no dealer is available, a general contact card takes the empty spot. That was tested and is live today.</p></div>
         </div>
       </div>
       <div class="demo">
-        <p class="demo-cap">Click the map to move the homeowner. Drag the radius to see the tradeoff. <span class="flag">SAMPLE DATA</span></p>
+        <p class="demo-cap">Click the map to move the homeowner and drag the radius. Results rank by dealer score, and there are always three choices. <span class="flag">SAMPLE DATA</span></p>
         <svg class="loc-svg" id="locSvg" viewBox="0 0 400 260" role="img" aria-label="Map of sample dealers with a search radius around the homeowner"></svg>
         <div class="ctrl">
           <div class="ctrl-row"><label for="radius">Search radius</label><span class="mono" id="radOut"></span></div>
           <input type="range" id="radius" min="10" max="60" step="5" value="25">
         </div>
         <div class="loc-out">
-          <div><span class="label">Nearest dealers</span><ol id="nearest"></ol></div>
+          <div><span class="label">Top 3 by dealer score</span><ol id="nearest"></ol></div>
           <div>
-            <span class="label">Searches that find nobody</span>
+            <span class="label">Searches with no dealer in range</span>
             <div class="big" id="zeroRate"></div>
             <svg class="spark" id="zeroSpark" viewBox="0 0 220 70" aria-label="Share of searches with no results by radius"></svg>
           </div>
@@ -433,7 +433,7 @@ footer{padding-block:28px;font-size:13px;color:var(--muted);font-family:var(--mo
     <div class="proj" role="tabpanel" id="p-btu" aria-labelledby="t-btu" hidden>
       <div>
         <h3>A BTU calculator for homeowners</h3>
-        <div class="where">Magenta Technologies (Trane × Red Ventures JV) · 2022–2024</div>
+        <div class="where">Magenta Technologies (a Trane venture) · 2022–2024</div>
         <div class="psa">
           <div><span class="label">Problem</span><p>Most homeowners have no idea what size system they need, and that uncertainty stalls them before they ever call a dealer.</p></div>
           <div><span class="label">What I did</span><p>Researched, built and developed a BTU calculator for the website with dealers, the Trane team, engineering and developers.</p></div>
@@ -461,16 +461,16 @@ footer{padding-block:28px;font-size:13px;color:var(--muted);font-family:var(--mo
     <!-- ab -->
     <div class="proj" role="tabpanel" id="p-ab" aria-labelledby="t-ab" hidden>
       <div>
-        <h3>Testing the site instead of guessing</h3>
-        <div class="where">Magenta Technologies (Trane × Red Ventures JV) · 2021–2022</div>
+        <h3>When "no impact" wasn't</h3>
+        <div class="where">Magenta Technologies (a Trane venture) · 2021–2022</div>
         <div class="psa">
-          <div><span class="label">Problem</span><p>Pages and calls to action were designed on instinct, and the team couldn't tell where a visitor was in their buying journey.</p></div>
-          <div><span class="label">What I did</span><p>Worked with data engineers, developers and creative to A/B test CTAs, pages and site paths. Reworked how on-site journeys are classified so we could read visitor intent.</p></div>
-          <div><span class="label">Result</span><p>Changes shipped on evidence, and new KPIs for site health and customer journeys fed business reviews with Trane.</p></div>
+          <div><span class="label">Problem</span><p>We ran dozens of tests a year, but campaign traffic was thin, so down-funnel results were sparse and often inconclusive. One test removed a "contact dealer now" card from product category pages. It showed no major impact, so the card came out.</p></div>
+          <div><span class="label">What I did</span><p>About a month later, leads from that area were way down. I went through the lead data and found that the source had dropped out as expected, but those calls never showed up anywhere else. People weren't finding another path. They were just leaving.</p></div>
+          <div><span class="label">Result</span><p>The card went back and lead volume recovered. The lesson I carry: an inconclusive test isn't a neutral one, so watch the downstream numbers after anything ships.</p></div>
         </div>
       </div>
       <div class="demo">
-        <p class="demo-cap">Enter results from a test to read out lift and significance. <span class="flag">EXAMPLE NUMBERS</span></p>
+        <p class="demo-cap">Enter results from a test to read out lift and significance. Try small numbers to see why low-traffic tests stay inconclusive. <span class="flag">EXAMPLE NUMBERS</span></p>
         <div class="ab-in">
           <span></span><span class="label">Visitors</span><span class="label">Conversions</span>
           <label for="nA">A · current</label><input id="nA" type="number" min="1" value="12400"><input id="cA" type="number" min="0" value="310" aria-label="Conversions A">
@@ -568,12 +568,12 @@ const roles = [
   {id:'m1', co:'Magenta Technologies', color:'--c-magenta', start:2021, end:2022, title:'Marketing Data Analyst', loc:'Fort Mill, SC',
    div:'Data Delivery & Technical Solutions, Residential HVAC',
    sum:"Helped grow the data insights and strategy team, leading testing, reporting and new analysis processes that supported Trane's business goals.",
-   bullets:["Rebuilt how on-site customer journeys are classified to read visitor intent.","Ran A/B tests on CTAs, pages and site paths with engineering, development and creative.","Defined new KPIs for site health and customer journeys and built the reporting for business reviews.","Improved forecasting accuracy for annual KPI plans."],
+   bullets:["Ran dozens of A/B tests a year on CTAs, pages and site paths, and caught a lasting lead drop after a low-traffic test removed a contact-dealer card. The card went back and lead volume recovered.","Rebuilt how on-site customer journeys are classified to read visitor intent.","Defined new KPIs for site health and customer journeys and built the reporting for business reviews.","Built annual KPI plans and forecasts."],
    tools:['SQL','Tableau','Alteryx','A/B testing','Forecasting','Web analytics']},
   {id:'m2', co:'Magenta Technologies', color:'--c-magenta', start:2022, end:2024, title:'Senior Data Analyst', loc:'Fort Mill, SC',
    div:'Data Delivery & Technical Solutions, Residential HVAC', promo:true,
-   sum:"Promoted to senior analyst and took the lead coordinating the team. Centralized communication with partners, built new tools and methods, and cleared project roadblocks.",
-   bullets:["Led a team of analysts as primary point of contact for partners and adjacent teams.","Coordinated dealer locator strategy, analysis, monitoring and testing.","Owned data and reporting for a phone system migration.","Built the BTU Calculator for the website with dealers, engineering and developers.","Applied machine learning and third-party data to customer behavior analysis."],
+   sum:"Promoted to senior analyst on a three-person analytics team. I owned the team's data strategy and website metrics and was the main data contact for partners and adjacent teams.",
+   bullets:["Designed the dealer locator's ranking score from customer feedback, response speed, Google reviews and dealer level, so the best-fit dealer shows first in each ZIP code.","Found that locator searches were logged on page load, removing thousands of false frustrated-search data points. That led to simpler ranking, a three-dealer minimum and a now-live general contact card.","Led analysis of the move from a pooled call-tracking system to Twilio. The lost calls were almost all bots and non-customers, and average dealer call time doubled from under 30 seconds to about a minute.","Designed the BTU Calculator proof of concept that developers built the website tool from.","Applied machine learning and third-party data to customer behavior analysis."],
    tools:['Team leadership','Machine learning','Forecasting','A/B testing','Web analytics','Dashboards']},
   {id:'t2', co:'Trane Technologies', color:'--c-trane', start:2024, end:2026.75, title:'Senior Data Asset Manager', loc:'Davidson, NC', current:true,
    div:'Marketing Strategy & Operations, Americas',
@@ -597,7 +597,7 @@ roles.slice().reverse().forEach(r => {
 const axis = document.createElement('div'); axis.className = 'g-axis';
 axis.innerHTML = '<div></div><div class="g-ticks">' + [2017,2019,2021,2023,2025].map(y => `<span style="left:${pct(y)}%">${y}</span>`).join('') + `<span style="left:97%">now</span></div>`;
 gantt.appendChild(axis);
-const note = document.createElement('p'); note.className = 'g-note'; note.textContent = 'Magenta Technologies was a joint venture between Trane and Red Ventures. It ran like a startup, which let me build fast, lead a team and ship tools before moving back inside Trane in 2024.';
+const note = document.createElement('p'); note.className = 'g-note'; note.textContent = 'Magenta Technologies was a Trane venture. It ran like a startup, which let me build fast, lead a team and ship tools before moving back inside Trane in 2024.';
 gantt.appendChild(note);
 
 function selectRole(id){
@@ -782,7 +782,7 @@ const dealers = [];
 metros.forEach(([x,y,s]) => { for (let i = 0; i < 12; i++){ const a = rnd()*6.283, r = Math.sqrt(rnd())*s*2.2; dealers.push([x+Math.cos(a)*r, y+Math.sin(a)*r]); } });
 for (let i = 0; i < 9; i++) dealers.push([20 + rnd()*360, 20 + rnd()*220]);
 const names = ['Comfort Pros','Blue Ridge Air','Piedmont Heating','Lakeside HVAC','Summit Climate','Carolina Cooling','Northside Air','Ironwood Mechanical','Redbud Heat & Air','Crescent Comfort'];
-dealers.forEach((d,i) => d.push(names[i % names.length] + (i >= names.length ? ' ' + (Math.floor(i/names.length)+1) : '')));
+dealers.forEach((d,i) => { d.push(names[i % names.length] + (i >= names.length ? ' ' + (Math.floor(i/names.length)+1) : '')); d.push(58 + (i * 37) % 41); });
 const home = [135,105];
 const samples = []; for (let i = 0; i < 600; i++) samples.push([rnd()*400, rnd()*260]);
 const dist = (a,b) => Math.hypot(a[0]-b[0], a[1]-b[1]) * MI;
@@ -798,7 +798,11 @@ function renderLoc(){
   html += `<text x="8" y="252" font-family="JetBrains Mono, monospace" font-size="10" fill="var(--muted)">200 × 130 mi sample region</text>`;
   svg.innerHTML = html;
   const hits = inR.filter(x => x.m <= r);
-  $('#nearest').innerHTML = hits.length ? hits.slice(0,3).map(x => `<li>${x.d[2]} · ${x.m.toFixed(1)} mi</li>`).join('') + (hits.length > 3 ? `<li style="list-style:none;color:var(--muted)">+${hits.length-3} more in range</li>` : '') : `<li style="list-style:none;color:var(--heat)">No dealers in range. Closest is ${inR[0].m.toFixed(1)} mi away.</li>`;
+  const ranked = hits.slice().sort((a,b) => b.d[3] - a.d[3]).slice(0,3);
+  let list = ranked.map(x => `<li>${x.d[2]} <span style="color:var(--muted)">· score ${x.d[3]} · ${x.m.toFixed(1)} mi</span></li>`).join('');
+  if (ranked.length < 3) list += `<li style="color:var(--heat)">General contact card <span style="color:var(--muted)">· fills ${3 - ranked.length === 1 ? 'the empty spot' : 'the empty spots'}</span></li>`;
+  if (hits.length > 3) list += `<li style="list-style:none;color:var(--muted)">+${hits.length-3} more in range</li>`;
+  $('#nearest').innerHTML = list;
   const z = zeroCurve.find(p => p[0] === r)[1];
   $('#zeroRate').textContent = Math.round(z*100) + '%';
   const sx = r => 10 + (r-10)/50*200, sy = z => 60 - z*52;

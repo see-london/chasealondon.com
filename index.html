@@ -1071,7 +1071,7 @@ tabs.forEach(t => t.addEventListener('click', () => {
 
 /* ---------- CHURCH FINANCE DEMO ---------- */
 const ATT = [[2014,125,49],[2015,128,57],[2016,128,63],[2017,128,64],[2018,128,69],[2019,107,65],[2021,49,46],[2022,48,52],[2023,46,58],[2024,38,59],[2025,35,59]];
-const EXP = [['Staff and personnel',52],['Property and building',24],['Designated funds',17],['Finance services',4],['Local ministries',3]];
+const EXP = [['Staff and personnel',52],['Property and building',24],['Ministry and outreach',20],['Finance services',4]];
 let finView = 'att', finGap = 10;
 const FS = 'font-family="JetBrains Mono, monospace"';
 function finDraw(){
@@ -1093,11 +1093,11 @@ function finDraw(){
     const L0 = 150, R0 = 46, rowH = 40, T0 = 18;
     EXP.forEach(([n, v], i) => {
       const y = T0 + i * rowH, w = (W - L0 - R0) * v / 55;
-      h += `<text x="${L0 - 10}" y="${y + 15}" text-anchor="end" font-size="12" fill="var(--ink)">${n}</text><rect x="${L0}" y="${y}" width="${W - L0 - R0}" height="22" rx="4" fill="var(--surface-2)"/><rect x="${L0}" y="${y}" width="${w}" height="22" rx="4" fill="${i === 0 ? 'var(--c-magenta)' : 'var(--accent)'}" opacity="${i === 0 ? 1 : .75}"/><text x="${L0 + w + 8}" y="${y + 15}" font-size="12" font-weight="700" ${FS} fill="var(--ink)">${v}%</text>`;
+      h += `<text x="${L0 - 10}" y="${y + 15}" text-anchor="end" font-size="12" fill="var(--ink)">${n}</text><rect x="${L0}" y="${y}" width="${W - L0 - R0}" height="22" rx="4" fill="var(--surface-2)"/><rect x="${L0}" y="${y}" width="${w}" height="22" rx="4" fill="${i === 2 ? 'var(--good)' : i === 0 ? 'var(--c-magenta)' : 'var(--accent)'}" opacity="${i === 3 ? .6 : 1}"/><text x="${L0 + w + 8}" y="${y + 15}" font-size="12" font-weight="700" ${FS} fill="var(--ink)">${v}%</text>`;
     });
-    h += `<text x="${L0}" y="${T0 + 5 * rowH + 10}" font-size="10.5" ${FS} fill="var(--muted)">share of 2025 spending</text>`;
+    h += `<text x="${L0}" y="${T0 + EXP.length * rowH + 10}" font-size="10.5" ${FS} fill="var(--muted)">share of 2025 spending</text>`;
     $('#finCtrl').innerHTML = '';
-    $('#finTake').textContent = 'Staff and building costs make up three-quarters of spending. The church consistently spends less than it budgets, but giving still falls short, leaving a monthly gap that reserves have to cover.';
+    $('#finTake').textContent = 'Three-quarters of spending is the cost of running the church: staff and the building. A fifth goes to ministry and outreach, funded from both the operating budget and designated gifts. The church spends under budget, but giving still falls short, leaving a monthly gap that reserves have to cover.';
   } else {
     // relative model: today's reserves = 100%; checking holds 1/7, investments 6/7; the current gap uses up 1/84 per month
     const L0 = 46, R0 = 26, T0 = 12, B0 = 30, yrs = 10;

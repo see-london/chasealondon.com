@@ -98,6 +98,12 @@ header p{color:var(--muted);max-width:60ch;margin-top:8px}
 .pop.neu{color:var(--accent)}
 @keyframes pop{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-34px)}}
 .bad{font-family:var(--mono);font-size:12px;color:var(--heat)}
+.boost{margin-top:12px;display:flex;gap:14px;align-items:center;flex-wrap:wrap;border:1px dashed var(--heat);border-radius:12px;padding:10px 14px;background:var(--heat-soft)}
+.boost p{font-size:13.5px;color:var(--ink);flex:1;min-width:220px}
+.boost-btn{border:0;border-radius:999px;padding:9px 16px;font-weight:700;background:var(--heat);color:#fff;cursor:pointer;white-space:nowrap;font-variant-numeric:tabular-nums}
+.boost-btn:disabled{opacity:.85;cursor:default}
+.boost.on{border-style:solid;animation:boostGlow 1s ease-in-out infinite alternate}
+@keyframes boostGlow{to{box-shadow:0 0 0 4px color-mix(in srgb,var(--heat) 25%,transparent)}}
 .pause{margin-top:14px;background:var(--accent-soft);color:var(--ink);border-radius:10px;padding:10px 14px;font-size:14px}
 @media (max-width:760px){.line{gap:6px}.stage{padding:10px;gap:6px}.stage h2{font-size:15px}.stage .count{font-size:20px}.stage .label,.stage .rate,.act kbd,.tag{display:none}.files{height:34px;padding:4px;gap:3px}.file{width:10px;height:13px}.file::after{top:4px;box-shadow:0 3px 0 var(--fc,var(--muted))}.act{padding:12px 8px;font-size:13px;justify-content:center;text-align:center}.bad{font-size:10.5px}.arrow{display:none}}
 
@@ -168,6 +174,10 @@ header p{color:var(--muted);max-width:60ch;margin-top:8px}
     <div class="side-stats"><span><b id="perSec">0</b> credits/sec</span><span><b id="shipped">0</b> files shipped</span><span><b id="clock">0:00</b> elapsed</span></div>
   </section>
 
+  <div class="boost">
+    <button class="boost-btn" id="boostBtn">Throw budget at it</button>
+    <p id="boostNote">In a hurry? Hire a consulting team for 30 seconds. They work every stage, everything runs 12× faster, and they buy the next tool the moment you can afford it.</p>
+  </div>
   <p class="pause" id="pauseNote" hidden></p>
   <section class="line" id="line">
     <div class="stage" id="stFetch">
@@ -221,6 +231,7 @@ header p{color:var(--muted);max-width:60ch;margin-top:8px}
     <h2 id="winTitle">The pipeline runs itself.</h2>
     <p>You went from dragging files one at a time to a pipeline that fetches, cleans, checks and ships data with no one touching it. That's the job I do: find the manual steps, automate them, fix the bottleneck, and repeat.</p>
     <div class="win-stats"><div><span class="label">Time</span><b id="wTime">0:00</b></div><div><span class="label">Clicks</span><b id="wClicks">0</b></div><div><span class="label">Files shipped</span><b id="wFiles">0</b></div></div>
+    <p id="wBoost" style="font-size:13.5px;color:var(--muted)"></p>
     <div class="row"><a class="primary" href="../#projects">See the real projects</a><a class="btn-s" href="../#contact" style="text-decoration:none">Get in touch</a><button class="btn-s" id="winClose">Keep watching it run</button></div>
   </div>
 </div>
@@ -233,26 +244,26 @@ const LEVELS = ['Manual','Delivered','Scheduled','Connected','Report-ready','Aut
 
 // Tools are named after (not quite) the real ones.
 const UP = [
-  {id:'macros', st:'clean',   lv:0, name:'Excelerator Macros',     hint:'Excel',          cost:10,   ds:'Clean 3 files per click instead of 1.',                         fx:s => { s.cleanClick = 3; }},
-  {id:'automate', st:'inbox', lv:0, name:'Power Auto-Mate',        hint:'Power Automate', cost:18,   ds:'Files move from the source folder to your inbox on their own: 2 files/sec.', fx:s => { s.fetchAuto += 2; }},
-  {id:'dropbox', st:'inbox',  lv:1, name:'SFTP Drop Zone',         hint:'SFTP',           cost:30,   ds:'Sources deliver on a schedule. +2 files/sec into the inbox.', fx:s => { s.fetchAuto += 2; }},
-  {id:'alteryx', st:'clean',  lv:2, name:'Alter-Why Workflow',     hint:'Alteryx',        cost:45,   ds:'A saved prep flow cleans 3 files/sec automatically.',          fx:s => { s.cleanAuto += 3; }},
-  {id:'tabserver', st:'dash',lv:2, name:'Tab-Low Server',         hint:'Tableau',        cost:65,   ds:'Scheduled refresh uploads 2 files/sec to the dashboard.',     fx:s => { s.uploadAuto += 2; }},
-  {id:'python', st:'all',   lv:2, name:'Pie-thon Scripts',       hint:'Python',         cost:110,  ds:'Script the glue. Every automated step runs 2× faster.',        fx:s => { s.mult *= 2; }},
-  {id:'sql', st:'credits',      lv:3, name:'SQueaL Queries',         hint:'SQL',            cost:180,  ds:'Join sources together so every shipped file is worth 2× credits. Unlocks API and cloud connections.', fx:s => { s.value *= 2; }},
-  {id:'api', st:'inbox',      lv:3, name:'API Hook-up',            hint:'API',            cost:280,  req:'sql', ds:'Direct connection: +8 files/sec with no files to fetch.', fx:s => { s.fetchAuto += 8; }},
-  {id:'dataiku', st:'clean',  lv:3, name:'Data-I-Queue Recipes',   hint:'Dataiku',        cost:400,  ds:'Scheduled recipes clean +6 files/sec.',                          fx:s => { s.cleanAuto += 6; }},
-  {id:'gcc', st:'dash',      lv:4, name:'Gee-See-See Cloud',      hint:'Google Cloud',   cost:580,  req:'sql', ds:'Land data in the cloud warehouse: +4 uploads/sec.',   fx:s => { s.uploadAuto += 4; }},
-  {id:'qa', st:'dash',       lv:4, name:'Auto-QA Checks',         hint:'data checks',    cost:800,  ds:'Automated checks catch bad rows. No more wasted files.',        fx:s => { s.err = 0; }},
-  {id:'sot', st:'credits',      lv:4, name:'One Source of Truth',    hint:'data model',     cost:1100, ds:'Every source keyed to one ID and date: 3× credits per file.',   fx:s => { s.value *= 3; }},
-  {id:'loa5', st:'all',     lv:5, name:'Autonomous Pipeline',    hint:'LoA 5',          cost:2400, req:'all', ds:'Self-validating, near real time, fully documented. No routine oversight.', fx:s => { s.won = true; }},
+  {id:'macros', st:'clean',   lv:0, name:'Excelerator Macros',     hint:'Excel',          cost:5,   ds:'Clean 3 files per click instead of 1.',                         fx:s => { s.cleanClick = 3; }},
+  {id:'automate', st:'inbox', lv:0, name:'Power Auto-Mate',        hint:'Power Automate', cost:15,   ds:'Files move from the source folder to your inbox on their own: 2 files/sec.', fx:s => { s.fetchAuto += 2; }},
+  {id:'dropbox', st:'inbox',  lv:1, name:'SFTP Drop Zone',         hint:'SFTP',           cost:20,   ds:'Sources deliver on a schedule. +2 files/sec into the inbox.', fx:s => { s.fetchAuto += 2; }},
+  {id:'alteryx', st:'clean',  lv:2, name:'Alter-Why Workflow',     hint:'Alteryx',        cost:30,   ds:'A saved prep flow cleans 3 files/sec automatically.',          fx:s => { s.cleanAuto += 3; }},
+  {id:'tabserver', st:'dash',lv:2, name:'Tab-Low Server',         hint:'Tableau',        cost:45,   ds:'Scheduled refresh uploads 2 files/sec to the dashboard.',     fx:s => { s.uploadAuto += 2; }},
+  {id:'python', st:'all',   lv:2, name:'Pie-thon Scripts',       hint:'Python',         cost:75,  ds:'Script the glue. Every automated step runs 2× faster.',        fx:s => { s.mult *= 2; }},
+  {id:'sql', st:'credits',      lv:3, name:'SQueaL Queries',         hint:'SQL',            cost:125,  ds:'Join sources together so every shipped file is worth 2× credits. Unlocks API and cloud connections.', fx:s => { s.value *= 2; }},
+  {id:'api', st:'inbox',      lv:3, name:'API Hook-up',            hint:'API',            cost:195,  req:'sql', ds:'Direct connection: +8 files/sec with no files to fetch.', fx:s => { s.fetchAuto += 8; }},
+  {id:'dataiku', st:'clean',  lv:3, name:'Data-I-Queue Recipes',   hint:'Dataiku',        cost:280,  ds:'Scheduled recipes clean +6 files/sec.',                          fx:s => { s.cleanAuto += 6; }},
+  {id:'gcc', st:'dash',      lv:4, name:'Gee-See-See Cloud',      hint:'Google Cloud',   cost:405,  req:'sql', ds:'Land data in the cloud warehouse: +4 uploads/sec.',   fx:s => { s.uploadAuto += 4; }},
+  {id:'qa', st:'dash',       lv:4, name:'Auto-QA Checks',         hint:'data checks',    cost:560,  ds:'Automated checks catch bad rows. No more wasted files.',        fx:s => { s.err = 0; }},
+  {id:'sot', st:'credits',      lv:4, name:'One Source of Truth',    hint:'data model',     cost:770, ds:'Every source keyed to one ID and date: 3× credits per file.',   fx:s => { s.value *= 3; }},
+  {id:'loa5', st:'all',     lv:5, name:'Autonomous Pipeline',    hint:'LoA 5',          cost:1680, req:'all', ds:'Self-validating, near real time, fully documented. No routine oversight.', fx:s => { s.won = true; }},
 ];
 
-const fresh = () => ({carry:0, credits:0, raw:0, clean:0, shipped:0, bad:0, clicks:0, fetchAuto:0, cleanAuto:0, uploadAuto:0, mult:1, value:1, err:.2, cleanClick:1, owned:[], won:false, elapsed:0, winSeen:false, log:['Day one. Your first report needs data, and it all has to be moved by hand.']});
+const fresh = () => ({boosts:0, carry:0, credits:0, raw:0, clean:0, shipped:0, bad:0, clicks:0, fetchAuto:0, cleanAuto:0, uploadAuto:0, mult:1, value:1, err:.2, cleanClick:1, owned:[], won:false, elapsed:0, winSeen:false, log:['Day one. Your first report needs data, and it all has to be moved by hand.']});
 let S = fresh();
 try { const saved = JSON.parse(localStorage.getItem('pipelineClicker') || 'null'); if (saved && saved.owned) S = Object.assign(fresh(), saved); } catch (e) {}
 // rebuild derived stats from owned tools so saves stay consistent
-function rebuild(){ const keep = {credits:S.credits, raw:S.raw, clean:S.clean, shipped:S.shipped, bad:S.bad, clicks:S.clicks, owned:S.owned, elapsed:S.elapsed, winSeen:S.winSeen, log:S.log}; S = Object.assign(fresh(), keep); S.owned.forEach(id => UP.find(u => u.id === id).fx(S)); }
+function rebuild(){ const keep = {boosts:S.boosts || 0, credits:S.credits, raw:S.raw, clean:S.clean, shipped:S.shipped, bad:S.bad, clicks:S.clicks, owned:S.owned, elapsed:S.elapsed, winSeen:S.winSeen, log:S.log}; S = Object.assign(fresh(), keep); S.owned.forEach(id => UP.find(u => u.id === id).fx(S)); }
 rebuild();
 const save = () => { try { localStorage.setItem('pipelineClicker', JSON.stringify(S)); } catch (e) {} };
 
@@ -274,7 +285,7 @@ function log(msg){ S.log.unshift(msg); S.log = S.log.slice(0, 6); }
 const pend = {f:0, c:0, u:0, bad:0, cr:0};
 // each file either ships clean (earns credits) or with bad rows (earns nothing)
 function ship(n){ S.carry += n; let earned = 0, bad = 0; while (S.carry >= 1){ S.carry -= 1; S.shipped += 1; if (Math.random() < S.err){ S.bad += 1; bad += 1; } else { S.credits += S.value; earned += S.value; } } return {earned, bad}; }
-function pop(el, text, kind){ if (reduce) return; const p = document.createElement('span'); p.className = 'pop ' + (kind || ''); p.textContent = text; const b = el.getBoundingClientRect(), l = $('#line').getBoundingClientRect(); p.style.left = (b.left - l.left + b.width / 2 - 14 + (Math.random() * 30 - 15)) + 'px'; p.style.top = (b.top - l.top - 6) + 'px'; $('#line').appendChild(p); setTimeout(() => p.remove(), 800); }
+function pop(el, text, kind){ if (reduce) return; const p = document.createElement('span'); p.className = 'pop ' + (kind || ''); p.textContent = text; const b = el.getBoundingClientRect(), l = $('#line').getBoundingClientRect(); if (el.classList.contains('count')){ p.style.left = (b.right - l.left + 8 + Math.random() * 40) + 'px'; p.style.top = (b.top - l.top + 4) + 'px'; } else { p.style.left = (b.left - l.left + b.width / 2 - 14 + (Math.random() * 30 - 15)) + 'px'; p.style.top = (b.top - l.top - 6) + 'px'; } $('#line').appendChild(p); setTimeout(() => p.remove(), 800); }
 function doFetch(){ S.clicks++; S.raw += 1; draw(); }
 function doClean(){ if (S.raw < 1) return; S.clicks++; const n = Math.min(Math.floor(S.raw), S.cleanClick); S.raw -= n; S.clean += n; draw(); }
 function doUp(){ if (S.clean < 1) return; S.clicks++; S.clean -= 1; const {earned, bad} = ship(1); if (bad) pop($('#btnUp'), '+0 bad rows', 'bad'); else pop($('#btnUp'), '+' + fmt(earned)); draw(); }
@@ -333,6 +344,7 @@ function draw(){
 }
 
 // ---- loop ----
+let boostUntil = 0;
 let last = performance.now(), acc = 0, lastInput = Date.now(), paused = false, wonAt = 0;
 const IDLE_MS = 5 * 60 * 1000, AFTER_WIN_MS = 2 * 60 * 1000;
 function wake(){ lastInput = Date.now(); if (paused){ if (S.won) wonAt = Date.now(); paused = false; $('#pauseNote').hidden = true; last = performance.now(); requestAnimationFrame(tick); } }
@@ -341,15 +353,18 @@ function tick(now){
   // pause the simulation when no one is playing, so an open tab isn't doing work forever
   const idle = Date.now() - lastInput > IDLE_MS, done = S.won && wonAt && Date.now() - wonAt > AFTER_WIN_MS;
   if (idle || done){ paused = true; draw(); $('#pauseNote').hidden = false; $('#pauseNote').textContent = done ? 'The pipeline is finished and paused. Click anywhere to watch it run again.' : 'Paused while you were away. Click anywhere to resume.'; save(); return; }
-  const dt = Math.min(1, (now - last) / 1000); last = now;
+  const boosting = boostUntil > Date.now();
+  const realDt = Math.min(1, (now - last) / 1000), dt = realDt * (boosting ? 12 : 1); last = now;
+  if (boosting){ const next = UP.find(u => !has(u.id) && unlocked(u)); if (next && S.credits >= next.cost) buy(next); }
+  if (boostUntil && !boosting) endBoost();
   {
-    if (!S.won) S.elapsed += dt;
-    const r = rates();
+    if (!S.won) S.elapsed += realDt;
+    const r0 = rates(), r = boosting ? {f:Math.max(r0.f, 3), c:Math.max(r0.c, 2.5), u:Math.max(r0.u, 2)} : r0;
     S.raw += r.f * dt; pend.f += r.f * dt;
     let n = Math.min(S.raw, r.c * dt); S.raw -= n; S.clean += n; pend.c += n;
     n = Math.min(S.clean, r.u * dt); S.clean -= n; if (n > 0){ const o = ship(n); pend.u += n; pend.cr += o.earned; pend.bad += o.bad; }
   }
-  acc += dt; if (acc > .1){ acc = 0; draw(); }
+  acc += dt; if (acc > .1){ acc = 0; draw(); if (boostUntil > Date.now()) $('#boostBtn').textContent = `Consultants on it: ${Math.ceil((boostUntil - Date.now()) / 1000)}s`; }
   requestAnimationFrame(tick);
 }
 setInterval(save, 4000);
@@ -364,7 +379,10 @@ setInterval(() => {
   if (pend.bad >= 1){ pop($('#cntShip'), '+0 ×' + Math.floor(pend.bad) + ' bad', 'bad'); pend.bad = 0; }
 }, 650); addEventListener('pagehide', save);
 
-function showWin(){ wonAt = Date.now(); $('#wTime').textContent = clock(S.elapsed); $('#wClicks').textContent = fmt(S.clicks); $('#wFiles').textContent = fmt(S.shipped); $('#win').hidden = false; S.winSeen = true; save(); }
+function startBoost(){ if (boostUntil > Date.now() || S.won) return; S.boosts++; boostUntil = Date.now() + 30000; log('Hired a consulting team for 30 seconds. Everything runs 12× faster.'); $('.boost').classList.add('on'); $('#boostBtn').disabled = true; save(); }
+function endBoost(){ boostUntil = 0; $('.boost').classList.remove('on'); $('#boostBtn').disabled = S.won; $('#boostBtn').textContent = 'Throw budget at it again'; log('The consultants left. The tools you bought stay.'); }
+$('#boostBtn').onclick = startBoost;
+function showWin(){ wonAt = Date.now(); $('#wTime').textContent = clock(S.elapsed); $('#wClicks').textContent = fmt(S.clicks); $('#wFiles').textContent = fmt(S.shipped); $('#wBoost').textContent = S.boosts ? `You threw budget at it ${S.boosts} ${S.boosts === 1 ? 'time' : 'times'}. Real teams rarely get that option, which is why the tools matter.` : 'No consultants needed. Nicely done.'; $('#win').hidden = false; S.winSeen = true; save(); }
 if (S.won) wonAt = Date.now();
 $('#winClose').onclick = () => { $('#win').hidden = true; };
 $('#resetBtn').onclick = () => { $('#resetConfirm').hidden = false; };

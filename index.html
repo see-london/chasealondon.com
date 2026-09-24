@@ -173,6 +173,13 @@ section:last-of-type{border-bottom:0}
 .fin-take{font-size:14px;color:var(--ink);background:var(--surface-2);border-radius:8px;padding:10px 12px;margin-top:10px}
 .fin-ctrl{display:grid;gap:4px;margin-top:8px}
 .fin-ctrl .ctrl-row{font-size:13px}
+.plan{display:grid;gap:6px;margin-top:12px}
+.plan-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1.2fr);gap:10px;align-items:center;background:var(--surface-2);border-radius:8px;padding:9px 12px;font-size:13.5px}
+.plan-k{font-weight:700}
+.plan-a{color:var(--muted);text-decoration:line-through}
+.plan-b{color:var(--accent);font-weight:700}
+.plan-b::before{content:"→ ";color:var(--muted);font-weight:400}
+@media (max-width:520px){.plan-row{grid-template-columns:1fr;gap:2px}}
 
 /* dealer source-of-truth diagram */
 .sot{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,.75fr) auto minmax(0,1.25fr);gap:16px;align-items:start;margin-top:4px;padding-top:18px;border-top:1px solid var(--line)}
@@ -551,12 +558,13 @@ footer{padding-block:28px;font-size:13px;color:var(--muted);font-family:var(--mo
         <div class="psa">
           <div><span class="label">Problem</span><p>The church's numbers lived in dense accounting exports. Leaders knew money was tight, but there was no shared picture of why, or how long the reserves would last.</p></div>
           <div><span class="label">What I did</span><p>Turned the exports into a simple monthly report and a three-chart briefing for church leadership: who's attending, where the money goes, and what happens if nothing changes.</p></div>
-          <div><span class="label">Result</span><p>Everyone now works from the same facts. Spending runs under budget, but giving doesn't cover it, so the church draws on its reserves every month. At the current gap, those reserves last about 7 years. That's the starting point for the next budget.</p></div>
+          <div><span class="label">Result</span><p>Everyone now works from the same facts. Spending runs under budget, but giving doesn't cover it, so the church draws on its reserves every month. At the current gap, those reserves last about 7 years.</p></div>
+          <div><span class="label">What I'm changing</span><p>I can't control attendance, but I can make every dollar clearer. For the 2027 budget I'm leading an overhaul: a cleaner set of account codes, a real approval process, budgets built around programs instead of staff positions, and training so staff and volunteers can check their own budgets and file reports themselves.</p></div>
         </div>
       </div>
       <div class="demo">
         <div class="fin-top">
-          <div class="seg" role="group" aria-label="Chart" id="finSeg"><button data-v="att" aria-pressed="true">Attendance</button><button data-v="exp" aria-pressed="false">Expenses</button><button data-v="out" aria-pressed="false">Outlook</button></div>
+          <div class="seg" role="group" aria-label="Chart" id="finSeg"><button data-v="att" aria-pressed="true">Attendance</button><button data-v="exp" aria-pressed="false">Expenses</button><button data-v="out" aria-pressed="false">Outlook</button><button data-v="plan" aria-pressed="false">The plan</button></div>
           <span class="flag">ROUNDED</span>
         </div>
         <svg id="finChart" class="fin-chart" viewBox="0 0 520 260" role="img" aria-label="Church finance chart"></svg>
@@ -1098,6 +1106,10 @@ function finDraw(){
     h += `<text x="${L0}" y="${T0 + EXP.length * rowH + 10}" font-size="10.5" ${FS} fill="var(--muted)">share of 2025 spending</text>`;
     $('#finCtrl').innerHTML = '';
     $('#finTake').textContent = 'Three-quarters of spending is the cost of running the church: staff and the building. A fifth goes to ministry and outreach, funded from both the operating budget and designated gifts. The church spends under budget, but giving still falls short, leaving a monthly gap that reserves have to cover.';
+  } else if (finView === 'plan'){
+    const rows = [['Budgets built around','staff positions','programs and ministries'],['Account codes','legacy and overlapping','one clean chart of accounts'],['Spending approvals','informal','a clear approval process'],['Budget access','finance chair only','self-serve for staff and volunteers'],['Reports','assembled by hand','filed by staff and volunteers']];
+    $('#finCtrl').innerHTML = `<div class="plan">${rows.map(([k, a, b]) => `<div class="plan-row"><span class="plan-k">${k}</span><span class="plan-a">${a}</span><span class="plan-b">${b}</span></div>`).join('')}</div>`;
+    $('#finTake').textContent = 'Attendance is outside my control; the money side isn\'t. Clearer accounts, real approvals and self-serve reporting help the church fund what it does with fewer surprises.';
   } else {
     // relative model: today's reserves = 100%; checking holds 1/7, investments 6/7; the current gap uses up 1/84 per month
     const L0 = 46, R0 = 26, T0 = 12, B0 = 30, yrs = 10;
@@ -1119,7 +1131,7 @@ function finDraw(){
     $('#finTake').textContent = !finGap ? 'Close the gap and reserves hold steady. That is the goal of the next budget.' : outI !== null ? (finGap === 10 ? `At the current gap, checking runs out in ${yrTxt(outC)} and the full reserves last ${yrTxt(outI)}. Drag the slider to see how much a smaller or larger gap changes the runway.` : `At ${(finGap / 10).toFixed(1)}× the current gap, the full reserves last ${yrTxt(outI)}.`) : `At ${(finGap / 10).toFixed(1)}× the current gap, the reserves last more than 10 years.`;
     svg.setAttribute('aria-label', 'Reserve balances as a share of today, projected at the chosen monthly gap');
   }
-  svg.innerHTML = h;
+  svg.innerHTML = h; svg.style.display = finView === 'plan' ? 'none' : '';
 }
 document.querySelectorAll('#finSeg button').forEach(b => b.onclick = () => { finView = b.dataset.v; $('#finCtrl').innerHTML = ''; finDraw(); });
 finDraw();
@@ -1510,7 +1522,7 @@ $('#skimSheet').innerHTML = `<h1>Chase London</h1><p class="sub">Senior Data Ass
   <h4>Summary</h4><p>Data leader who turns messy business problems into working data solutions. In nine years at Trane Technologies and a Trane venture, I've found opportunities where better data could move the business forward, designed the solution and led analysts, developers and stakeholders to deliver it. Today I build and maintain 20+ data pipelines for 6 brands and 4 business units, including the dealer ROI dashboard managers use across a 3,000–5,000-dealer network. Looking for a data lead or analytics consulting role.</p>
   <h4>Experience</h4>` + roles.slice().reverse().map(r => `<div class="sk-job"><div class="top">${r.title}, ${r.co}<span>${r.start}–${r.current?'present':r.end}</span></div><ul>${r.bullets.slice(0,3).map(b => `<li>${b}</li>`).join('')}</ul></div>`).join('') +
   `<h4>Skills</h4><p>${Object.values(groups).flat().join(' · ')}</p>
-  <h4>Leadership &amp; volunteer</h4><p>Finance Chair at a local church (2024–present): turned accounting exports into a monthly report and a three-chart briefing on attendance, spending and reserve runway, giving leadership a shared picture ahead of the next budget.</p>
+  <h4>Leadership &amp; volunteer</h4><p>Finance Chair at a local church (2024–present): turned accounting exports into a monthly report and a three-chart briefing on attendance, spending and reserve runway, giving leadership a shared picture, and now leading the 2027 overhaul: recoded accounts, a new approval process, program-based budgets and self-serve reporting for staff and volunteers.</p>
   <h4>Education &amp; training</h4><p>UNC Charlotte: double major in Marketing and Management, plus Marketing Analytics coursework. Tableau, Alteryx and Dataiku courses; Trane Dataiku Champions group.</p>`;
 function setSkim(on){ const b = $('#skimBtn'); b.setAttribute('aria-pressed', on); b.textContent = on ? 'Full site' : '60-second version'; $('#explore').hidden = on; $('#skim').hidden = !on; if (!on){ size(); wfDraw(); } }
 $('#skimBtn').onclick = () => { setSkim($('#skimBtn').getAttribute('aria-pressed') !== 'true'); scrollTo(0,0); };

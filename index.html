@@ -663,10 +663,10 @@ footer{padding-block:28px;font-size:13px;color:var(--muted);font-family:var(--mo
     <div class="sec-head">
       <div class="label">Toolkit</div>
       <h2>How my toolkit grew with each role.</h2>
-      <p>Each bar shows the years I've used a tool, lined up against my roles. Hover or tap a tool to see where it overlaps.</p>
+      <p>Each bar shows when I picked up a skill or tool, lined up against my roles. Hover or tap one to see where it overlaps.</p>
     </div>
     <div class="tl" id="toolTl"></div>
-    <div class="skill-read" id="skillRead" aria-live="polite">Excel and Tableau run the whole way. Alteryx carried the middle years, and Dataiku and Power Automate took over in the current role.</div>
+    <div class="skill-read" id="skillRead" aria-live="polite">Skills stay in use from the day I pick them up. Tools come and go: Alteryx carried the middle years, and Dataiku and Power Automate took over from there.</div>
     <div class="edu">
       <div><span class="label">Education</span><p><b>UNC Charlotte</b>: double major in Marketing and Management, plus Marketing Analytics coursework.</p></div>
       <div><span class="label">Training</span><p>Tableau, Alteryx and Dataiku courses. Member of Trane's Dataiku Champions group. Most of what I know came from building for real team needs.</p></div>
@@ -1268,12 +1268,12 @@ function renderAB(){
 /* ---------- TOOLS TIMELINE ---------- */
 const NOW = T1;
 const TOOLS = {
-  'Collect & prep': [['Excel',[[2017,NOW]]],['Alteryx',[[2018,2025.5]]],['APIs & scraping',[[2018,2021]]],['SQL',[[2021,NOW]]],['Python',[[2024,NOW]]],['Dataiku',[[2024.75,NOW]]],['Power Automate',[[2024.75,NOW]]]],
-  'Measure & analyze': [['Google Analytics / GA4',[[2021,NOW]]],['A/B testing',[[2021,2024]]],['Forecasting',[[2021,NOW]]],['Machine learning',[[2022,2024]]],['Campaign Manager',[[2024,NOW]]],['Meta & LinkedIn Ads',[[2024,NOW]]],['Google Ads',[[2025,NOW]]],['BrightEdge',[[2025,NOW]]]],
-  'Share & lead': [['Tableau',[[2018,NOW]]],['Training & adoption',[[2017,2018],[2024,NOW]]],['Team leadership',[[2022,NOW]]]],
+  'Skills': [['SQL',[[2021,NOW]]],['Python',[[2024,NOW]]],['APIs & scraping',[[2018,NOW]]],['A/B testing',[[2021,NOW]]],['Forecasting',[[2021,NOW]]],['Machine learning',[[2022,NOW]]],['Team leadership',[[2022,NOW]]]],
+  'Data & automation tools': [['Excel',[[2017,NOW]]],['Tableau',[[2018,NOW]]],['Alteryx',[[2018,2025.5]]],['Dataiku',[[2024.75,NOW]]],['Power Automate',[[2024.75,NOW]]],['Google Cloud (GCC)',[[2024,NOW]]]],
+  'Marketing platforms': [['Universal Analytics',[[2021,2023.5]]],['GA4',[[2023,NOW]]],['Campaign Manager',[[2024,NOW]]],['Meta & LinkedIn Ads',[[2024,NOW]]],['Google Ads',[[2025,NOW]]],['BrightEdge',[[2025,NOW]]]],
 };
 const groups = Object.fromEntries(Object.entries(TOOLS).map(([g, l]) => [g, l.map(t => t[0])]));
-const grpColor = {'Collect & prep':'var(--accent)','Measure & analyze':'var(--c-magenta)','Share & lead':'var(--heat)'};
+const grpColor = {'Skills':'var(--heat)','Data & automation tools':'var(--accent)','Marketing platforms':'var(--c-magenta)'};
 const tl = $('#toolTl');
 const shortRole = {ir:'Mktg Associate', t1:'Digital Mktg Specialist', m1:'Mktg Data Analyst', m2:'Sr Data Analyst', t2:'Sr Data Asset Mgr'};
 let tlHtml = `<div class="tl-row tl-roles"><span class="tl-name" style="cursor:default;color:var(--muted);font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase">Roles</span><div class="tl-track">${roles.map(r => `<div class="tl-role" data-role="${r.id}" title="${r.title}, ${r.co}" style="--co:var(${r.color});left:${pct(r.start)}%;width:calc(${pct(r.end) - pct(r.start)}% - 2px)">${shortRole[r.id]}</div>`).join('')}</div></div><div class="tl-body">`;
@@ -1290,7 +1290,7 @@ let tlPinned = null;
 function tlFocus(name){
   const rowsEl = tl.querySelectorAll('.tl-row[data-tool]');
   if (!name){ tl.classList.remove('focus'); rowsEl.forEach(r => r.classList.remove('on')); tl.querySelectorAll('.tl-role').forEach(r => r.classList.remove('off'));
-    $('#skillRead').textContent = 'Excel and Tableau run the whole way. Alteryx carried the middle years, and Dataiku and Power Automate took over in the current role.'; return; }
+    $('#skillRead').textContent = 'Skills stay in use from the day I pick them up. Tools come and go: Alteryx carried the middle years, and Dataiku and Power Automate took over from there.'; return; }
   const segs = Object.values(TOOLS).flat().find(t => t[0] === name)[1];
   tl.classList.add('focus'); rowsEl.forEach(r => r.classList.toggle('on', r.dataset.tool === name));
   const hit = roles.filter(r => segs.some(([a, b]) => r.start < b && r.end > a));

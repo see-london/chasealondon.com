@@ -90,6 +90,8 @@ section:last-of-type{border-bottom:0}
 .ba button{border:0;background:transparent;border-radius:999px;padding:6px 14px;font-family:var(--mono);font-size:13px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;color:var(--muted);transition:background .35s,color .35s,transform .35s}
 .ba #modeRaw[aria-pressed="true"]{background:var(--heat);color:#fff;transform:scale(1.06)}
 .ba #modeClean[aria-pressed="true"]{background:var(--accent);color:var(--bg);transform:scale(1.06)}
+.ba #lvmB[aria-pressed="true"]{background:var(--heat);color:#fff}
+.ba #lvmA[aria-pressed="true"]{background:var(--accent);color:var(--bg)}
 .pipe-top .label b{font-weight:600}
 .pipe-top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}
 .seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:2px;background:var(--surface-2)}
@@ -234,6 +236,21 @@ section:last-of-type{border-bottom:0}
 .roi-row.unused span:last-child{font-style:italic}
 .roi-note{font-size:13px;color:var(--muted);margin-top:12px}
 @media (max-width:520px){.roi-kpis{gap:6px}.roi-kpi{padding:8px}.roi-kpi b{font-size:19px}.roi-kpi span,.roi-kpi small{font-size:9.5px}.roi-cats{grid-template-columns:1fr}}
+/* ROI sources by level */
+.lvm{grid-column:1/-1;margin-top:4px;padding-top:18px;border-top:1px solid var(--line);display:grid;gap:12px}
+.lvm-top{display:flex;justify-content:space-between;gap:16px;align-items:end;flex-wrap:wrap}
+.lvm-top p{margin-top:6px;max-width:70ch;color:var(--muted);font-size:15px}
+.lvm-board{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.lvm-cols{display:grid;grid-template-columns:repeat(6,minmax(0,1fr))}
+.lvm-col{border-right:1px solid var(--line);padding:8px 8px 0;min-height:220px}
+.lvm-col:last-child{border-right:0}
+.lvm-col b{display:block;font-family:var(--display);font-size:20px;color:var(--lc)}
+.lvm-col span{font-family:var(--mono);font-size:10.5px;color:var(--muted);display:block;height:28px}
+.lvm-col i{display:block;height:3px;background:var(--lc);border-radius:2px;margin:6px 0 0}
+.lvm-chip{position:absolute;height:24px;border-radius:6px;font-size:11.5px;font-family:var(--mono);display:flex;align-items:center;padding:0 7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:color-mix(in srgb,var(--lc) 16%,var(--surface));border:1px solid color-mix(in srgb,var(--lc) 55%,transparent);color:var(--ink);transition:left .8s cubic-bezier(.4,.1,.2,1),top .8s cubic-bezier(.4,.1,.2,1),background .8s,border-color .8s}
+.lvm-count{position:absolute;bottom:8px;font-family:var(--mono);font-size:11px;color:var(--muted);text-align:center;transition:opacity .3s}
+@media (max-width:640px){.lvm-col span{font-size:0;height:4px}.lvm-chip{font-size:0;padding:0;height:14px;border-radius:4px}.lvm-col{min-height:190px}}
+
 /* levels of automation */
 .loa{grid-column:1/-1;margin-top:6px;padding-top:22px;border-top:1px solid var(--line);display:grid;gap:18px}
 .loa-head h3{margin-top:8px}
@@ -514,6 +531,17 @@ footer{padding-block:28px;font-size:13px;color:var(--muted);font-family:var(--mo
           <div class="sot-wide" id="sotWide"></div>
           <div class="sot-foot"><button class="copy-btn" id="sotAdd">Append next month</button><span class="mono" id="sotMsg"></span></div>
         </div>
+      </div>
+      <div class="lvm">
+        <div class="lvm-top">
+          <div>
+            <span class="label">The sources, graded on the Levels of Automation</span>
+            <p>Most of the dashboard's sources started as manual pulls and emailed files. Rebuilding with Dataiku, Python and Power Automate moved most of them into scheduled, connected pipelines.</p>
+          </div>
+          <div class="ba" role="group" aria-label="Before or after the rebuild"><button id="lvmB" aria-pressed="false">Before</button><button id="lvmA" aria-pressed="true">After</button></div>
+        </div>
+        <div class="lvm-board" id="lvmBoard"></div>
+        <p class="roi-note">Illustrative mix of sources, not an exact count. <a href="#p-auto" id="lvmLink">What the levels mean →</a></p>
       </div>
     </div>
 
@@ -804,7 +832,7 @@ const roles = [
   {id:'t2', co:'Trane Technologies', color:'--c-trane', start:2024, end:2026.75, title:'Senior Data Asset Manager', loc:'Davidson, NC', current:true,
    div:'Marketing Strategy & Operations, Americas',
    sum:"Came back to Trane to speed up marketing analytics across channels and campaigns, reporting to the Marketing Strategy & Operations Leader for the Americas. I own how marketing data is combined, stored and kept clean, from 20+ data pipelines across 6 brands and 4 business units to the Tableau reports leadership uses to guide spend.",
-   bullets:["Build and maintain 20+ data pipelines for 6 brands and 4 business units, feeding 15+ leadership and decision-making dashboards across e-commerce, marketing programs, site analytics and campaigns.","Rebuilt and own the Dealer ROI Dashboard for a 3,000–5,000-dealer network, built on one dealer source of truth and date key so it appends monthly and runs year over year. Managers use it to run their regions and in one-on-one dealer reviews.","Automated about 90% of the monthly dashboard refresh, which used to take multiple days of manual updates.","Set up automated national-comparison reports for independent distributors who don't have internal dashboard access.","Led my team's move from Alteryx to Dataiku as part of Trane's Dataiku Champions group: tested new features before company rollout, taught the team and was their go-to contact while they learned.","Saved the team dozens of hours a month on routine updates and scheduled flows with Dataiku (about 5 hours a week for me).","Built Power Automate → Dataiku pipelines that removed multiple days of manual work each month from recurring projects.","Led the integration of Google Ads and BrightEdge data into existing reporting, joined with GA4, Campaign Manager, Meta and LinkedIn.","Partnered with dataset owners across teams to catch and resolve upstream data issues, improving accuracy and confidence in shared reporting.","Trained about 10 marketers to use self-service analytics.","Analyze site and landing page performance for paid campaigns and present findings to marketing leadership."],
+   bullets:["Build and maintain 20+ data pipelines for 6 brands and 4 business units, feeding 15+ leadership and decision-making dashboards across e-commerce, marketing programs, site analytics and campaigns.","Rebuilt and own the Dealer ROI Dashboard for a 3,000–5,000-dealer network, built on one dealer source of truth and date key so it appends monthly and runs year over year. Managers use it to run their regions and in one-on-one dealer reviews.","Automated about 90% of the monthly dashboard refresh, which used to take multiple days of manual updates.","Set up automated national-comparison reports for independent distributors who don't have internal dashboard access.","Created a 0–5 Levels of Automation framework, modeled on self-driving car levels, giving marketing a shared way to grade data sources and prioritize what to automate next.","Led my team's move from Alteryx to Dataiku as part of Trane's Dataiku Champions group: tested new features before company rollout, taught the team and was their go-to contact while they learned.","Saved the team dozens of hours a month on routine updates and scheduled flows with Dataiku (about 5 hours a week for me).","Built Power Automate → Dataiku pipelines that removed multiple days of manual work each month from recurring projects.","Led the integration of Google Ads and BrightEdge data into existing reporting, joined with GA4, Campaign Manager, Meta and LinkedIn.","Partnered with dataset owners across teams to catch and resolve upstream data issues, improving accuracy and confidence in shared reporting.","Trained about 10 marketers to use self-service analytics.","Analyze site and landing page performance for paid campaigns and present findings to marketing leadership."],
    tools:['Dataiku','Power Automate','Alteryx','Python','Cloud','Tableau','GA4','Campaign Manager','Google Ads','Meta & LinkedIn Ads','BrightEdge','Dashboards','Training','Team leadership']},
 ];
 const T0 = 2017, T1 = 2026.75;
@@ -1149,6 +1177,36 @@ document.querySelectorAll('#loaQs .opt').forEach(b => b.onclick = () => { loaA[+
 document.querySelectorAll('#loaEx button').forEach(b => b.onclick = () => { loaA = LOAEX[+b.dataset.i][1].slice(); loaRender(); });
 document.querySelectorAll('.loa-lv').forEach(b => b.onclick = () => { const t = +b.dataset.i; const ex = LOAEX.find(([, a]) => Math.min(...a.map((o, qi) => LOAQ[qi].o[o][1])) === t); if (ex){ loaA = ex[1].slice(); loaRender(); } });
 loaRender();
+
+/* ---------- ROI SOURCES BY LEVEL ---------- */
+const LVM = [['Enrollment',0,3],['Purchases',1,4],['Financing',0,2],['Lead programs',1,3],['Warranty',0,2],['Training',0,2],['Incentives',1,2],['Distributor sales',1,4],['Dealer levels',2,4],['Partner file A',0,2],['Partner file B',1,2],['Partner file C',0,1]];
+let lvmAfter = true;
+function lvmDraw(){
+  const board = $('#lvmBoard'); if (!board.clientWidth) return;
+  if (!board.querySelector('.lvm-cols')){
+    board.innerHTML = `<div class="lvm-cols">${LOA.map((l, i) => `<div class="lvm-col" style="--lc:${LOAC[i]}"><b>${i}</b><span>${l.n}</span><i></i></div>`).join('')}</div>` + LVM.map(([n], k) => `<div class="lvm-chip" data-k="${k}" title="${n}">${n}</div>`).join('') + LOA.map((_, i) => `<div class="lvm-count" data-c="${i}"></div>`).join('');
+  }
+  const W = board.clientWidth, cw = W / 6, small = W < 560, top0 = small ? 58 : 64, rh = small ? 18 : 30;
+  const slot = [0,0,0,0,0,0];
+  LVM.forEach(([n, b, a], k) => {
+    const lv = lvmAfter ? a : b, row = slot[lv]++;
+    const el = board.querySelector(`.lvm-chip[data-k="${k}"]`);
+    el.style.left = (lv * cw + 6) + 'px'; el.style.width = (cw - 12) + 'px'; el.style.top = (top0 + row * rh) + 'px';
+    el.style.setProperty('--lc', LOAC[lv]);
+  });
+  board.querySelectorAll('.lvm-count').forEach(c => { const i = +c.dataset.c; c.style.left = (i * cw) + 'px'; c.style.width = cw + 'px'; c.textContent = slot[i] ? slot[i] + (small ? '' : slot[i] === 1 ? ' source' : ' sources') : ''; });
+  const h = Math.max(...slot) * rh + top0 + 30; board.style.minHeight = Math.max(small ? 190 : 220, h) + 'px';
+  board.querySelectorAll('.lvm-col').forEach(c => c.style.minHeight = board.style.minHeight);
+  $('#lvmB').setAttribute('aria-pressed', !lvmAfter); $('#lvmA').setAttribute('aria-pressed', lvmAfter);
+}
+$('#lvmB').onclick = () => { lvmAfter = false; lvmDraw(); };
+$('#lvmA').onclick = () => { lvmAfter = true; lvmDraw(); };
+$('#lvmLink').onclick = e => { e.preventDefault(); $('#t-auto').click(); document.querySelector('.loa').scrollIntoView({behavior: reduce ? 'auto' : 'smooth', block: 'start'}); };
+addEventListener('resize', lvmDraw);
+$('#t-roi').addEventListener('click', () => setTimeout(lvmDraw));
+// play the move once, the first time it scrolls into view
+lvmAfter = false; lvmDraw();
+new IntersectionObserver((es, ob) => es.forEach(e => { if (e.isIntersecting){ lvmDraw(); setTimeout(() => { lvmAfter = true; lvmDraw(); }, reduce ? 0 : 900); ob.disconnect(); } }), {threshold: .5}).observe($('#lvmBoard'));
 
 /* ---------- AUTOMATION DEMO ---------- */
 const autoSteps = [

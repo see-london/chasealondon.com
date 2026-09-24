@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AC Size &amp; Cost Calculator | Chase London</title>
+<meta name="description" content="Answer a few questions in simple ranges to estimate what size air conditioner your home needs, then compare good, better and best options by what they cost to own where you live.">
+<meta property="og:title" content="AC Size & Cost Calculator | Chase London">
+<meta property="og:description" content="Estimate your AC size from a few simple questions and compare good, better and best options by cost to own.">
+<meta property="og:url" content="https://chasealondon.com/btu/">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://chasealondon.com/assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://chasealondon.com/btu/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230E6A87'/%3E%3Ctext x='16' y='22' font-family='Arial' font-weight='700' font-size='15' fill='white' text-anchor='middle'%3ECL%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Public+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E6ECEB; --ink:#15212B; --muted:#56646E; --line:#D2DAD9;
+  --accent:#0E6A87; --accent-soft:#D5E8EE; --heat:#D96A22; --heat-soft:#F7E1D1;
+  --s-keep:#D96A22; --s-good:#6F7F8A; --s-better:#A8416F; --s-best:#0E6A87;
+  --display:"Bricolage Grotesque", "Avenir Next", "Segoe UI", sans-serif;
+  --body:"Public Sans", "Segoe UI", system-ui, sans-serif;
+  --mono:"JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#0D1419; --surface:#151F26; --surface-2:#1C2830; --ink:#E4EBEE; --muted:#93A3AD; --line:#2A3740;
+    --accent:#56B6D4; --accent-soft:#16333E; --heat:#F0924F; --heat-soft:#3A2518;
+    --s-keep:#F0924F; --s-good:#9AAAB4; --s-better:#D47AA2; --s-best:#56B6D4;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0D1419; --surface:#151F26; --surface-2:#1C2830; --ink:#E4EBEE; --muted:#93A3AD; --line:#2A3740;
+  --accent:#56B6D4; --accent-soft:#16333E; --heat:#F0924F; --heat-soft:#3A2518;
+  --s-keep:#F0924F; --s-good:#9AAAB4; --s-better:#D47AA2; --s-best:#56B6D4;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55;padding-inline:20px}
+.wrap{max-width:1120px;margin:0 auto}
+h1,h2,h3{font-family:var(--display);margin:0;line-height:1.1;text-wrap:balance}
+p{margin:0}
+a{color:var(--accent)}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.label{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.mono{font-family:var(--mono)}
+.nav{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);margin-inline:-20px;padding:12px 20px}
+.nav .wrap{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.brand{font-family:var(--display);font-weight:800;font-size:18px;color:var(--ink);text-decoration:none}
+.nav a.back{font-family:var(--mono);font-size:13px;color:var(--muted);text-decoration:none}
+header{padding:48px 0 28px;max-width:760px}
+header h1{font-size:clamp(34px,5vw,54px);font-weight:800;letter-spacing:-.02em;margin-top:12px}
+header p{margin-top:14px;color:var(--muted);font-size:18px}
+.layout{display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);gap:28px;align-items:start;padding-bottom:40px}
+@media (max-width:900px){.layout{grid-template-columns:1fr}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px}
+.card + .card{margin-top:16px}
+.card h2{font-size:22px;font-weight:800}
+.card .sub{color:var(--muted);font-size:14px;margin-top:4px}
+.q{margin-top:18px}
+.q .qh{display:flex;justify-content:space-between;gap:8px;align-items:baseline;font-size:15px;font-weight:600}
+.q .qh small{font-weight:400;color:var(--muted);font-size:12px;font-family:var(--mono)}
+.opts{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.opt{border:1px solid var(--line);background:var(--surface-2);border-radius:8px;padding:6px 11px;font-size:14px;cursor:pointer;color:var(--muted)}
+.opt[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);color:var(--ink);font-weight:600}
+.row2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:18px}
+.field{display:grid;gap:6px;font-size:14px;font-weight:600}
+.field input{border:1px solid var(--line);background:var(--surface-2);border-radius:8px;padding:8px 10px;font-family:var(--mono);font-size:15px;font-weight:400;width:100%}
+.field small{font-weight:400;color:var(--muted);font-size:12px}
+@media (max-width:520px){.row2{grid-template-columns:1fr}}
+.size{display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:center}
+.size .big{font-family:var(--display);font-weight:800;font-size:52px;line-height:1;font-variant-numeric:tabular-nums}
+.size .big small{font-size:20px;font-weight:600;color:var(--muted);margin-left:4px}
+.size p{color:var(--muted);font-size:14px}
+.drivers{display:grid;gap:6px;margin-top:16px}
+.drv{display:grid;grid-template-columns:120px 1fr 48px;gap:10px;align-items:center;font-size:13px}
+.drv .trk{position:relative;height:10px;background:var(--surface-2);border-radius:5px}
+.drv .trk::before{content:"";position:absolute;left:50%;top:-3px;bottom:-3px;width:1px;background:var(--line)}
+.drv .trk i{position:absolute;top:0;bottom:0;border-radius:5px}
+.drv span:last-child{font-family:var(--mono);text-align:right;color:var(--muted);font-variant-numeric:tabular-nums}
+.tiers{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:14px}
+.tier{border:1px solid var(--line);border-radius:10px;padding:12px;display:grid;gap:4px;align-content:start;background:var(--surface-2);border-top:4px solid var(--c)}
+.tier .t{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.tier b{font-family:var(--display);font-size:20px;font-weight:800}
+.tier .n{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.tier .n strong{color:var(--ink);font-weight:600}
+@media (max-width:640px){.tiers{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:2px;background:var(--surface-2)}
+.seg button{border:0;background:transparent;border-radius:999px;padding:5px 12px;font-size:13px;cursor:pointer;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgb(0 0 0/.12);font-weight:600}
+.chart-top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+#chart{width:100%;height:auto;display:block;margin-top:10px}
+.takeaway{margin-top:10px;padding:12px 14px;border-radius:10px;background:var(--accent-soft);font-size:15px}
+.cta{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;border-radius:8px;padding:10px 16px;font-weight:600;font-size:15px;text-decoration:none;cursor:pointer;border:1px solid var(--accent);background:var(--accent);color:var(--bg)}
+.cta-note{font-size:14px;color:var(--muted);flex:1;min-width:220px}
+.fine{font-size:13px;color:var(--muted);display:grid;gap:8px}
+.fine ul{margin:0;padding-left:18px;display:grid;gap:4px}
+footer{padding:20px 0 40px;font-size:13px;color:var(--muted);font-family:var(--mono);border-top:1px solid var(--line)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="wrap"><a class="brand" href="../">Chase London</a><a class="back" href="../#projects">← back to projects</a></div></nav>
+<main class="wrap">
+  <header>
+    <div class="label">Homeowner tool · rebuilt from my original proof of concept</div>
+    <h1>What size AC does your home need, and what will it cost to own?</h1>
+    <p>Answer in simple ranges, no tape measure needed. You'll get a size estimate and good, better and best options compared by what each costs to own over the years.</p>
+  </header>
+
+  <div class="layout">
+    <section class="card" aria-labelledby="qTitle">
+      <h2 id="qTitle">About your home</h2>
+      <p class="sub">Ranges are enough. Each answer adds or removes points that adjust the size.</p>
+      <div id="questions"></div>
+      <div class="row2">
+        <label class="field">ZIP code<input id="zip" inputmode="numeric" maxlength="5" value="28202" autocomplete="postal-code"><small id="zipOut"></small></label>
+        <label class="field">Electricity rate ($/kWh)<input id="rate" inputmode="decimal" value="0.15"><small>Default is the NC average. Check your bill.</small></label>
+      </div>
+    </section>
+
+    <div>
+      <section class="card" aria-live="polite">
+        <span class="label">Estimated size</span>
+        <div class="size" style="margin-top:8px">
+          <div class="big" id="tons"></div>
+          <p id="sizeNote"></p>
+        </div>
+        <div class="label" style="margin-top:18px">What's driving your size</div>
+        <div class="drivers" id="drivers"></div>
+      </section>
+
+      <section class="card">
+        <div class="chart-top">
+          <h2>Your options</h2>
+          <div class="seg" role="group" aria-label="Replacement scope">
+            <button id="scOut" aria-pressed="true">Outdoor unit</button><button id="scFull" aria-pressed="false">Full system</button>
+          </div>
+        </div>
+        <div class="tiers" id="tiers"></div>
+        <div class="chart-top" style="margin-top:20px">
+          <span class="label">Cumulative cost to own</span>
+          <div class="seg" role="group" aria-label="Years">
+            <button data-y="10" aria-pressed="false">10 yrs</button><button data-y="15" aria-pressed="true">15 yrs</button>
+          </div>
+        </div>
+        <svg id="chart" viewBox="0 0 560 300" role="img" aria-label="Cumulative cost to own each option by year"></svg>
+        <p class="takeaway" id="takeaway"></p>
+      </section>
+
+      <section class="card">
+        <div class="cta">
+          <button class="btn" id="dealerBtn">Talk to a local dealer</button>
+          <p class="cta-note" id="dealerNote">A dealer confirms the size on site with a full load calculation (Manual J).</p>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <section class="card fine" style="margin-bottom:32px">
+    <span class="label">How this works</span>
+    <ul>
+      <li><b>Sizing:</b> a points model. Home size sets the base load, and each answer adds or removes points, the same way my original version weighted factors learned from real housing data with known system sizes. This rebuild uses published rules of thumb, not that data.</li>
+      <li><b>Climate:</b> your ZIP sets a climate band (hot, mixed or cold) that adjusts the size and the hours your AC runs each year.</li>
+      <li><b>Prices:</b> installed costs are mid-range 2026 estimates for a 3-ton system, scaled by size. Outdoor unit only is estimated at 70% of a full system. Maintenance is $150 a year for a new unit. An older unit's efficiency drops about 1.5% a year while its maintenance and repair costs climb.</li>
+      <li>This is an estimate for planning, not a quote. It's a personal project and isn't affiliated with or endorsed by any manufacturer.</li>
+    </ul>
+  </section>
+</main>
+<footer class="wrap">Built by Chase London · <a href="../">chasealondon.com</a></footer>
+
+<script>
+(() => {
+const $ = s => document.querySelector(s);
+const cssv = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+/* ---- questions: [key, label, hint, options: [label, value or points]] ---- */
+const Q = [
+  {k:'sqft', label:'Home size', hint:'heated and cooled sq ft', opts:[['Under 1,000',850],['1,000–1,500',1250],['1,500–2,000',1750],['2,000–2,500',2250],['2,500–3,000',2750],['3,000–4,000',3500]], v:2},
+  {k:'ceil', label:'Ceiling height', hint:'most rooms', opts:[['Short (8 ft)',0],['Medium (9 ft)',3],['Tall (10 ft+)',6]], v:0},
+  {k:'ins', label:'Insulation', hint:'attic and walls', opts:[['Poor',5],['Average',0],['Good',-4]], v:1},
+  {k:'win', label:'Windows', hint:'amount of glass', opts:[['Few',-2],['Average',0],['Lots',4]], v:1},
+  {k:'dir', label:'Back of the house faces', hint:'afternoon sun', opts:[['North',-1],['East',0],['South',1],['West',3]], v:1},
+  {k:'shade', label:'Shade', hint:'trees and neighbors', opts:[['Mostly shaded',-3],['Some',0],['Full sun',3]], v:1},
+  {k:'occ', label:'People living there', hint:'', opts:[['1–2',0],['3–4',1],['5+',3]], v:1},
+  {k:'age', label:'Age of the home', hint:'', opts:[['Under 10 yrs',-3],['10–30 yrs',0],['30+ yrs',4]], v:1},
+  {k:'unit', label:'Age of your current AC', hint:'for the keep-it option', opts:[['Under 10 yrs',14],['10–15 yrs',12],['15+ yrs',10]], v:1},
+];
+const qBox = $('#questions');
+Q.forEach(q => {
+  const el = document.createElement('div'); el.className = 'q';
+  el.innerHTML = `<div class="qh">${q.label}<small>${q.hint}</small></div><div class="opts" role="group" aria-label="${q.label}">${q.opts.map((o, i) => `<button class="opt" data-i="${i}">${o[0]}</button>`).join('')}</div>`;
+  el.querySelectorAll('.opt').forEach(b => b.onclick = () => { q.v = +b.dataset.i; render(); });
+  q.el = el; qBox.appendChild(el);
+});
+const val = k => { const q = Q.find(x => x.k === k); return q.opts[q.v][1]; };
+
+/* ---- ZIP → state → climate band ---- */
+const zipRanges = [[10,27,'MA'],[28,29,'RI'],[30,38,'NH'],[39,49,'ME'],[50,59,'VT'],[60,69,'CT'],[70,89,'NJ'],[100,149,'NY'],[150,196,'PA'],[197,199,'DE'],[200,205,'DC'],[206,219,'MD'],[220,246,'VA'],[247,268,'WV'],[270,289,'NC'],[290,299,'SC'],[300,319,'GA'],[320,349,'FL'],[350,369,'AL'],[370,385,'TN'],[386,397,'MS'],[398,399,'GA'],[400,427,'KY'],[430,459,'OH'],[460,479,'IN'],[480,499,'MI'],[500,528,'IA'],[530,549,'WI'],[550,567,'MN'],[570,577,'SD'],[580,588,'ND'],[590,599,'MT'],[600,629,'IL'],[630,658,'MO'],[660,679,'KS'],[680,693,'NE'],[700,714,'LA'],[716,729,'AR'],[730,749,'OK'],[750,799,'TX'],[800,816,'CO'],[820,831,'WY'],[832,838,'ID'],[840,847,'UT'],[850,865,'AZ'],[870,884,'NM'],[885,885,'TX'],[889,898,'NV'],[900,961,'CA'],[967,968,'HI'],[970,979,'OR'],[980,994,'WA'],[995,999,'AK']];
+const hot = new Set(['FL','TX','LA','AZ','NV','HI','MS','AL','GA','SC']);
+const cold = new Set(['MA','RI','NH','ME','VT','CT','NY','PA','NJ','OH','IN','MI','IA','WI','MN','SD','ND','MT','IL','NE','CO','WY','ID','UT','OR','WA','AK']);
+const bands = {hot:{name:'hot', mult:1.1, hours:2000}, mixed:{name:'mixed', mult:1.0, hours:1200}, cold:{name:'cold', mult:.9, hours:700}};
+function climate(){
+  const z = $('#zip').value.replace(/\D/g, '');
+  if (z.length < 3) return {st:null, band:bands.mixed};
+  const p = +z.slice(0, 3), r = zipRanges.find(([a, b]) => p >= a && p <= b);
+  if (!r) return {st:null, band:bands.mixed};
+  const st = r[2];
+  return {st, band: hot.has(st) ? bands.hot : cold.has(st) ? bands.cold : bands.mixed};
+}
+
+/* ---- options ---- */
+const TIERS = [
+  {k:'keep', name:'Keep current', c:'--s-keep'},
+  {k:'good', name:'Good', seer:14, cost:4650, c:'--s-good'},
+  {k:'better', name:'Better', seer:17, cost:6900, c:'--s-better'},
+  {k:'best', name:'Best', seer:20, cost:11250, c:'--s-best'},
+];
+let scope = 'out', years = 15;
+const money = v => '$' + Math.round(v).toLocaleString();
+
+function compute(){
+  const cl = climate(), sq = val('sqft');
+  const pts = Q.filter(q => !['sqft','unit'].includes(q.k)).map(q => ({label:q.label, p:q.opts[q.v][1]}));
+  const total = pts.reduce((a, x) => a + x.p, 0);
+  const btu = sq * 20 * cl.band.mult * (1 + total * .025);
+  const rawTons = btu / 12000, tons = Math.min(5, Math.max(1.5, Math.ceil(rawTons * 2) / 2));
+  const rate = Math.max(.03, Math.min(1, parseFloat($('#rate').value) || .15));
+  const hours = cl.band.hours, sizeF = .75 + tons / 12, scopeF = scope === 'out' ? .7 : 1;
+  const kwh = seer => tons * 12000 * hours / (seer * 1000);
+  const curSeer = val('unit'), curAge = {14:7, 12:12, 10:17}[curSeer];
+  const series = TIERS.map(t => {
+    const pts = [0]; let cum = 0, yearOne = 0;
+    if (t.k === 'keep'){
+      for (let y = 1; y <= years; y++){
+        const eff = curSeer * Math.pow(1 - .015, curAge + y - 1);
+        const maint = 250 * Math.pow(1.12, y - 1) + (curAge + y > 15 ? 180 * (curAge + y - 15) : 0);
+        const yr = kwh(eff) * rate + maint; if (y === 1) yearOne = yr; cum += yr; pts.push(cum);
+      }
+      return {...t, up:0, yearOne, pts, total:cum};
+    }
+    const up = t.cost * sizeF * scopeF; cum = up; pts[0] = up;
+    for (let y = 1; y <= years; y++){ const yr = kwh(t.seer * Math.pow(1 - .005, y - 1)) * rate + 150; if (y === 1) yearOne = yr; cum += yr; pts.push(cum); }
+    return {...t, up, yearOne, pts, total:cum};
+  });
+  return {cl, pts, total, rawTons, tons, rate, series};
+}
+
+function render(){
+  Q.forEach(q => q.el.querySelectorAll('.opt').forEach(b => b.setAttribute('aria-pressed', +b.dataset.i === q.v)));
+  $('#scOut').setAttribute('aria-pressed', scope === 'out'); $('#scFull').setAttribute('aria-pressed', scope === 'full');
+  document.querySelectorAll('[data-y]').forEach(b => b.setAttribute('aria-pressed', +b.dataset.y === years));
+  const r = compute();
+  $('#zipOut').textContent = r.cl.st ? `${r.cl.st} · ${r.cl.band.name} climate · ~${r.cl.band.hours.toLocaleString()} cooling hrs/yr` : 'Enter a US ZIP to set your climate';
+  $('#tons').innerHTML = `${r.tons.toFixed(1)}<small>tons</small>`;
+  $('#sizeNote').textContent = r.rawTons > 5 ? `About ${r.rawTons.toFixed(1)} tons, which is more than one 5-ton system. A dealer would likely suggest two systems or zoning.` : `About ${Math.round(r.rawTons * 12000).toLocaleString()} BTU/h, rounded up to the nearest half-ton size. Size ${r.tons.toFixed(1)} is where a dealer conversation would start.`;
+  const maxP = 6;
+  $('#drivers').innerHTML = r.pts.map(x => {
+    const w = Math.abs(x.p) / maxP * 50, left = x.p >= 0 ? 50 : 50 - w;
+    return `<div class="drv"><span>${x.label}</span><div class="trk"><i style="left:${left}%;width:${Math.max(w, x.p ? 0 : 0)}%;background:${x.p > 0 ? 'var(--heat)' : 'var(--accent)'}"></i></div><span>${x.p > 0 ? '+' : ''}${x.p} pts</span></div>`;
+  }).join('') + `<div class="drv"><span><b>Net</b></span><div></div><span><b>${r.total > 0 ? '+' : ''}${r.total}</b></span></div>`;
+
+  $('#tiers').innerHTML = r.series.map(s => `<div class="tier" style="--c:var(${s.c})"><span class="t">${s.name}</span><b>${s.seer ? s.seer + ' SEER' : 'Current unit'}</b>
+    <span class="n">Upfront <strong>${s.up ? money(s.up) : '$0'}</strong></span><span class="n">Year 1 run + upkeep <strong>${money(s.yearOne)}</strong></span><span class="n">${years}-yr total <strong>${money(s.total)}</strong></span></div>`).join('');
+  drawChart(r);
+  const newOnes = r.series.filter(s => s.k !== 'keep').sort((a, b) => a.total - b.total), low = newOnes[0], keep = r.series[0];
+  const cross = keep.pts.findIndex((v, i) => v > low.pts[i]);
+  $('#takeaway').innerHTML = `Over ${years} years, <b>${low.name}</b> (${low.seer} SEER) is the lowest-cost new option here at ${money(low.total)}. ` +
+    (cross > 0 ? `Keeping your current unit costs more than ${low.name} after about <b>${cross} year${cross > 1 ? 's' : ''}</b>, as its efficiency drops and repairs add up.` : `Keeping your current unit stays cheaper over this window, but its repair risk keeps climbing.`) +
+    ` Higher efficiency pays off faster in hot climates and with higher electric rates, so try your own rate.`;
+}
+
+function drawChart(r){
+  const W = 560, H = 300, L = 62, R = 104, T = 14, B = 34;
+  const maxV = Math.max(...r.series.flatMap(s => s.pts)) * 1.05;
+  const x = y => L + y / years * (W - L - R), yv = v => T + (1 - v / maxV) * (H - T - B);
+  const line = cssv('--line'), muted = cssv('--muted');
+  let h = '';
+  const step = maxV > 40000 ? 10000 : 5000;
+  for (let v = 0; v <= maxV; v += step) h += `<line x1="${L}" x2="${W - R}" y1="${yv(v)}" y2="${yv(v)}" stroke="${line}"/><text x="${L - 8}" y="${yv(v) + 4}" text-anchor="end" font-size="13" font-family="JetBrains Mono, monospace" fill="${muted}">$${v / 1000}k</text>`;
+  for (let y = 0; y <= years; y += 5) h += `<text x="${x(y)}" y="${H - 12}" text-anchor="middle" font-size="13" font-family="JetBrains Mono, monospace" fill="${muted}">yr ${y}</text>`;
+  const ends = [];
+  r.series.forEach(s => {
+    const c = cssv(s.c);
+    h += `<polyline fill="none" stroke="${c}" stroke-width="2.5" stroke-linejoin="round" points="${s.pts.map((v, i) => x(i).toFixed(1) + ',' + yv(v).toFixed(1)).join(' ')}"/>`;
+    ends.push({y: yv(s.total), c, t: s.name});
+  });
+  ends.sort((a, b) => a.y - b.y); for (let i = 1; i < ends.length; i++) if (ends[i].y - ends[i - 1].y < 14) ends[i].y = ends[i - 1].y + 14;
+  ends.forEach(e => h += `<text x="${W - R + 8}" y="${e.y + 4}" font-size="14" font-weight="600" font-family="Public Sans, sans-serif" fill="${e.c}">${e.t}</text>`);
+  $('#chart').innerHTML = h;
+}
+
+$('#zip').addEventListener('input', render); $('#rate').addEventListener('input', render);
+$('#scOut').onclick = () => { scope = 'out'; render(); }; $('#scFull').onclick = () => { scope = 'full'; render(); };
+document.querySelectorAll('[data-y]').forEach(b => b.onclick = () => { years = +b.dataset.y; render(); });
+$('#dealerBtn').onclick = () => { $('#dealerNote').textContent = 'In a production version, this button sends your answers and chosen option to a local dealer, so the quote starts from what you already told us instead of from scratch.'; };
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', render);
+render();
+})();
+</script>
+</body>
+</html>

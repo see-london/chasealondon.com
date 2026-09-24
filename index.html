@@ -139,6 +139,13 @@ section:last-of-type{border-bottom:0}
 .flag{display:inline-block;font-family:var(--mono);font-size:11px;background:var(--heat-soft);color:var(--heat);border-radius:4px;padding:2px 6px;margin-left:6px;vertical-align:middle;letter-spacing:.04em}
 @media (max-width:880px){.proj{grid-template-columns:1fr}}
 
+/* call tracking demo */
+.call-bars{display:grid;gap:10px;margin-top:18px}
+.call-row{display:grid;grid-template-columns:110px 1fr 70px;gap:10px;align-items:center;font-size:13px;font-variant-numeric:tabular-nums}
+.call-track{height:22px;background:var(--surface-2);border-radius:5px;display:flex;overflow:hidden}
+.call-track i{display:block;height:100%;transition:width .3s}
+.call-row span:last-child{font-family:var(--mono);text-align:right}
+@media (max-width:520px){.call-row{grid-template-columns:80px 1fr 56px}}
 /* dealer roi demo */
 .roi-top{display:flex;justify-content:space-between;align-items:end;gap:12px;flex-wrap:wrap}
 .roi-top select{font:inherit;font-size:14px;padding:7px 10px;border:1px solid var(--line);border-radius:6px;background:var(--surface-2);color:var(--ink);min-width:210px}
@@ -331,6 +338,7 @@ footer{padding-block:28px;font-size:13px;color:var(--muted);font-family:var(--mo
       <button class="tab" role="tab" aria-selected="false" aria-controls="p-auto" id="t-auto">Reporting automation</button>
       <button class="tab" role="tab" aria-selected="false" aria-controls="p-model" id="t-model">Marketing data model</button>
       <button class="tab" role="tab" aria-selected="false" aria-controls="p-loc" id="t-loc">Dealer locator</button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="p-call" id="t-call">Call tracking</button>
       <button class="tab" role="tab" aria-selected="false" aria-controls="p-btu" id="t-btu">BTU calculator</button>
       <button class="tab" role="tab" aria-selected="false" aria-controls="p-ab" id="t-ab">A/B testing</button>
     </div>
@@ -429,19 +437,43 @@ footer{padding-block:28px;font-size:13px;color:var(--muted);font-family:var(--mo
       </div>
     </div>
 
+    <!-- call tracking -->
+    <div class="proj" role="tabpanel" id="p-call" aria-labelledby="t-call" hidden>
+      <div>
+        <h3>Fewer calls, better leads</h3>
+        <div class="where">Magenta Technologies (a Trane venture) · 2022–2024</div>
+        <div class="psa">
+          <div><span class="label">Problem</span><p>To connect website visits to dealer phone calls, every session gets its own tracking number. We moved from a vendor pool of millions of numbers to our own Twilio setup with only a few thousand that rotate. Call volume dropped hard, and the question was whether we'd lost real customers.</p></div>
+          <div><span class="label">What I did</span><p>The rotation logic was built by developers; I owned the analysis. I compared call patterns, durations and completion before and after the switch to find out who the "lost" callers actually were.</p></div>
+          <div><span class="label">Result</span><p>The lost calls were almost all bots, random dials and people who weren't looking for a dealer. Hitting a number from a small pool by chance is far less likely. Dealer call completion improved and average call time went from under 30 seconds to about a minute. It changed how the business defines a healthy call volume.</p></div>
+        </div>
+      </div>
+      <div class="demo">
+        <p class="demo-cap">Change the size of the number pool and watch what happens to junk calls and call quality. <span class="flag">ILLUSTRATIVE</span></p>
+        <div class="ctrl">
+          <div class="ctrl-row"><label for="pool">Tracking numbers in the pool</label><span class="mono" id="poolOut"></span></div>
+          <input type="range" id="pool" min="3" max="6" step="0.05" value="6">
+        </div>
+        <div class="call-bars" id="callBars"></div>
+        <div class="kv" id="callKv"></div>
+        <p class="roi-note">Numbers are illustrative and only show the direction of the real result. No internal data is shown.</p>
+      </div>
+    </div>
+
     <!-- btu -->
     <div class="proj" role="tabpanel" id="p-btu" aria-labelledby="t-btu" hidden>
       <div>
         <h3>A BTU calculator for homeowners</h3>
         <div class="where">Magenta Technologies (a Trane venture) · 2022–2024</div>
         <div class="psa">
-          <div><span class="label">Problem</span><p>Most homeowners have no idea what size system they need, and that uncertainty stalls them before they ever call a dealer.</p></div>
-          <div><span class="label">What I did</span><p>Researched, built and developed a BTU calculator for the website with dealers, the Trane team, engineering and developers.</p></div>
-          <div><span class="label">Result</span><p>Shoppers get a starting number and arrive at the dealer conversation with better context.</p></div>
+          <div><span class="label">Problem</span><p>Most homeowners have no idea what size system they need, and that uncertainty stalls them before they ever call a dealer. The official load calculations need details a shopper doesn't have.</p></div>
+          <div><span class="label">What I did</span><p>Researched how dealers size systems, then pushed to get real-world housing listing data with known system types. I used machine learning to weight each factor (square footage, ceilings, insulation, windows, orientation, occupants, age) into a points system. Homeowners answer in simple ranges instead of exact numbers. The output was good, better and best options (14, 17 and 20 SEER) with a cost-to-own chart using local weather and energy prices, plus a call-a-dealer button.</p></div>
+          <div><span class="label">Result</span><p>The proof of concept became the base developers built the website tool from. I've rebuilt my version as a working calculator on this site.</p></div>
+          <div><a class="btn primary" href="btu/">Open the full calculator →</a></div>
         </div>
       </div>
       <div class="demo">
-        <p class="demo-cap">A rule-of-thumb version. Real sizing uses a Manual J load calculation done by a dealer. <span class="flag">SIMPLIFIED</span></p>
+        <p class="demo-cap">Quick rule-of-thumb preview. The <a href="btu/">full calculator</a> adds range-based questions, good/better/best options and a cost-to-own chart. <span class="flag">SIMPLIFIED</span></p>
         <div class="field">
           <div class="ctrl-row"><label for="sqft">Home size</label><span class="mono" id="sqftOut"></span></div>
           <input type="range" id="sqft" min="600" max="4000" step="50" value="1800">
@@ -573,7 +605,7 @@ const roles = [
   {id:'m2', co:'Magenta Technologies', color:'--c-magenta', start:2022, end:2024, title:'Senior Data Analyst', loc:'Fort Mill, SC',
    div:'Data Delivery & Technical Solutions, Residential HVAC', promo:true,
    sum:"Promoted to senior analyst on a three-person analytics team. I owned the team's data strategy and website metrics and was the main data contact for partners and adjacent teams.",
-   bullets:["Designed the dealer locator's ranking score from customer feedback, response speed, Google reviews and dealer level, so the best-fit dealer shows first in each ZIP code.","Found that locator searches were logged on page load, removing thousands of false frustrated-search data points. That led to simpler ranking, a three-dealer minimum and a now-live general contact card.","Led analysis of the move from a pooled call-tracking system to Twilio. The lost calls were almost all bots and non-customers, and average dealer call time doubled from under 30 seconds to about a minute.","Designed the BTU Calculator proof of concept that developers built the website tool from.","Applied machine learning and third-party data to customer behavior analysis."],
+   bullets:["Designed the dealer locator's ranking score from customer feedback, response speed, Google reviews and dealer level, so the best-fit dealer shows first in each ZIP code.","Found that locator searches were logged on page load, removing thousands of false frustrated-search data points. That led to simpler ranking, a three-dealer minimum and a now-live general contact card.","Led analysis of the move from a pooled call-tracking system to Twilio. The lost calls were almost all bots and non-customers, and average dealer call time doubled from under 30 seconds to about a minute.","Designed the BTU Calculator proof of concept, weighting sizing factors with machine learning on real housing data, with good/better/best options and local cost-to-own. Developers built the website tool from it.","Applied machine learning and third-party data to customer behavior analysis."],
    tools:['Team leadership','Machine learning','Forecasting','A/B testing','Web analytics','Dashboards']},
   {id:'t2', co:'Trane Technologies', color:'--c-trane', start:2024, end:2026.75, title:'Senior Data Asset Manager', loc:'Davidson, NC', current:true,
    div:'Marketing Strategy & Operations, Americas',
@@ -816,6 +848,20 @@ function renderLoc(){
 rad.addEventListener('input', renderLoc);
 svg.addEventListener('click', e => { const b = svg.getBoundingClientRect(); home[0] = (e.clientX - b.left) / b.width * 400; home[1] = (e.clientY - b.top) / b.height * 260; renderLoc(); });
 renderLoc();
+
+/* ---------- CALL TRACKING DEMO ---------- */
+function renderCall(){
+  const lg = +$('#pool').value, pool = Math.round(Math.pow(10, lg));
+  $('#poolOut').textContent = pool >= 1e6 ? (pool / 1e6).toFixed(1) + 'M' : pool.toLocaleString();
+  const real = 1000, junk = Math.round(1500 * Math.pow(pool / 1e6, 0.42));
+  const total = real + junk, dur = (real * 62 + junk * 8) / total;
+  const max = 2600;
+  const row = (lab, parts, val) => `<div class="call-row"><span>${lab}</span><div class="call-track">${parts.map(([v, c]) => `<i style="width:${v / max * 100}%;background:${c}"></i>`).join('')}</div><span>${val}</span></div>`;
+  $('#callBars').innerHTML = row('Calls / month', [[real, 'var(--accent)'], [junk, 'var(--heat)']], total.toLocaleString()) +
+    '<div class="a-key"><span><b style="background:var(--accent)"></b>real customers</span><span><b style="background:var(--heat)"></b>bots and random dials</span></div>';
+  $('#callKv').innerHTML = `<div><span class="label">Junk share</span><b>${Math.round(junk / total * 100)}%</b></div><div><span class="label">Avg call time</span><b>${Math.round(dur)} s</b></div><div><span class="label">Real leads</span><b>${real.toLocaleString()}</b></div>`;
+}
+$('#pool').addEventListener('input', renderCall); renderCall();
 
 /* ---------- BTU DEMO ---------- */
 const btuFields = [

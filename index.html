@@ -309,6 +309,27 @@ input[type=range]{width:100%;accent-color:var(--accent)}
 .edu div{display:grid;gap:6px;border-top:1px solid var(--line);padding-top:12px}
 .edu p{font-size:15px;max-width:52ch}
 @media (max-width:820px){.edu{grid-template-columns:1fr;gap:16px}}
+/* tools timeline */
+.tl{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px 20px 12px;display:grid;gap:3px}
+.tl-row{display:grid;grid-template-columns:170px 1fr;gap:14px;align-items:center}
+.tl-name{font-size:14px;line-height:1.2;text-align:left;background:none;border:0;padding:3px 0;cursor:pointer;color:var(--ink);font:inherit;font-size:14px}
+.tl-track{position:relative;height:22px}
+.tl-grid{position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 calc(10.2564% - 1px),var(--line) calc(10.2564% - 1px) 10.2564%);opacity:.6}
+.tl-seg{position:absolute;top:5px;bottom:5px;border-radius:6px;background:var(--gc);opacity:.75;transition:opacity .2s}
+.tl-seg.open::after{content:"";position:absolute;right:-6px;top:50%;border:5px solid transparent;border-left-color:var(--gc);transform:translateY(-50%)}
+.tl-grp{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-top:12px;padding-bottom:2px}
+.tl-roles .tl-track{height:30px}
+.tl-role{position:absolute;top:3px;bottom:3px;border-radius:5px;background:color-mix(in srgb,var(--co) 22%,var(--surface));border-left:3px solid var(--co);font-size:10.5px;font-family:var(--mono);color:var(--ink);padding:0 5px;display:flex;align-items:center;overflow:hidden;white-space:nowrap;transition:opacity .2s}
+.tl-axis .tl-track{height:16px}
+.tl-axis .tl-track span{position:absolute;transform:translateX(-50%);font-family:var(--mono);font-size:11px;color:var(--muted)}
+.tl-band{position:absolute;top:0;bottom:0;background:color-mix(in srgb,var(--accent) 10%,transparent);border-left:1.5px dashed var(--accent);border-right:1.5px dashed var(--accent);pointer-events:none;display:none}
+.tl.focus .tl-row[data-tool] .tl-seg{opacity:.18}
+.tl.focus .tl-row.on .tl-seg{opacity:1}
+.tl.focus .tl-row.on .tl-name{font-weight:700;color:var(--accent)}
+.tl.focus .tl-role.off{opacity:.3}
+.tl-body{position:relative;display:grid;gap:3px}
+@media (max-width:640px){.tl{padding:14px 12px 10px}.tl-row{grid-template-columns:104px 1fr;gap:8px}.tl-name{font-size:12.5px}.tl-role{font-size:0;padding:0}.tl-axis .tl-track span{font-size:9.5px}}
+
 /* off hours */
 .off{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
 .off article{padding-top:14px;border-top:2px solid var(--ink);display:grid;gap:8px;align-content:start}
@@ -641,11 +662,11 @@ footer{padding-block:28px;font-size:13px;color:var(--muted);font-family:var(--mo
   <section id="skills">
     <div class="sec-head">
       <div class="label">Toolkit</div>
-      <h2>Tools grouped by the job they do.</h2>
-      <p>Pick a skill to see where I've used it. The career chart above updates to match.</p>
+      <h2>How my toolkit grew with each role.</h2>
+      <p>Each bar shows the years I've used a tool, lined up against my roles. Hover or tap a tool to see where it overlaps.</p>
     </div>
-    <div class="skills" id="skillGroups"></div>
-    <div class="skill-read" id="skillRead" aria-live="polite">Pick a skill to trace it through my career.</div>
+    <div class="tl" id="toolTl"></div>
+    <div class="skill-read" id="skillRead" aria-live="polite">Excel and Tableau run the whole way. Alteryx carried the middle years, and Dataiku and Power Automate took over in the current role.</div>
     <div class="edu">
       <div><span class="label">Education</span><p><b>UNC Charlotte</b>: double major in Marketing and Management, plus Marketing Analytics coursework.</p></div>
       <div><span class="label">Training</span><p>Tableau, Alteryx and Dataiku courses. Member of Trane's Dataiku Champions group. Most of what I know came from building for real team needs.</p></div>
@@ -1244,25 +1265,47 @@ function renderAB(){
 }
 ['nA','cA','nB','cB'].forEach(id => $('#'+id).addEventListener('input', renderAB)); renderAB();
 
-/* ---------- SKILLS ---------- */
-const groups = {
-  'Collect & prep': ['Dataiku','Power Automate','Alteryx','Python','SQL','APIs & scraping','Cloud'],
-  'Measure & analyze': ['GA4','Web analytics','Campaign Manager','Google Ads','Meta & LinkedIn Ads','BrightEdge','A/B testing','Forecasting','Machine learning'],
-  'Share & enable': ['Tableau','Dashboards','Excel','Training','Team leadership'],
+/* ---------- TOOLS TIMELINE ---------- */
+const NOW = T1;
+const TOOLS = {
+  'Collect & prep': [['Excel',[[2017,NOW]]],['Alteryx',[[2018,2025.5]]],['APIs & scraping',[[2018,2021]]],['SQL',[[2021,NOW]]],['Python',[[2024,NOW]]],['Dataiku',[[2024.75,NOW]]],['Power Automate',[[2024.75,NOW]]]],
+  'Measure & analyze': [['Google Analytics / GA4',[[2021,NOW]]],['A/B testing',[[2021,2024]]],['Forecasting',[[2021,NOW]]],['Machine learning',[[2022,2024]]],['Campaign Manager',[[2024,NOW]]],['Meta & LinkedIn Ads',[[2024,NOW]]],['Google Ads',[[2025,NOW]]],['BrightEdge',[[2025,NOW]]]],
+  'Share & lead': [['Tableau',[[2018,NOW]]],['Training & adoption',[[2017,2018],[2024,NOW]]],['Team leadership',[[2022,NOW]]]],
 };
-const sg = $('#skillGroups'); let curSkill = null;
-Object.entries(groups).forEach(([g, list]) => {
-  const col = document.createElement('div'); col.innerHTML = `<h3>${g}</h3>`;
-  list.forEach(s => { const b = document.createElement('button'); b.className = 'skill'; b.textContent = s; b.setAttribute('aria-pressed','false'); b.onclick = () => pickSkill(s === curSkill ? null : s); col.appendChild(b); });
-  sg.appendChild(col);
+const groups = Object.fromEntries(Object.entries(TOOLS).map(([g, l]) => [g, l.map(t => t[0])]));
+const grpColor = {'Collect & prep':'var(--accent)','Measure & analyze':'var(--c-magenta)','Share & lead':'var(--heat)'};
+const tl = $('#toolTl');
+const shortRole = {ir:'Mktg Associate', t1:'Digital Mktg Specialist', m1:'Mktg Data Analyst', m2:'Sr Data Analyst', t2:'Sr Data Asset Mgr'};
+let tlHtml = `<div class="tl-row tl-roles"><span class="tl-name" style="cursor:default;color:var(--muted);font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase">Roles</span><div class="tl-track">${roles.map(r => `<div class="tl-role" data-role="${r.id}" title="${r.title}, ${r.co}" style="--co:var(${r.color});left:${pct(r.start)}%;width:calc(${pct(r.end) - pct(r.start)}% - 2px)">${shortRole[r.id]}</div>`).join('')}</div></div><div class="tl-body">`;
+Object.entries(TOOLS).forEach(([g, list]) => {
+  tlHtml += `<div class="tl-grp">${g}</div>`;
+  list.forEach(([name, segs]) => {
+    tlHtml += `<div class="tl-row" data-tool="${name}"><button class="tl-name">${name}</button><div class="tl-track"><div class="tl-grid"></div>${segs.map(([a, b]) => `<div class="tl-seg ${b >= NOW ? 'open' : ''}" style="--gc:${grpColor[g]};left:${pct(a)}%;width:${pct(b) - pct(a)}%"></div>`).join('')}</div></div>`;
+  });
 });
-function pickSkill(s){
-  curSkill = s;
-  sg.querySelectorAll('.skill').forEach(b => b.setAttribute('aria-pressed', b.textContent === s));
-  const used = s ? roles.filter(r => r.tools.includes(s)) : roles;
-  gantt.querySelectorAll('.g-row').forEach(row => { const on = !s || used.some(r => r.id === row.dataset.id); row.classList.toggle('dim', !on); row.querySelector('.g-bar').classList.toggle('dim', !on); });
-  $('#skillRead').innerHTML = s ? `<b>${s}</b>: used in ${used.length} of ${roles.length} roles (${used.map(r => r.title + ', ' + r.start).join('; ')}). <a href="#career">See it on the career chart ↑</a>` : 'Pick a skill to trace it through my career.';
+tlHtml += `</div><div class="tl-row tl-axis"><div></div><div class="tl-track">${[2017,2019,2021,2023,2025].map(y => `<span style="left:${pct(y)}%">${y}</span>`).join('')}<span style="left:97%">now</span></div></div>`;
+tl.innerHTML = tlHtml;
+const yr = v => v >= NOW ? 'now' : Math.floor(v);
+let tlPinned = null;
+function tlFocus(name){
+  const rowsEl = tl.querySelectorAll('.tl-row[data-tool]');
+  if (!name){ tl.classList.remove('focus'); rowsEl.forEach(r => r.classList.remove('on')); tl.querySelectorAll('.tl-role').forEach(r => r.classList.remove('off'));
+    $('#skillRead').textContent = 'Excel and Tableau run the whole way. Alteryx carried the middle years, and Dataiku and Power Automate took over in the current role.'; return; }
+  const segs = Object.values(TOOLS).flat().find(t => t[0] === name)[1];
+  tl.classList.add('focus'); rowsEl.forEach(r => r.classList.toggle('on', r.dataset.tool === name));
+  const hit = roles.filter(r => segs.some(([a, b]) => r.start < b && r.end > a));
+  tl.querySelectorAll('.tl-role').forEach(el => el.classList.toggle('off', !hit.some(r => r.id === el.dataset.role)));
+  const span = segs.map(([a, b]) => `${yr(a)}–${yr(b)}`).join(' and ');
+  $('#skillRead').innerHTML = `<b>${name}</b> · ${span} · used as ${hit.map(r => r.title).join(', ')}.`;
 }
+tl.querySelectorAll('.tl-row[data-tool]').forEach(row => {
+  const n = row.dataset.tool;
+  row.addEventListener('mouseenter', () => { if (!tlPinned) tlFocus(n); });
+  row.addEventListener('mouseleave', () => { if (!tlPinned) tlFocus(null); });
+  row.addEventListener('click', e => { e.stopPropagation(); tlPinned = tlPinned === n ? null : n; tlFocus(tlPinned); });
+  row.style.cursor = 'pointer';
+});
+document.addEventListener('click', e => { if (tlPinned && !tl.contains(e.target)){ tlPinned = null; tlFocus(null); } });
 
 /* ---------- HOW I WORK LINKS ---------- */
 document.querySelectorAll('.how-card').forEach(c => c.addEventListener('click', () => { $('#' + c.dataset.tab).click(); $('#projects').scrollIntoView({behavior: reduce ? 'auto' : 'smooth'}); }));

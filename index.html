@@ -441,14 +441,14 @@ footer{padding-block:28px;font-size:13px;color:var(--muted);font-family:var(--mo
     </div>
     <div class="pipe">
       <div class="pipe-top">
-        <span class="label">Four problems I've solved</span>
+        <span class="label">Highlights</span>
         <div class="ba" role="group" aria-label="Before or after">
           <button id="modeRaw" aria-pressed="false">before</button>
           <button id="modeClean" aria-pressed="true">after</button>
         </div>
       </div>
       <div class="cases" role="group" aria-label="Pick a problem" id="caseBtns"></div>
-      <canvas id="pipeCanvas" aria-label="Animated diagram of the selected project: its data inputs flow through the solution I designed into the results"></canvas>
+      <canvas id="pipeCanvas" aria-label="Animated before-and-after view of the selected highlight"></canvas>
       <p class="pipe-cap"><span id="pipeCap"></span> <a href="#projects" id="pipeLink">See the project →</a></p>
     </div>
   </section>
@@ -875,18 +875,21 @@ const CASES = [
    out:{raw:['1 year at a time','days to refresh','no distributor view'], clean:['future-proof','90% automated','3,000+ dealers']},
    cap:{raw:'Before: a separate table for every source, rebuilt every year. The dashboard could only show one year, and each refresh took days.',
         clean:'After: every source tied to one dealer source of truth and a date. Data appends monthly, so it runs year after year, and it covers 3,000+ dealers.'}},
+  {id:'loa', kind:'levels', name:'Automation levels', tab:'t-auto', scroll:'.loa',
+   cap:{raw:'Before: most of the dealer ROI sources needed someone to request, download or load them by hand, at Levels 0 and 1.',
+        clean:'After: graded on a 0–5 framework I created, most sources now run through scheduled, connected pipelines at Levels 2–4, and marketing has a shared way to decide what to automate next.'}},
+  {id:'auto', kind:'flow', name:'Pipelines', tab:'t-auto',
+   src:['Exports','Alteryx flows','Emailed files','Manual QA','Tableau refresh'],
+   hub:{raw:['hands-on','every cycle'], clean:['designed to','run itself']},
+   out:{raw:['days of work','hard to scale','manual checks'], clean:['15+ decision dashboards','20+ pipelines','~5 hrs/week back']},
+   cap:{raw:'Before: recurring reports needed hands-on steps every cycle, which made them slow to refresh and hard to scale as demand grew.',
+        clean:'After: I redesigned recurring reporting end to end, from collecting files to checks and publishing, so it runs on schedule. 20+ pipelines across 6 brands and 4 BUs now feed 15+ dashboards leadership uses to make decisions.'}},
   {id:'loc', kind:'map', name:'Dealer locator', tab:'t-loc',
    cap:{raw:'Before: dealers were ranked by distance only, and the site logged a "search" every time the page loaded, which looked like homeowners searching again and again.',
         clean:'After: dealers are ranked by a score built from customer feedback, response speed, reviews and dealer level. Page-load noise was removed from the data, and there are always three choices.'}},
   {id:'call', kind:'funnel', name:'Call tracking', tab:'t-call',
    cap:{raw:'Before: millions of tracking numbers. Bots and random dials padded call volume, and only about 1 in 275 calls became a win.',
         clean:'After: a few thousand rotating numbers. Calls fell about 80%, wins held flat, and about 1 in 50 calls now becomes a win.'}},
-  {id:'auto', kind:'flow', name:'Automation', tab:'t-auto',
-   src:['Exports','Alteryx flows','Emailed files','Manual QA','Tableau refresh'],
-   hub:{raw:['hands-on','every cycle'], clean:['designed to','run itself']},
-   out:{raw:['days of work','hard to scale','manual checks'], clean:['15+ decision dashboards','20+ pipelines','~5 hrs/week back']},
-   cap:{raw:'Before: recurring reports needed hands-on steps every cycle, which made them slow to refresh and hard to scale as demand grew.',
-        clean:'After: I redesigned recurring reporting end to end, from collecting files to checks and publishing, so it runs on schedule. 20+ pipelines across 6 brands and 4 BUs now feed 15+ dashboards leadership uses to make decisions.'}},
 ];
 let ci = 0, mode = reduce ? 'clean' : 'raw', mix = reduce ? 1 : 0, W = 0, H = 0, parts = [], auto = !reduce, timer = null;
 const cur = () => CASES[ci];
@@ -984,6 +987,29 @@ function drawMap(time, k){
   ctx.fillStyle = k.muted; ctx.font = mono(fs - 1); ctx.fillText('homeowner', 24, H - 13.5);
 }
 
+/* --- levels: sources moving up the automation scale --- */
+function drawLevels(time, k){
+  const small = W < 480, fs = small ? 9 : 11, cw = W / 6, top = small ? 44 : 50, rh = small ? 17 : 22, ch = small ? 12 : 17;
+  ctx.textBaseline = 'middle';
+  LOA.forEach((l, i) => {
+    const x = i * cw;
+    if (i) { ctx.strokeStyle = k.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
+    ctx.fillStyle = LOAC[i]; ctx.font = disp(small ? 16 : 20); ctx.textAlign = 'left'; ctx.fillText(i, x + 6, 12);
+    if (!small){ ctx.font = mono(fs - 1); ctx.fillStyle = k.muted; ctx.fillText(l.n, x + 6, 30); }
+    ctx.fillStyle = LOAC[i]; ctx.fillRect(x + 6, top - 8, cw - 12, 2.5);
+  });
+  const sb = [0,0,0,0,0,0], sa = [0,0,0,0,0,0];
+  LVM.forEach(([n, b, a]) => {
+    const rb = sb[b]++, ra = sa[a]++;
+    const x = lerp(b, a, mix) * cw + 5, y = top + lerp(rb, ra, mix) * rh, lv = mix < .5 ? b : a;
+    ctx.fillStyle = LOAC[lv]; ctx.globalAlpha = .2; ctx.beginPath(); ctx.roundRect(x, y, cw - 10, ch, 4); ctx.fill();
+    ctx.globalAlpha = 1; ctx.strokeStyle = LOAC[lv]; ctx.lineWidth = 1; ctx.stroke();
+    if (!small){ ctx.fillStyle = k.ink; ctx.font = mono(fs - 1); ctx.textAlign = 'left'; ctx.save(); ctx.beginPath(); ctx.rect(x, y, cw - 14, ch); ctx.clip(); ctx.fillText(n, x + 5, y + ch / 2 + .5); ctx.restore(); }
+  });
+  const cnt = mix < .5 ? sb : sa;
+  cnt.forEach((c, i) => { if (c){ ctx.fillStyle = k.muted; ctx.font = mono(fs); ctx.textAlign = 'center'; ctx.fillText(c + (small ? '' : c === 1 ? ' source' : ' sources'), i * cw + cw / 2, H - 10); } });
+}
+
 /* --- funnel: junk calls vs wins --- */
 const FUN = {calls:[110000,21000], junk:[88000,2500], leads:[7000,4400], wins:[400,400]};
 function drawFunnel(time, k){
@@ -1019,7 +1045,7 @@ function draw(time){
   { const tgt = mode === 'clean' ? 1 : 0; mix += (tgt - mix) * (reduce ? 1 : .12); if (Math.abs(tgt - mix) < .01) mix = tgt; }
   ctx.clearRect(0,0,W,H);
   const kind = cur().kind;
-  if (kind === 'flow') drawFlow(time, k); else if (kind === 'map') drawMap(time, k); else drawFunnel(time, k);
+  if (kind === 'flow') drawFlow(time, k); else if (kind === 'map') drawMap(time, k); else if (kind === 'levels') drawLevels(time, k); else drawFunnel(time, k);
   if (!reduce) requestAnimationFrame(draw);
 }
 function refresh(){
@@ -1033,7 +1059,7 @@ function refresh(){
 function setCase(i){ ci = i; resetParts(); refresh(); }
 function setMode(m){ mode = m; refresh(); }
 $('#modeRaw').onclick = () => { stopAuto(); setMode('raw'); }; $('#modeClean').onclick = () => { stopAuto(); setMode('clean'); };
-$('#pipeLink').onclick = e => { e.preventDefault(); $('#' + cur().tab).click(); $('#projects').scrollIntoView({behavior: reduce ? 'auto' : 'smooth'}); };
+$('#pipeLink').onclick = e => { e.preventDefault(); $('#' + cur().tab).click(); document.querySelector(cur().scroll || '#projects').scrollIntoView({behavior: reduce ? 'auto' : 'smooth'}); };
 size(); resetParts(); refresh(); requestAnimationFrame(draw);
 function stopAuto(){ auto = false; clearTimeout(timer); caseBox.querySelectorAll('.case').forEach(b => b.classList.remove('timing')); }
 function startBar(){ caseBox.querySelectorAll('.case').forEach((b, i) => { b.classList.remove('timing'); if (i === ci){ void b.offsetWidth; b.classList.add('timing'); } }); }

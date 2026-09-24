@@ -387,7 +387,9 @@ input[type=range]{width:100%;accent-color:var(--accent)}
 @media (max-width:640px){.tl{padding:14px 12px 10px}.tl-row{grid-template-columns:104px 1fr;gap:8px}.tl-name{font-size:12.5px}.tl-role{font-size:0;padding:0}.tl-axis .tl-track span{font-size:9.5px}}
 
 /* off hours */
-.off{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.off{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:16px}
+.off-link-ext{font-family:var(--mono);font-size:12px;text-decoration:none}
+@media (max-width:1080px){.off{grid-template-columns:repeat(3,minmax(0,1fr))}}
 .off article{padding-top:14px;border-top:2px solid var(--ink);display:grid;gap:8px;align-content:start}
 .off p{font-size:15px;color:var(--muted)}
 .off-link{font-family:var(--mono);font-size:12px;text-decoration:none}
@@ -771,6 +773,7 @@ footer{padding-block:28px;font-size:13px;color:var(--muted);font-family:var(--mo
       <article><span class="label">Volunteer</span><h3>Church Finance Chair</h3><p>I turn accounting exports into a monthly report package our leaders can actually read, and I help plan the budget. Same job as my day job, different data.</p><a class="off-link" href="#projects" data-tab="t-fin">See the project →</a></article>
       <article><span class="label">Hands-on</span><h3>Building things</h3><p>Furniture from raw lumber, truck mods, yard and landscaping projects, and small Arduino electronics. If I don't know how to do something yet, that's usually why I try it.</p></article>
       <article><span class="label">Outdoors</span><h3>Mountain biking</h3><p>Time on the trails is how I reset. There's always a cleaner line to find on the next run.</p></article>
+      <article><span class="label">Games</span><h3>Incremental games</h3><p>I love games where you start by hand and automate your way up. So I built one about my day job: drag files, clean them, ship them, then buy tools until the pipeline runs itself.</p><a class="off-link-ext" href="pipeline/">Play Pipeline Clicker →</a></article>
       <article><span class="label">Fuel</span><h3>Coffee and pizza</h3><p>Before buying an espresso machine, I built a payoff calculator to see when it would beat the coffee shop. Out back, the pizza oven is my other test kitchen: dough, heat and timing, adjusted one variable at a time until the 'za is right.</p></article>
     </div>
   </section>

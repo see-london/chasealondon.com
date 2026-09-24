@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pipeline Clicker | Chase London</title>
+<meta name="description" content="A small incremental game about data pipelines. Start by dragging files by hand and automate your way to Level 5.">
+<meta property="og:title" content="Pipeline Clicker">
+<meta property="og:description" content="Start by dragging files by hand. Automate your way to a fully autonomous data pipeline.">
+<meta property="og:url" content="https://chasealondon.com/pipeline/">
+<meta property="og:image" content="https://chasealondon.com/assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://chasealondon.com/pipeline/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230E6A87'/%3E%3Ctext x='16' y='22' font-family='Arial' font-weight='700' font-size='15' fill='white' text-anchor='middle'%3ECL%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Public+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600;700&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E6ECEB; --ink:#15212B; --muted:#56646E; --line:#D2DAD9;
+  --accent:#0E6A87; --accent-soft:#D5E8EE; --heat:#D96A22; --heat-soft:#F7E1D1; --good:#2E7D4F;
+  --l0:#D96A22; --l1:#C98A2E; --l2:#A39335; --l3:#4E8B63; --l4:#1D7C8E; --l5:#0E6A87;
+  --display:"Bricolage Grotesque","Avenir Next","Segoe UI",sans-serif;
+  --body:"Public Sans","Segoe UI",system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#0D1419; --surface:#151F26; --surface-2:#1C2830; --ink:#E4EBEE; --muted:#93A3AD; --line:#2A3740;
+    --accent:#56B6D4; --accent-soft:#16333E; --heat:#F0924F; --heat-soft:#3A2518; --good:#5CC089;
+    --l0:#F0924F; --l1:#E0A94A; --l2:#C9B955; --l3:#6CC08A; --l4:#4FB3C4; --l5:#56B6D4;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0D1419; --surface:#151F26; --surface-2:#1C2830; --ink:#E4EBEE; --muted:#93A3AD; --line:#2A3740;
+  --accent:#56B6D4; --accent-soft:#16333E; --heat:#F0924F; --heat-soft:#3A2518; --good:#5CC089;
+  --l0:#F0924F; --l1:#E0A94A; --l2:#C9B955; --l3:#6CC08A; --l4:#4FB3C4; --l5:#56B6D4;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5;padding-inline:18px}
+.wrap{max-width:1140px;margin:0 auto}
+h1,h2,h3{font-family:var(--display);margin:0;line-height:1.1;text-wrap:balance}
+p{margin:0}
+a{color:var(--accent)}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.label{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:color-mix(in srgb,var(--bg) 90%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);margin-inline:-18px;padding:10px 18px}
+.nav .wrap{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.brand{font-family:var(--display);font-weight:800;font-size:18px;color:var(--ink);text-decoration:none}
+.nav a.back{font-family:var(--mono);font-size:12px;color:var(--muted);text-decoration:none}
+header{display:flex;justify-content:space-between;align-items:end;gap:20px;flex-wrap:wrap;padding:26px 0 18px}
+header h1{font-size:clamp(30px,4.6vw,46px);font-weight:800;letter-spacing:-.02em;margin-top:6px}
+header p{color:var(--muted);max-width:60ch;margin-top:8px}
+
+/* scoreboard */
+.board{display:grid;grid-template-columns:auto 1fr auto;gap:18px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 18px}
+.credits b{display:block;font-family:var(--display);font-weight:800;font-size:34px;line-height:1;font-variant-numeric:tabular-nums}
+.credits span{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.loa{display:grid;gap:6px}
+.loa-track{display:grid;grid-template-columns:repeat(6,1fr);gap:4px}
+.loa-track i{height:10px;border-radius:3px;background:var(--surface-2);transition:background .5s}
+.loa-track i.on{background:var(--c)}
+.loa-names{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;font-family:var(--mono);font-size:10px;color:var(--muted)}
+.loa-names span.on{color:var(--ink);font-weight:700}
+.loa-now{font-size:14px}
+.loa-now b{font-family:var(--display);font-size:18px}
+.side-stats{display:grid;gap:2px;text-align:right;font-family:var(--mono);font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.side-stats b{color:var(--ink)}
+@media (max-width:760px){.board{grid-template-columns:1fr 1fr}.loa{grid-column:1/-1;order:3}.loa-names{font-size:0}.loa-names span.on{font-size:10px}}
+
+/* pipeline */
+.line{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:14px;position:relative}
+.stage{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;display:grid;gap:10px;align-content:start;position:relative;transition:border-color .3s,box-shadow .3s}
+.stage.bneck{border-color:var(--heat);box-shadow:0 0 0 3px color-mix(in srgb,var(--heat) 18%,transparent)}
+.stage-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.stage h2{font-size:19px;font-weight:800}
+.stage .count{font-family:var(--display);font-weight:800;font-size:26px;font-variant-numeric:tabular-nums}
+.stage .rate{font-family:var(--mono);font-size:12px;color:var(--muted);min-height:1.5em}
+.tag{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;border-radius:999px;padding:2px 8px;background:var(--heat);color:#fff}
+.tag.auto{background:var(--accent-soft);color:var(--accent)}
+.files{height:58px;display:flex;flex-wrap:wrap;align-content:flex-start;gap:4px;overflow:hidden;padding:6px;border-radius:8px;background:var(--surface-2)}
+.file{width:16px;height:20px;border-radius:3px 7px 3px 3px;background:var(--surface);border:1.5px solid var(--fc,var(--muted));position:relative}
+.file::after{content:"";position:absolute;left:3px;right:3px;top:6px;height:1.5px;background:var(--fc,var(--muted));box-shadow:0 4px 0 var(--fc,var(--muted))}
+.act{border:0;border-radius:10px;padding:14px 12px;font-weight:700;font-size:15px;cursor:pointer;background:var(--ink);color:var(--bg);display:flex;justify-content:space-between;align-items:center;gap:8px;transition:transform .08s}
+.act:active{transform:scale(.97)}
+.act:disabled{opacity:.4;cursor:default}
+.act kbd{font-family:var(--mono);font-size:11px;opacity:.7;border:1px solid currentColor;border-radius:4px;padding:0 5px}
+.arrow{position:absolute;top:50%;width:12px;text-align:center;font-family:var(--display);color:var(--muted);transform:translateY(-50%);pointer-events:none}
+.pop{position:absolute;font-family:var(--mono);font-weight:700;font-size:13px;color:var(--good);pointer-events:none;animation:pop .8s ease-out forwards}
+@keyframes pop{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-34px)}}
+.bad{font-family:var(--mono);font-size:12px;color:var(--heat)}
+@media (max-width:760px){.line{gap:6px}.stage{padding:10px;gap:6px}.stage h2{font-size:15px}.stage .count{font-size:20px}.stage .label,.stage .rate,.act kbd,.tag{display:none}.files{height:34px;padding:4px;gap:3px}.file{width:10px;height:13px}.file::after{top:4px;box-shadow:0 3px 0 var(--fc,var(--muted))}.act{padding:12px 8px;font-size:13px;justify-content:center;text-align:center}.bad{font-size:10.5px}.arrow{display:none}}
+
+/* shop */
+.lower{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:14px;margin-top:14px;align-items:start;padding-bottom:40px}
+.shop{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;display:grid;gap:8px}
+.shop-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+.up{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;border:1px solid var(--line);border-left:4px solid var(--lc);border-radius:10px;padding:10px 12px;background:var(--surface);cursor:pointer;text-align:left;width:100%}
+.up:hover:not(:disabled){background:var(--surface-2)}
+.up:disabled{cursor:default}
+.up.cant{opacity:.62}
+.up.locked{opacity:.4}
+.up.owned{background:var(--surface-2);border-left-color:var(--good);cursor:default}
+.up .lv{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--lc);border:1.5px solid var(--lc);border-radius:6px;padding:2px 5px;white-space:nowrap}
+.up .nm{font-weight:700;font-size:15px}
+.up .nm small{font-weight:400;color:var(--muted);font-size:12px;font-family:var(--mono);margin-left:6px}
+.up .ds{font-size:13px;color:var(--muted);line-height:1.35}
+.up .cost{font-family:var(--mono);font-weight:700;font-size:14px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.up.owned .cost{color:var(--good)}
+.side{display:grid;gap:14px;position:sticky;top:64px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;display:grid;gap:8px}
+.log{list-style:none;margin:0;padding:0;display:grid;gap:6px;font-size:13px;min-height:120px}
+.log li{border-left:2px solid var(--line);padding-left:8px;color:var(--muted)}
+.log li:first-child{border-left-color:var(--accent);color:var(--ink)}
+.how{font-size:13.5px;color:var(--muted);display:grid;gap:6px}
+.how b{color:var(--ink)}
+.reset{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn-s{border:1px solid var(--line);background:var(--surface-2);border-radius:8px;padding:6px 10px;font-size:13px;cursor:pointer}
+.btn-s.warn{border-color:var(--heat);color:var(--heat)}
+@media (max-width:860px){.lower{grid-template-columns:1fr}.side{position:static}}
+
+/* win */
+.win{position:fixed;inset:0;z-index:30;background:color-mix(in srgb,var(--bg) 70%,transparent);backdrop-filter:blur(6px);display:grid;place-items:center;padding:18px}
+.win-card{max-width:520px;width:100%;background:var(--surface);border:1px solid var(--line);border-top:6px solid var(--l5);border-radius:16px;padding:24px;display:grid;gap:12px;box-shadow:0 20px 60px rgb(0 0 0/.2)}
+.win-card h2{font-size:30px;font-weight:800}
+.win-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.win-stats div{background:var(--surface-2);border-radius:10px;padding:10px}
+.win-stats b{display:block;font-family:var(--display);font-size:22px;font-variant-numeric:tabular-nums}
+.win-card .row{display:flex;gap:8px;flex-wrap:wrap}
+.win-card a.primary{background:var(--accent);color:var(--bg);text-decoration:none;border-radius:8px;padding:9px 14px;font-weight:700}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="wrap"><a class="brand" href="../">Chase London</a><a class="back" href="../#off">← back to the site</a></div></nav>
+<main class="wrap">
+  <header>
+    <div>
+      <span class="label">An incremental game about my day job</span>
+      <h1>Pipeline Clicker</h1>
+      <p>Every report starts the same way: someone drags a file, cleans it and uploads it. Do it by hand, earn data credits, and buy tools that automate each step until the whole pipeline runs itself at Level 5.</p>
+    </div>
+  </header>
+
+  <section class="board" aria-live="polite">
+    <div class="credits"><b id="credits">0</b><span>data credits</span></div>
+    <div class="loa">
+      <div class="loa-now">Level of Automation: <b id="loaNum">0</b> · <span id="loaName">Manual</span></div>
+      <div class="loa-track" id="loaTrack"></div>
+      <div class="loa-names" id="loaNames"></div>
+    </div>
+    <div class="side-stats"><span><b id="perSec">0</b> credits/sec</span><span><b id="shipped">0</b> files shipped</span><span><b id="clock">0:00</b> elapsed</span></div>
+  </section>
+
+  <section class="line" id="line">
+    <div class="stage" id="stFetch">
+      <div class="stage-top"><h2>Inbox</h2><span class="tag" id="tagFetch">manual</span></div>
+      <div class="stage-top"><span class="count" id="cntRaw">0</span><span class="label">files waiting to clean</span></div>
+      <div class="files" id="filesRaw"></div>
+      <div class="rate" id="rateFetch">Files arrive when you drag them in.</div>
+      <button class="act" id="btnFetch">Drag file in <kbd>1</kbd></button>
+    </div>
+    <div class="stage" id="stClean">
+      <div class="stage-top"><h2>Clean</h2><span class="tag" id="tagClean">manual</span></div>
+      <div class="stage-top"><span class="count" id="cntClean">0</span><span class="label">clean files ready</span></div>
+      <div class="files" id="filesClean"></div>
+      <div class="rate" id="rateClean">Fix headers, dates and duplicates by hand.</div>
+      <button class="act" id="btnClean">Clean file <kbd>2</kbd></button>
+    </div>
+    <div class="stage" id="stUp">
+      <div class="stage-top"><h2>Dashboard</h2><span class="tag" id="tagUp">manual</span></div>
+      <div class="stage-top"><span class="count" id="cntShip">0</span><span class="label">files shipped</span></div>
+      <div class="files" id="filesShip"></div>
+      <div class="rate" id="rateUp">Upload each file to the report.</div>
+      <button class="act" id="btnUp">Upload file <kbd>3</kbd></button>
+      <div class="bad" id="badNote"></div>
+    </div>
+  </section>
+
+  <section class="lower">
+    <div class="shop">
+      <div class="shop-head"><h2 style="font-size:20px">Tool shop</h2><span class="label">Buy tools to move up the levels</span></div>
+      <div id="shop" style="display:grid;gap:8px"></div>
+    </div>
+    <aside class="side">
+      <div class="panel">
+        <span class="label">Pipeline log</span>
+        <ul class="log" id="log"></ul>
+      </div>
+      <div class="panel how">
+        <span class="label">How it works</span>
+        <p><b>Every stage has to keep up.</b> Files only earn credits once they reach the dashboard, so the slowest stage sets your pace. It's marked in orange.</p>
+        <p><b>Unchecked data costs you.</b> Until you buy automated checks, 1 in 5 files ships with bad rows and earns nothing.</p>
+        <p><b>Levels follow my real framework.</b> The meter uses the <a href="../#p-auto">Levels of Automation</a> I built for marketing's data sources.</p>
+        <div class="reset"><button class="btn-s" id="resetBtn">Start over</button><span id="resetConfirm" hidden><button class="btn-s warn" id="resetYes">Yes, reset progress</button> <button class="btn-s" id="resetNo">Keep playing</button></span></div>
+      </div>
+    </aside>
+  </section>
+</main>
+
+<div class="win" id="win" hidden>
+  <div class="win-card" role="dialog" aria-labelledby="winTitle">
+    <span class="label">Level 5 · Autonomous</span>
+    <h2 id="winTitle">The pipeline runs itself.</h2>
+    <p>You went from dragging files one at a time to a pipeline that fetches, cleans, checks and ships data with no one touching it. That's the job I do: find the manual steps, automate them, fix the bottleneck, and repeat.</p>
+    <div class="win-stats"><div><span class="label">Time</span><b id="wTime">0:00</b></div><div><span class="label">Clicks</span><b id="wClicks">0</b></div><div><span class="label">Files shipped</span><b id="wFiles">0</b></div></div>
+    <div class="row"><a class="primary" href="../#projects">See the real projects</a><a class="btn-s" href="../#contact" style="text-decoration:none">Get in touch</a><button class="btn-s" id="winClose">Keep watching it run</button></div>
+  </div>
+</div>
+
+<script>
+(() => {
+const $ = s => document.querySelector(s);
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const LEVELS = ['Manual','Delivered','Scheduled','Connected','Report-ready','Autonomous'];
+
+// Tools are named after (not quite) the real ones.
+const UP = [
+  {id:'macros',   lv:0, name:'Excelerator Macros',     hint:'Excel',          cost:10,   ds:'Clean 3 files per click instead of 1.',                         fx:s => { s.cleanClick = 3; }},
+  {id:'automate', lv:0, name:'Power Auto-Mate',        hint:'Power Automate', cost:20,   ds:'Files move from the source folder to your inbox on their own.', fx:s => { s.fetchAuto += 1.5; }},
+  {id:'dropbox',  lv:1, name:'SFTP Drop Zone',         hint:'SFTP',           cost:40,   ds:'Sources deliver on a schedule. +2.5 files/sec into the inbox.', fx:s => { s.fetchAuto += 2.5; }},
+  {id:'alteryx',  lv:2, name:'Alter-Why Workflow',     hint:'Alteryx',        cost:60,   ds:'A saved prep flow cleans 4 files/sec automatically.',          fx:s => { s.cleanAuto += 4; }},
+  {id:'tabserver',lv:2, name:'Tab-Low Server',         hint:'Tableau',        cost:90,   ds:'Scheduled refresh uploads 4 files/sec to the dashboard.',     fx:s => { s.uploadAuto += 4; }},
+  {id:'python',   lv:2, name:'Pie-thon Scripts',       hint:'Python',         cost:150,  ds:'Script the glue. Every automated step runs 2× faster.',        fx:s => { s.mult *= 2; }},
+  {id:'sql',      lv:3, name:'SQueaL Queries',         hint:'SQL',            cost:240,  ds:'Joined data is worth more: 2× credits per file. Unlocks connections.', fx:s => { s.value *= 2; }},
+  {id:'api',      lv:3, name:'API Hook-up',            hint:'API',            cost:380,  req:'sql', ds:'Direct connection: +8 files/sec with no files to fetch.', fx:s => { s.fetchAuto += 8; }},
+  {id:'dataiku',  lv:3, name:'Data-I-Queue Recipes',   hint:'Dataiku',        cost:600,  ds:'Scheduled recipes clean +8 files/sec.',                          fx:s => { s.cleanAuto += 8; }},
+  {id:'gcc',      lv:4, name:'Gee-See-See Cloud',      hint:'Google Cloud',   cost:850,  req:'sql', ds:'Land data in the cloud warehouse: +10 uploads/sec.',   fx:s => { s.uploadAuto += 10; }},
+  {id:'qa',       lv:4, name:'Auto-QA Checks',         hint:'data checks',    cost:1200, ds:'Automated checks catch bad rows. No more wasted files.',        fx:s => { s.err = 0; }},
+  {id:'sot',      lv:4, name:'One Source of Truth',    hint:'data model',     cost:1700, ds:'Every source keyed to one ID and date: 3× credits per file.',   fx:s => { s.value *= 3; }},
+  {id:'loa5',     lv:5, name:'Autonomous Pipeline',    hint:'LoA 5',          cost:3500, req:'all', ds:'Self-validating, near real time, fully documented. No routine oversight.', fx:s => { s.won = true; }},
+];
+
+const fresh = () => ({credits:0, raw:0, clean:0, shipped:0, bad:0, clicks:0, fetchAuto:0, cleanAuto:0, uploadAuto:0, mult:1, value:1, err:.2, cleanClick:1, owned:[], won:false, elapsed:0, winSeen:false, log:['Day one. Your first report needs data, and it all has to be moved by hand.']});
+let S = fresh();
+try { const saved = JSON.parse(localStorage.getItem('pipelineClicker') || 'null'); if (saved && saved.owned) S = Object.assign(fresh(), saved); } catch (e) {}
+// rebuild derived stats from owned tools so saves stay consistent
+function rebuild(){ const keep = {credits:S.credits, raw:S.raw, clean:S.clean, shipped:S.shipped, bad:S.bad, clicks:S.clicks, owned:S.owned, elapsed:S.elapsed, winSeen:S.winSeen, log:S.log}; S = Object.assign(fresh(), keep); S.owned.forEach(id => UP.find(u => u.id === id).fx(S)); }
+rebuild();
+const save = () => { try { localStorage.setItem('pipelineClicker', JSON.stringify(S)); } catch (e) {} };
+
+const has = id => S.owned.includes(id);
+function level(){
+  if (has('loa5')) return 5;
+  if (has('api') && has('gcc') && has('qa') && has('alteryx') && has('tabserver')) return 4;
+  if (has('api') && has('alteryx') && has('tabserver')) return 3;
+  if (has('dropbox') && has('alteryx') && has('tabserver')) return 2;
+  if (has('dropbox')) return 1;
+  return 0;
+}
+const rates = () => ({f:S.fetchAuto * S.mult, c:S.cleanAuto * S.mult, u:S.uploadAuto * S.mult});
+const fmt = n => n >= 1e6 ? (n / 1e6).toFixed(1) + 'M' : n >= 1e4 ? (n / 1e3).toFixed(1) + 'k' : Math.floor(n).toLocaleString();
+const clock = s => Math.floor(s / 60) + ':' + String(Math.floor(s % 60)).padStart(2, '0');
+function log(msg){ S.log.unshift(msg); S.log = S.log.slice(0, 6); }
+
+// ---- actions ----
+function ship(n){ const good = n * (1 - S.err); S.shipped += n; S.bad += n - good; const earn = good * S.value; S.credits += earn; return earn; }
+function pop(el, text){ if (reduce) return; const p = document.createElement('span'); p.className = 'pop'; p.textContent = text; const b = el.getBoundingClientRect(), l = $('#line').getBoundingClientRect(); p.style.left = (b.left - l.left + b.width / 2 - 14) + 'px'; p.style.top = (b.top - l.top - 6) + 'px'; $('#line').appendChild(p); setTimeout(() => p.remove(), 800); }
+function doFetch(){ S.clicks++; S.raw += 1; draw(); }
+function doClean(){ if (S.raw < 1) return; S.clicks++; const n = Math.min(Math.floor(S.raw), S.cleanClick); S.raw -= n; S.clean += n; draw(); }
+function doUp(){ if (S.clean < 1) return; S.clicks++; S.clean -= 1; const e = ship(1); pop($('#btnUp'), e > 0 ? '+' + fmt(e) : 'bad rows'); draw(); }
+$('#btnFetch').onclick = doFetch; $('#btnClean').onclick = doClean; $('#btnUp').onclick = doUp;
+addEventListener('keydown', e => { if (e.target.closest('input,textarea')) return; if (e.key === '1') doFetch(); else if (e.key === '2') doClean(); else if (e.key === '3') doUp(); });
+
+function buy(u){
+  if (has(u.id) || S.credits < u.cost || !unlocked(u)) return;
+  const before = level();
+  S.credits -= u.cost; S.owned.push(u.id); u.fx(S);
+  log(`Bought ${u.name}. ${u.ds}`);
+  const after = level();
+  if (after > before) log(`Level ${after} reached: ${LEVELS[after]}.`);
+  if (u.id === 'loa5'){ S.won = true; showWin(); }
+  buildShop(); draw(); save();
+}
+function unlocked(u){ if (!u.req) return true; if (u.req === 'all') return UP.filter(x => x.id !== 'loa5').every(x => has(x.id)); return has(u.req); }
+
+// ---- shop ----
+function buildShop(){
+  $('#shop').innerHTML = UP.map(u => {
+    const own = has(u.id), lock = !own && !unlocked(u);
+    const need = lock ? (u.req === 'all' ? 'Own every other tool first' : `Needs ${UP.find(x => x.id === u.req).name}`) : u.ds;
+    return `<button class="up ${own ? 'owned' : lock ? 'locked' : ''}" data-id="${u.id}" style="--lc:var(--l${u.lv})" ${own || lock ? 'disabled' : ''}>
+      <span class="lv">L${u.lv}</span>
+      <span><span class="nm">${u.name}<small>${u.hint}</small></span><span class="ds" style="display:block">${need}</span></span>
+      <span class="cost">${own ? 'owned' : fmt(u.cost)}</span></button>`;
+  }).join('');
+  document.querySelectorAll('.up').forEach(b => b.onclick = () => buy(UP.find(u => u.id === b.dataset.id)));
+}
+
+// ---- render ----
+function files(el, n, color){ const k = Math.min(24, Math.floor(n)); if (el.childElementCount !== k || el.dataset.c !== color){ el.dataset.c = color; el.innerHTML = Array.from({length:k}, () => `<span class="file" style="--fc:${color}"></span>`).join(''); } }
+function draw(){
+  const lv = level(), r = rates();
+  $('#credits').textContent = fmt(S.credits);
+  $('#loaNum').textContent = lv; $('#loaName').textContent = LEVELS[lv];
+  $('#loaTrack').innerHTML = LEVELS.map((_, i) => `<i class="${i <= lv ? 'on' : ''}" style="--c:var(--l${i})"></i>`).join('');
+  $('#loaNames').innerHTML = LEVELS.map((n, i) => `<span class="${i === lv ? 'on' : ''}">${i} ${n}</span>`).join('');
+  const thru = Math.min(r.f || 0, r.c || 0, r.u || 0);
+  $('#perSec').textContent = (thru * S.value * (1 - S.err)).toFixed(1);
+  $('#shipped').textContent = fmt(S.shipped); $('#clock').textContent = clock(S.elapsed);
+  $('#cntRaw').textContent = fmt(S.raw); $('#cntClean').textContent = fmt(S.clean); $('#cntShip').textContent = fmt(S.shipped);
+  files($('#filesRaw'), S.raw, 'var(--heat)'); files($('#filesClean'), S.clean, 'var(--accent)'); files($('#filesShip'), Math.min(24, S.shipped), 'var(--good)');
+  $('#btnClean').disabled = S.raw < 1; $('#btnUp').disabled = S.clean < 1;
+  $('#btnClean').firstChild.textContent = S.cleanClick > 1 ? `Clean ${S.cleanClick} files ` : 'Clean file ';
+  const st = [['Fetch', r.f, 'files arrive'], ['Clean', r.c, 'files cleaned'], ['Up', r.u, 'files uploaded']];
+  st.forEach(([k, v, what]) => { const tag = $('#tag' + k); tag.textContent = v ? 'automated' : 'manual'; tag.classList.toggle('auto', !!v); if (v) $('#rate' + k).textContent = `${v.toFixed(1)} ${what}/sec automatically. Clicking still helps.`; });
+  // bottleneck: slowest automated stage once anything is automated
+  const any = r.f || r.c || r.u; const vals = [r.f, r.c, r.u]; const low = any ? vals.indexOf(Math.min(...vals)) : -1;
+  ['#stFetch', '#stClean', '#stUp'].forEach((id, i) => $(id).classList.toggle('bneck', i === low && lv < 5));
+  $('#badNote').textContent = S.err > 0 && S.shipped > 0 ? `${fmt(S.bad)} ${Math.floor(S.bad) === 1 ? 'file' : 'files'} shipped with bad rows and earned nothing.` : S.err === 0 && S.shipped ? 'Automated checks are catching bad rows.' : '';
+  $('#log').innerHTML = S.log.map(m => `<li>${m}</li>`).join('');
+  document.querySelectorAll('.up:not(.owned):not(.locked)').forEach(b => b.classList.toggle('cant', S.credits < UP.find(u => u.id === b.dataset.id).cost));
+}
+
+// ---- loop ----
+let last = performance.now(), acc = 0;
+function tick(now){
+  const dt = Math.min(1, (now - last) / 1000); last = now;
+  {
+    if (!S.won) S.elapsed += dt;
+    const r = rates();
+    S.raw += r.f * dt;
+    let n = Math.min(S.raw, r.c * dt); S.raw -= n; S.clean += n;
+    n = Math.min(S.clean, r.u * dt); S.clean -= n; if (n > 0) ship(n);
+  }
+  acc += dt; if (acc > .1){ acc = 0; draw(); }
+  requestAnimationFrame(tick);
+}
+setInterval(save, 4000); addEventListener('pagehide', save);
+
+function showWin(){ $('#wTime').textContent = clock(S.elapsed); $('#wClicks').textContent = fmt(S.clicks); $('#wFiles').textContent = fmt(S.shipped); $('#win').hidden = false; S.winSeen = true; save(); }
+$('#winClose').onclick = () => { $('#win').hidden = true; };
+$('#resetBtn').onclick = () => { $('#resetConfirm').hidden = false; };
+$('#resetNo').onclick = () => { $('#resetConfirm').hidden = true; };
+$('#resetYes').onclick = () => { S = fresh(); $('#resetConfirm').hidden = true; buildShop(); draw(); save(); };
+
+buildShop(); draw(); requestAnimationFrame(tick);
+})();
+</script>
+</body>
+</html>

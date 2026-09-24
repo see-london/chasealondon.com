@@ -381,15 +381,40 @@ input[type=range]{width:100%;accent-color:var(--accent)}
 .tl-body{position:relative;display:grid;gap:3px}
 @media (max-width:640px){.tl{padding:14px 12px 10px}.tl-row{grid-template-columns:104px 1fr;gap:8px}.tl-name{font-size:12.5px}.tl-role{font-size:0;padding:0}.tl-axis .tl-track span{font-size:9.5px}}
 
-/* off hours */
-.off{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:16px}
-.off-link-ext{font-family:var(--mono);font-size:12px;text-decoration:none}
-@media (max-width:1080px){.off{grid-template-columns:repeat(3,minmax(0,1fr))}}
-.off article{padding-top:14px;border-top:2px solid var(--ink);display:grid;gap:8px;align-content:start}
-.off p{font-size:15px;color:var(--muted)}
-.off-link{font-family:var(--mono);font-size:12px;text-decoration:none}
-@media (max-width:880px){.off{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media (max-width:520px){.off{grid-template-columns:1fr}}
+/* off hours: hobby map */
+.hb{--g0:#2a78d6;--g1:#1baf7a;--g2:#eb6834}
+@media (prefers-color-scheme:dark){:root:where(:not([data-theme="light"])) .hb{--g0:#3987e5;--g1:#199e70;--g2:#d95926}}
+:root[data-theme="dark"] .hb{--g0:#3987e5;--g1:#199e70;--g2:#d95926}
+.hb-bar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-bottom:12px}
+.hb-seg{display:inline-flex;border-radius:999px;padding:3px;background:var(--surface-2);border:1px solid var(--line)}
+.hb-seg button{border:0;background:transparent;border-radius:999px;padding:6px 14px;font:600 13px var(--mono);color:var(--muted);cursor:pointer}
+.hb-seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.hb-axes{display:flex;gap:10px;flex-wrap:wrap;font-size:13px;color:var(--muted);align-items:center}
+.hb-axes select{font:13px var(--body);padding:5px 8px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.hb-legend{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+.hb-legend span{display:inline-flex;align-items:center;gap:6px}
+.hb-legend i{width:10px;height:10px;border-radius:50%;display:inline-block}
+.hb-grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(280px,1fr);gap:18px;align-items:start}
+.hb-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px}
+.hb-dot{cursor:pointer;transition:opacity .2s}
+.hb-map.dim .hb-dot:not(.on),.hb-map.dim .hb-lab:not(.on){opacity:.28}
+.hb-lab{font-size:12.5px;fill:var(--ink);pointer-events:none}
+.hb-lab.on{font-weight:700}
+.hb-quad{font:600 11px var(--mono);fill:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.hb-multi{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
+.hb-mini{border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:8px 6px 6px;cursor:pointer;text-align:center;font:inherit;color:inherit}
+.hb-mini[aria-pressed="true"]{border-color:var(--ink);box-shadow:0 0 0 2px var(--ink) inset}
+.hb-mini b{display:block;font-size:13px;line-height:1.25;min-height:2.5em}
+.hb-detail h3{font-size:22px;margin-top:4px}
+.hb-detail p{color:var(--muted);font-size:15px;margin:6px 0 10px}
+.hb-detail .hb-cap{font-size:13px;margin-top:0}
+.hb-scores{display:grid;grid-template-columns:auto 1fr;gap:2px 12px;font-size:13px;margin-top:4px}
+.hb-scores span{color:var(--muted)}
+.hb-scores b{font-family:var(--mono);font-weight:600}
+.hb-back{border:1px solid var(--line);background:var(--surface-2);color:var(--ink);border-radius:8px;padding:6px 12px;font:600 13px var(--body);cursor:pointer;margin-top:12px}
+.hb-tip{position:fixed;pointer-events:none;background:var(--ink);color:var(--bg);font-size:12.5px;padding:6px 9px;border-radius:8px;opacity:0;transition:opacity .12s;max-width:240px;z-index:20}
+.hb-note{font-size:13px;color:var(--muted);margin-top:10px}
+@media (max-width:820px){.hb-grid{grid-template-columns:1fr}}
 
 /* contact */
 .contact{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:32px;align-items:end}
@@ -758,14 +783,23 @@ footer{padding-block:28px;font-size:13px;color:var(--muted);font-family:var(--mo
     <div class="sec-head">
       <div class="label">Off the clock</div>
       <h2>I like learning by building.</h2>
-      <p>What I do when I'm not at work, including one volunteer role that uses the same skills.</p>
+      <p>Everything I do when I'm not at work, each one rated by me on five traits and then mapped. Tap any of them to see its profile.</p>
     </div>
-    <div class="off">
-      <article><span class="label">Volunteer</span><h3>Church Finance Chair</h3><p>I turn accounting exports into a monthly report package our leaders can actually read, and I help plan the budget. Same job as my day job, different data.</p><a class="off-link" href="#projects" data-tab="t-fin">See the project →</a></article>
-      <article><span class="label">Hands-on</span><h3>Building things</h3><p>Furniture from raw lumber, truck mods, yard and landscaping projects, and small Arduino electronics. If I don't know how to do something yet, that's usually why I try it.</p></article>
-      <article><span class="label">Outdoors</span><h3>Mountain biking</h3><p>Time on the trails is how I reset. There's always a cleaner line to find on the next run.</p></article>
-      <article><span class="label">Games</span><h3>Incremental games</h3><p>I love games where you start by hand and automate your way up. So I built one about my day job: drag files, clean them, ship them, then buy tools until the pipeline runs itself.</p><a class="off-link-ext" href="pipeline/">Play Pipeline Clicker →</a></article>
-      <article><span class="label">Fuel</span><h3>Coffee and pizza</h3><p>Before buying an espresso machine, I built a payoff calculator to see when it would beat the coffee shop. Out back, the pizza oven is my other test kitchen: dough, heat and timing, adjusted one variable at a time until the 'za is right.</p></article>
+    <div class="hb">
+      <div class="hb-bar">
+        <div class="hb-seg" role="group" aria-label="View"><button data-v="map" aria-pressed="true">Map</button><button data-v="multi" aria-pressed="false">Profiles</button></div>
+        <div class="hb-axes" id="hbAxes"><label>Across <select id="hbX"></select></label><label>Up <select id="hbY"></select></label></div>
+        <div class="hb-legend" id="hbLegend"></div>
+      </div>
+      <div class="hb-grid">
+        <div class="hb-card" id="hbView">
+          <svg class="hb-map" id="hbMap" viewBox="0 0 640 480" role="img" aria-label="Map of hobbies from recharge to grow and from solo to social"></svg>
+          <div class="hb-multi" id="hbMulti" hidden></div>
+        </div>
+        <div class="hb-card hb-detail" id="hbDetail" aria-live="polite"></div>
+      </div>
+      <p class="hb-note" id="hbNote"></p>
+      <div class="hb-tip" id="hbTip"></div>
     </div>
   </section>
 
@@ -1512,7 +1546,108 @@ document.addEventListener('click', e => { if (tlPinned && !tl.contains(e.target)
 /* ---------- HOW I WORK LINKS ---------- */
 document.querySelectorAll('.how-card').forEach(c => c.addEventListener('click', () => { $('#' + c.dataset.tab).click(); $('#projects').scrollIntoView({behavior: reduce ? 'auto' : 'smooth'}); }));
 
-document.querySelectorAll('.off-link').forEach(l => l.addEventListener('click', e => { e.preventDefault(); $('#' + l.dataset.tab).click(); $('#projects').scrollIntoView({behavior: reduce ? 'auto' : 'smooth'}); }));
+/* ---------- OFF THE CLOCK: HOBBY MAP ---------- */
+(() => {
+const DIMS = ['Learning','Relaxing','Self-improvement','Social','Active'];
+const GROUPS = [{n:'Numbers and making', c:'var(--g0)'},{n:'Outdoors', c:'var(--g1)'},{n:'Unwinding', c:'var(--g2)'}];
+// Learning, Relaxing, Self-improvement, Social, Active (0–5), self-rated
+const H = [
+  {n:'Church Finance Chair', sn:'Finance Chair', g:0, s:[4,1,4,4,0], d:'I turn accounting exports into a monthly report package our leaders can actually read, and I help plan the budget. Same job as my day job, different data.', tab:'t-fin', link:'See the project →'},
+  {n:'Building things', g:0, s:[3.5,3,2.5,1,3], d:'Furniture from raw lumber and truck mods. If I don\'t know how to do something yet, that\'s usually why I try it.'},
+  {n:'Microelectronics (Arduino)', sn:'Arduino', g:0, s:[5,2.5,3,.5,0], d:'Small Arduino and electronics projects, where wiring and code have to work together.'},
+  {n:'RC cars', g:0, s:[3,4,1,2.5,1.5], d:'Building, tuning and driving RC cars.'},
+  {n:'Lifting (and the data)', sn:'Lifting', g:0, s:[3,1.5,5,1,5], d:'Every set, rep and weight logged, then charted to see what\'s working.'},
+  {n:'Calorie and macro tracking', sn:'Macro tracking', g:0, s:[3.5,.5,4.5,0,1], d:'Calories and macros tracked daily. The data habit follows me home.'},
+  {n:'Mountain biking', g:1, s:[2.5,3.5,4,2,5], d:'Time on the trails is how I reset. There\'s always a cleaner line to find on the next run.'},
+  {n:'Yard beautification', sn:'Yard work', g:1, s:[2,3.5,2,1,4], d:'Landscaping and yard projects. Slow results, but you can see every bit of progress.'},
+  {n:'Camping', g:1, s:[1,5,1.5,4.5,3], d:'Nights outside, away from screens.'},
+  {n:'Off-roading and exploring', sn:'Off-roading', g:1, s:[3,3.5,1,3,2], d:'Taking the truck down back roads to see what\'s out there.'},
+  {n:'Skiing', g:1, s:[3,2.5,3,4,5], d:'Always chasing the next run.'},
+  {n:'Disc golf', g:1, s:[1.5,4,2,4,3], d:'Easy rounds with friends.'},
+  {n:'Drumming', g:2, s:[3,4,3,1.5,3], d:'Playing the drums. Good for focus, better for stress.'},
+  {n:'Photography', g:2, s:[3.5,4,2.5,1.5,1.5], d:'Taking photos and learning what makes a shot work.'},
+  {n:'Miniatures and board games', sn:'Minis and games', g:2, s:[2,4.5,1.5,3.5,0], d:'Painting miniatures, then putting them on the table on game night.'},
+  {n:'PC and incremental games', sn:'PC games', g:2, s:[2,5,.5,2.5,0], d:'I love games where you start by hand and automate your way up. So I built one about my day job: drag files, clean them, ship them, then buy tools until the pipeline runs itself.', href:'pipeline/', link:'Play Pipeline Clicker →'},
+  {n:'Audiobooks and books', sn:'Books', g:2, s:[5,4,3.5,0,0], d:'Audible and books, mostly to learn something new.'},
+  {n:'Coffee and pizza', g:2, s:[3,4,1,4,1], d:'Before buying an espresso machine, I built a payoff calculator to see when it would beat the coffee shop. Out back, the pizza oven is my other test kitchen: dough, heat and timing, adjusted one variable at a time until the \'za is right.'},
+];
+const AX = [
+  {id:'grow', n:'Recharge → Grow', lo:'Recharge', hi:'Grow', min:-5.5, max:5.5, f:s => (s[0] + s[2]) / 2 - s[1]},
+  ...DIMS.map((d, i) => ({id:'d' + i, n:d, lo:i === 3 ? 'Solo' : 'Less', hi:i === 3 ? 'With people' : 'More', min:-.6, max:5.6, f:s => s[i]})),
+];
+let axX = 'grow', axY = 'd3', view = 'map', sel = -1;
+$('#hbX').innerHTML = $('#hbY').innerHTML = AX.map(a => `<option value="${a.id}">${a.n}</option>`).join('');
+$('#hbX').value = axX; $('#hbY').value = axY;
+$('#hbX').onchange = e => { axX = e.target.value; draw(); };
+$('#hbY').onchange = e => { axY = e.target.value; draw(); };
+$('#hbLegend').innerHTML = GROUPS.map(g => `<span><i style="background:${g.c}"></i>${g.n}</span>`).join('') + '<span>Bigger dot = more active</span>';
+document.querySelectorAll('.hb-seg button').forEach(b => b.onclick = () => { view = b.dataset.v; draw(); });
+const tip = $('#hbTip');
+const showTip = (e, h) => { tip.innerHTML = `<b>${h.n}</b><br>${DIMS.map((d, i) => `${d} ${h.s[i]}`).join(' · ')}`; tip.style.opacity = 1; tip.style.left = Math.min(e.clientX + 12, innerWidth - 250) + 'px'; tip.style.top = (e.clientY + 12) + 'px'; };
+const hideTip = () => tip.style.opacity = 0;
+function radar(s, size, col, o = {}){
+  const c = size / 2, r = size / 2 - (o.pad ?? 8), n = DIMS.length;
+  const pt = (i, v) => { const a = -Math.PI / 2 + i * 2 * Math.PI / n; return [c + Math.cos(a) * r * v / 5, c + Math.sin(a) * r * v / 5]; };
+  let h = '';
+  [1.25, 2.5, 3.75, 5].forEach(v => h += `<polygon points="${DIMS.map((_, i) => pt(i, v).join(',')).join(' ')}" fill="none" stroke="var(--line)"/>`);
+  DIMS.forEach((_, i) => { const [x, y] = pt(i, 5); h += `<line x1="${c}" y1="${c}" x2="${x}" y2="${y}" stroke="var(--line)"/>`; });
+  if (o.under) h += `<polygon points="${o.under.map((v, i) => pt(i, v).join(',')).join(' ')}" fill="none" stroke="var(--muted)" stroke-dasharray="3 3" stroke-width="1.5"/>`;
+  h += `<polygon points="${s.map((v, i) => pt(i, v).join(',')).join(' ')}" fill="${col}" fill-opacity=".22" stroke="${col}" stroke-width="2" stroke-linejoin="round"/>`;
+  if (o.labels) DIMS.forEach((d, i) => { const [x, y] = pt(i, 6.1); h += `<text x="${x}" y="${y + 4}" text-anchor="middle" font-size="11.5" fill="var(--muted)">${d}</text>`; });
+  return `<svg viewBox="${o.labels ? `-44 -26 ${size + 88} ${size + 46}` : `0 0 ${size} ${size}`}" width="100%" aria-hidden="true">${h}</svg>`;
+}
+const AVG = DIMS.map((_, i) => +(H.reduce((a, h) => a + h.s[i], 0) / H.length).toFixed(1));
+function drawMap(){
+  const small = $('#hbView').clientWidth < 560, W = small ? 380 : 640, Ht = small ? 600 : 480, L = 30, R = 10, T = 24, B = 40;
+  const svg = $('#hbMap'); svg.setAttribute('viewBox', `0 0 ${W} ${Ht}`);
+  const X = AX.find(a => a.id === axX), Y = AX.find(a => a.id === axY), quads = axX === 'grow' && axY === 'd3';
+  const sx = v => L + (v - X.min) / (X.max - X.min) * (W - L - R), sy = v => T + (1 - (v - Y.min) / (Y.max - Y.min)) * (Ht - T - B);
+  const mx = sx((X.min + X.max) / 2), my = sy((Y.min + Y.max) / 2);
+  let h = `<rect x="${L}" y="${T}" width="${W - L - R}" height="${Ht - T - B}" rx="10" fill="var(--surface-2)" opacity=".5"/><line x1="${mx}" x2="${mx}" y1="${T}" y2="${Ht - B}" stroke="var(--line)" stroke-width="1.5"/><line x1="${L}" x2="${W - R}" y1="${my}" y2="${my}" stroke="var(--line)" stroke-width="1.5"/>`;
+  h += `<text x="${L}" y="${Ht - 14}" font-size="12" fill="var(--muted)">← ${X.lo}</text><text x="${W - R}" y="${Ht - 14}" text-anchor="end" font-size="12" fill="var(--muted)">${X.hi} →</text>`;
+  h += `<text transform="translate(16 ${Ht - B}) rotate(-90)" font-size="12" fill="var(--muted)">← ${Y.lo}</text><text transform="translate(16 ${T}) rotate(-90)" text-anchor="end" font-size="12" fill="var(--muted)">${Y.hi} →</text>`;
+  if (quads) h += `<text class="hb-quad" x="${L + 10}" y="${T + 18}">Recharge together</text><text class="hb-quad" x="${W - R - 10}" y="${T + 18}" text-anchor="end">Grow together</text><text class="hb-quad" x="${L + 10}" y="${Ht - B - 10}">Recharge solo</text><text class="hb-quad" x="${W - R - 10}" y="${Ht - B - 10}" text-anchor="end">Grow solo</text>`;
+  const P = H.map((o, k) => ({k, x:sx(X.f(o.s)), y:sy(Y.f(o.s)), r:(small ? 5 : 6) + o.s[4] * 1.3}));
+  for (let it = 0; it < 60; it++) for (const a of P) for (const b of P){ if (a === b) continue; const dx = b.x - a.x, dy = b.y - a.y, d = Math.hypot(dx, dy) || .01, m = a.r + b.r + 3; if (d < m){ const p = (m - d) / 2; a.x -= dx / d * p; a.y -= dy / d * p; b.x += dx / d * p; b.y += dy / d * p; } }
+  const boxes = P.map(p => [p.x - p.r, p.y - p.r, p.x + p.r, p.y + p.r]);
+  if (quads) boxes.push([L, T, L + 150, T + 24], [W - R - 120, T, W - R, T + 24], [L, Ht - B - 24, L + 130, Ht - B], [W - R - 110, Ht - B - 24, W - R, Ht - B]);
+  const hit = b => boxes.some(o => !(b[2] < o[0] || b[0] > o[2] || b[3] < o[1] || b[1] > o[3])) || b[0] < L || b[2] > W - R || b[1] < T || b[3] > Ht - B;
+  const labs = P.map(p => {
+    const t = small ? (H[p.k].sn || H[p.k].n) : H[p.k].n, w = t.length * 6.9, hh = 14;
+    const tries = [[p.x + p.r + 4, p.y + 4, 'start'], [p.x - p.r - 4, p.y + 4, 'end'], [p.x, p.y - p.r - 5, 'middle'], [p.x, p.y + p.r + 14, 'middle'], [p.x + p.r + 4, p.y - p.r, 'start'], [p.x - p.r - 4, p.y + p.r + 10, 'end'], [p.x - p.r - 4, p.y - p.r, 'end'], [p.x + p.r + 4, p.y + p.r + 10, 'start']];
+    for (const [x, y, a] of tries){ const x0 = a === 'start' ? x : a === 'end' ? x - w : x - w / 2, b = [x0, y - hh + 3, x0 + w, y + 3]; if (!hit(b)){ boxes.push(b); return {x, y, a, t}; } }
+    const x = Math.min(Math.max(p.x, L + w / 2 + 2), W - R - w / 2 - 2); let y = p.y + p.r + 14;
+    for (const yy of [p.y + p.r + 14, p.y - p.r - 5]) if (!hit([x - w / 2, yy - hh + 3, x + w / 2, yy + 3])){ y = yy; break; }
+    boxes.push([x - w / 2, y - hh + 3, x + w / 2, y + 3]); return {x, y, a:'middle', t};
+  });
+  P.forEach((p, i) => { const o = H[p.k], on = p.k === sel ? ' on' : '', l = labs[i]; h += `<circle class="hb-dot${on}" data-k="${p.k}" cx="${p.x}" cy="${p.y}" r="${p.r}" fill="${GROUPS[o.g].c}" stroke="var(--surface)" stroke-width="2" tabindex="0" role="button" aria-label="${o.n}"/><text class="hb-lab${on}" x="${l.x}" y="${l.y}" text-anchor="${l.a}">${l.t}</text>`; });
+  svg.innerHTML = h; svg.classList.toggle('dim', sel >= 0);
+  svg.querySelectorAll('.hb-dot').forEach(d => { const k = +d.dataset.k; d.onclick = () => pick(k); d.onkeydown = e => { if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); pick(k); } }; d.onmousemove = e => showTip(e, H[k]); d.onmouseleave = hideTip; });
+  $('#hbNote').textContent = (axX === 'grow' ? '"Grow" = the average of Learning and Self-improvement, minus Relaxing. ' : '') + 'Dots that would overlap are nudged apart slightly.';
+}
+function drawMulti(){
+  $('#hbMulti').innerHTML = H.map((o, k) => `<button class="hb-mini" data-k="${k}" aria-pressed="${k === sel}">${radar(o.s, 110, GROUPS[o.g].c)}<b>${o.n}</b></button>`).join('');
+  $('#hbMulti').querySelectorAll('.hb-mini').forEach(b => b.onclick = () => pick(+b.dataset.k));
+  $('#hbNote').textContent = 'Each shape is one hobby on the same five traits in the same order: Learning at the top, then clockwise.';
+}
+function drawDetail(){
+  if (sel < 0){ $('#hbDetail').innerHTML = `<span class="label">All of it together</span><h3>The overall mix</h3><p>The average across everything on the map. Tap any hobby to compare it with this outline.</p>${radar(AVG, 220, 'var(--accent)', {labels:true, pad:4})}`; return; }
+  const o = H[sel], c = GROUPS[o.g].c;
+  const link = o.tab ? `<a class="off-link" href="#projects" data-tab="${o.tab}">${o.link}</a>` : o.href ? `<a class="off-link-ext" href="${o.href}">${o.link}</a>` : '';
+  $('#hbDetail').innerHTML = `<span class="label" style="color:${c}">${GROUPS[o.g].n}</span><h3>${o.n}</h3><p>${o.d}</p>${link}${radar(o.s, 220, c, {labels:true, pad:4, under:AVG})}<p class="hb-cap">Dashed outline = the average across all hobbies.</p><div class="hb-scores">${DIMS.map((d, i) => `<span>${d}</span><b>${o.s[i]} / 5</b>`).join('')}</div><button class="hb-back" id="hbBack">Show the overall mix</button>`;
+  $('#hbBack').onclick = () => pick(-1);
+  const a = $('#hbDetail .off-link'); if (a) a.onclick = e => { e.preventDefault(); $('#' + a.dataset.tab).click(); $('#projects').scrollIntoView({behavior: reduce ? 'auto' : 'smooth'}); };
+}
+function pick(k){ sel = sel === k ? -1 : k; draw(); }
+function draw(){
+  document.querySelectorAll('.hb-seg button').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === view));
+  $('#hbMap').toggleAttribute('hidden', view !== 'map'); $('#hbMulti').hidden = view !== 'multi'; $('#hbAxes').style.visibility = view === 'map' ? 'visible' : 'hidden';
+  view === 'map' ? drawMap() : drawMulti(); drawDetail();
+}
+let lastW = 0; addEventListener('resize', () => { const w = $('#hbView').clientWidth; if ((w < 560) !== (lastW < 560) && view === 'map') drawMap(); lastW = w; });
+draw(); lastW = $('#hbView').clientWidth;
+})();
+
 
 /* ---------- COPY ---------- */
 $('#copyEmail').onclick = async e => { const b = e.currentTarget; try { await navigator.clipboard.writeText($('#email').textContent); b.textContent = 'Copied'; } catch { const r = document.createRange(); r.selectNodeContents($('#email')); const s = getSelection(); s.removeAllRanges(); s.addRange(r); b.textContent = 'Selected'; } setTimeout(() => b.textContent = 'Copy', 1600); };

@@ -1,0 +1,732 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Chase London | Marketing Analytics</title>
+<meta name="description" content="Chase London, Senior Data Asset Manager. Marketing analytics, data architecture and self-service dashboards, with working project demos.">
+<meta property="og:title" content="Chase London | Marketing Analytics">
+<meta property="og:description" content="Messy marketing data in. Clear decisions out. Career, project demos and contact.">
+<meta property="og:url" content="https://chasealondon.com">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230E6A87'/%3E%3Ctext x='16' y='22' font-family='Arial' font-weight='700' font-size='15' fill='white' text-anchor='middle'%3ECL%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Public+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E6ECEB; --ink:#15212B; --muted:#56646E; --line:#D2DAD9;
+  --accent:#0E6A87; --accent-soft:#D5E8EE; --heat:#D96A22; --heat-soft:#F7E1D1;
+  --c-trane:#0E6A87; --c-magenta:#A8416F; --c-ir:#6F7F8A;
+  --good:#2E7D4F; --warn:#B7791F;
+  --display:"Bricolage Grotesque", "Avenir Next", "Segoe UI", sans-serif;
+  --body:"Public Sans", "Segoe UI", system-ui, sans-serif;
+  --mono:"JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#0D1419; --surface:#151F26; --surface-2:#1C2830; --ink:#E4EBEE; --muted:#93A3AD; --line:#2A3740;
+    --accent:#56B6D4; --accent-soft:#16333E; --heat:#F0924F; --heat-soft:#3A2518;
+    --c-trane:#56B6D4; --c-magenta:#D47AA2; --c-ir:#8FA0AB; --good:#5CC089; --warn:#E0A94A;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0D1419; --surface:#151F26; --surface-2:#1C2830; --ink:#E4EBEE; --muted:#93A3AD; --line:#2A3740;
+  --accent:#56B6D4; --accent-soft:#16333E; --heat:#F0924F; --heat-soft:#3A2518;
+  --c-trane:#56B6D4; --c-magenta:#D47AA2; --c-ir:#8FA0AB; --good:#5CC089; --warn:#E0A94A;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.6;padding-inline:20px}
+.wrap{max-width:1120px;margin:0 auto}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.1}
+h2{font-size:clamp(28px,4vw,40px);font-weight:800;letter-spacing:-.01em}
+h3{font-size:20px;font-weight:600}
+p{margin:0}
+a{color:var(--accent)}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.mono{font-family:var(--mono)}
+.label{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+
+/* nav */
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);margin-inline:-20px;padding:10px 20px}
+.nav .wrap{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.brand{font-family:var(--display);font-weight:800;font-size:18px;text-decoration:none;color:var(--ink);margin-right:auto}
+.nav-links{display:flex;gap:18px;flex-wrap:wrap}
+.nav-links a{font-family:var(--mono);font-size:13px;color:var(--muted);text-decoration:none}
+.nav-links a:hover{color:var(--ink)}
+.skim-btn{border:1px solid var(--ink);background:var(--ink);color:var(--bg);border-radius:999px;padding:6px 14px;font-size:13px;font-weight:600;cursor:pointer}
+.skim-btn[aria-pressed="true"]{background:transparent;color:var(--ink)}
+@media (max-width:720px){.nav-links{display:none}}
+
+section{padding-block:72px;border-bottom:1px solid var(--line)}
+section:last-of-type{border-bottom:0}
+.sec-head{display:grid;gap:10px;margin-bottom:32px;max-width:680px}
+.sec-head p{color:var(--muted)}
+
+/* hero */
+.hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:40px;align-items:center;padding-block:56px 64px}
+.hero h1{font-size:clamp(38px,5.6vw,64px);font-weight:800;letter-spacing:-.02em;margin-top:14px}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.hero .lede{margin-top:18px;font-size:18px;color:var(--muted);max-width:52ch}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}
+.btn{display:inline-flex;align-items:center;gap:8px;border-radius:8px;padding:10px 16px;font-weight:600;font-size:15px;text-decoration:none;cursor:pointer;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+.pipe{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px}
+.pipe-top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:2px;background:var(--surface-2)}
+.seg button{border:0;background:transparent;border-radius:999px;padding:4px 12px;font-size:12px;font-family:var(--mono);cursor:pointer;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgb(0 0 0/.12)}
+#pipeCanvas{display:block;width:100%;height:300px}
+.pipe-cap{font-size:13px;color:var(--muted);margin-top:6px;min-height:2.6em}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin-top:30px}
+.stat{background:var(--bg);padding:14px 16px}
+.stat b{display:block;font-family:var(--display);font-size:30px;font-weight:800;font-variant-numeric:tabular-nums}
+.stat span{font-size:13px;color:var(--muted)}
+@media (max-width:880px){.hero{grid-template-columns:1fr}#pipeCanvas{height:250px}}
+
+/* timeline */
+.gantt{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px 20px 12px}
+.g-row{display:grid;grid-template-columns:220px 1fr;gap:16px;align-items:center;padding-block:6px}
+.g-name{font-size:14px;line-height:1.3}
+.g-name small{display:block;color:var(--muted);font-size:12px;font-family:var(--mono)}
+.g-track{position:relative;height:30px;background:repeating-linear-gradient(90deg,transparent 0 calc(10.2564% - 1px),var(--line) calc(10.2564% - 1px) 10.2564%)}
+.g-bar{position:absolute;top:3px;bottom:3px;border-radius:6px;border:0;cursor:pointer;background:var(--co);opacity:.35;transition:opacity .2s,transform .2s;padding:0}
+.g-bar:hover{opacity:.7}
+.g-bar[aria-selected="true"]{opacity:1}
+.g-bar.dim{opacity:.08}
+.g-row.dim .g-name{opacity:.4}
+.g-axis{display:grid;grid-template-columns:220px 1fr;gap:16px;margin-top:4px}
+.g-ticks{position:relative;height:18px}
+.g-ticks span{position:absolute;transform:translateX(-50%);font-family:var(--mono);font-size:11px;color:var(--muted)}
+.g-note{font-size:13px;color:var(--muted);margin-top:10px}
+@media (max-width:720px){
+  .g-row,.g-axis{grid-template-columns:1fr;gap:4px}
+  .g-axis>div:first-child{display:none}
+}
+.role{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:32px;margin-top:24px}
+.role h3{font-size:26px;font-weight:800}
+.role .meta{font-family:var(--mono);font-size:13px;color:var(--muted);margin-top:6px}
+.role .sum{margin-top:14px;max-width:62ch}
+.role ul{margin:0;padding-left:18px;display:grid;gap:8px}
+.role li::marker{color:var(--co)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
+.chip{font-family:var(--mono);font-size:12px;border:1px solid var(--line);border-radius:999px;padding:3px 10px;background:var(--surface)}
+@media (max-width:820px){.role{grid-template-columns:1fr}}
+
+/* projects */
+.tabs{display:flex;gap:6px;flex-wrap:wrap;border-bottom:1px solid var(--line);margin-bottom:24px}
+.tab{border:0;background:transparent;padding:10px 14px;cursor:pointer;font-weight:600;color:var(--muted);border-bottom:3px solid transparent;margin-bottom:-1px}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.proj{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:36px;align-items:start}
+.proj .where{font-family:var(--mono);font-size:13px;color:var(--muted);margin-top:6px}
+.psa{display:grid;gap:16px;margin-top:20px}
+.psa div{display:grid;gap:4px}
+.psa p{max-width:60ch}
+.demo{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px}
+.demo-cap{font-size:13px;color:var(--muted);margin-bottom:14px}
+.flag{display:inline-block;font-family:var(--mono);font-size:11px;background:var(--heat-soft);color:var(--heat);border-radius:4px;padding:2px 6px;margin-left:6px;vertical-align:middle;letter-spacing:.04em}
+@media (max-width:880px){.proj{grid-template-columns:1fr}}
+
+/* data model demo */
+.srcs{display:flex;flex-wrap:wrap;gap:8px}
+.src{border:1px solid var(--line);background:var(--surface-2);border-radius:8px;padding:7px 12px;cursor:pointer;font-family:var(--mono);font-size:13px;color:var(--muted)}
+.src[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--ink)}
+.meter{height:8px;background:var(--surface-2);border-radius:99px;margin:18px 0 6px;overflow:hidden}
+.meter i{display:block;height:100%;background:var(--accent);width:0;transition:width .35s}
+.qs{list-style:none;padding:0;margin:14px 0 0;display:grid;gap:6px}
+.qs li{display:grid;grid-template-columns:20px 1fr;gap:8px;align-items:start;font-size:14px;color:var(--muted);padding:6px 8px;border-radius:6px}
+.qs li.on{color:var(--ink);background:var(--accent-soft)}
+.qs li .ck{width:16px;height:16px;border-radius:4px;border:1.5px solid var(--line);margin-top:3px;display:grid;place-items:center;font-size:11px;line-height:1}
+.qs li.on .ck{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+.qs li small{display:block;font-family:var(--mono);font-size:11px;color:var(--muted)}
+
+/* locator */
+.loc-svg{width:100%;height:auto;display:block;border-radius:8px;background:var(--surface-2);cursor:crosshair;touch-action:manipulation}
+.ctrl{display:grid;gap:6px;margin-top:14px}
+.ctrl-row{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:14px}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.loc-out{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;margin-top:16px}
+.loc-out ol{margin:6px 0 0;padding-left:18px;font-size:14px;font-variant-numeric:tabular-nums}
+.big{font-family:var(--display);font-size:28px;font-weight:800;font-variant-numeric:tabular-nums}
+.spark{width:100%;height:auto;display:block;margin-top:6px}
+@media (max-width:520px){.loc-out{grid-template-columns:1fr}}
+
+/* btu */
+.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.field{display:grid;gap:6px;font-size:14px}
+.field .opts{display:flex;flex-wrap:wrap;gap:4px}
+.opt{border:1px solid var(--line);background:var(--surface-2);border-radius:6px;padding:5px 10px;font-size:13px;cursor:pointer;color:var(--muted)}
+.opt[aria-pressed="true"]{border-color:var(--heat);background:var(--heat-soft);color:var(--ink)}
+.btu-out{display:grid;grid-template-columns:minmax(0,200px) 1fr;gap:20px;align-items:center;margin-top:18px}
+.btu-out svg{width:100%;height:auto}
+@media (max-width:520px){.form-grid{grid-template-columns:1fr}.btu-out{grid-template-columns:1fr}.btu-out svg{max-width:220px}}
+
+/* ab */
+.ab-in{display:grid;grid-template-columns:auto 1fr 1fr;gap:8px 12px;align-items:center;font-size:14px}
+.ab-in input{width:100%;font:inherit;font-family:var(--mono);font-size:14px;padding:7px 9px;border:1px solid var(--line);border-radius:6px;background:var(--surface-2);color:var(--ink);font-variant-numeric:tabular-nums}
+.ab-bars{margin-top:18px;display:grid;gap:10px}
+.ab-bar{display:grid;grid-template-columns:70px 1fr 64px;gap:10px;align-items:center;font-size:13px;font-variant-numeric:tabular-nums}
+.ab-track{position:relative;height:22px;background:var(--surface-2);border-radius:5px}
+.ab-fill{position:absolute;left:0;top:0;bottom:0;border-radius:5px}
+.ab-ci{position:absolute;top:50%;height:2px;background:var(--ink);transform:translateY(-50%)}
+.ab-ci::before,.ab-ci::after{content:"";position:absolute;top:-5px;width:2px;height:12px;background:var(--ink)}
+.ab-ci::before{left:0}.ab-ci::after{right:0}
+.verdict{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:16px}
+.pill{font-family:var(--mono);font-size:12px;border-radius:999px;padding:4px 10px;font-weight:600}
+.pill.good{background:color-mix(in srgb,var(--good) 18%,transparent);color:var(--good)}
+.pill.warn{background:color-mix(in srgb,var(--warn) 20%,transparent);color:var(--warn)}
+.kv{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:14px}
+.kv div{border-top:1px solid var(--line);padding-top:8px}
+.kv b{display:block;font-family:var(--display);font-size:22px;font-variant-numeric:tabular-nums}
+
+/* skills */
+.skills{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px}
+.skills h3{font-size:16px;margin-bottom:10px}
+.skill{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 12px;font-size:14px;cursor:pointer;margin:0 6px 8px 0}
+.skill[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.skill-read{margin-top:20px;padding:14px 16px;border-radius:var(--r);background:var(--accent-soft);font-size:15px;min-height:3.2em}
+@media (max-width:820px){.skills{grid-template-columns:1fr}}
+
+/* off hours */
+.off{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.off article{padding-top:14px;border-top:2px solid var(--ink);display:grid;gap:8px;align-content:start}
+.off p{font-size:15px;color:var(--muted)}
+@media (max-width:880px){.off{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:520px){.off{grid-template-columns:1fr}}
+
+/* contact */
+.contact{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:32px;align-items:end}
+.contact h2{font-size:clamp(32px,5vw,52px)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px;display:grid;gap:14px}
+.copy-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.copy-row code{font-family:var(--mono);font-size:15px;user-select:all;overflow-wrap:anywhere}
+.copy-btn{border:1px solid var(--line);background:var(--surface-2);border-radius:6px;padding:5px 10px;font-size:13px;cursor:pointer}
+@media (max-width:820px){.contact{grid-template-columns:1fr}}
+footer{padding-block:28px;font-size:13px;color:var(--muted);font-family:var(--mono)}
+
+/* skim */
+#skim{padding-block:48px}
+.skim-sheet{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:clamp(20px,4vw,44px);max-width:860px;margin:0 auto}
+.skim-sheet h1{font-size:34px;font-weight:800}
+.skim-sheet .sub{color:var(--muted);margin-top:6px}
+.skim-sheet h4{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:28px 0 8px;border-bottom:1px solid var(--line);padding-bottom:6px}
+.sk-job{margin-top:16px}
+.sk-job .top{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-weight:600}
+.sk-job .top span{font-family:var(--mono);font-size:13px;color:var(--muted);font-weight:400}
+.sk-job ul{margin:6px 0 0;padding-left:18px;font-size:15px}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+<style>html{-webkit-text-size-adjust:100%}body{margin:0}img{max-width:100%}</style>
+</head>
+<body>
+<nav class="nav" aria-label="Site">
+  <div class="wrap">
+    <a class="brand" href="#top">Chase London</a>
+    <div class="nav-links">
+      <a href="#career">career</a><a href="#projects">projects</a><a href="#skills">skills</a><a href="#off">off the clock</a><a href="#contact">contact</a>
+    </div>
+    <button class="skim-btn" id="skimBtn" aria-pressed="false">60-second version</button>
+  </div>
+</nav>
+
+<main id="explore" class="wrap">
+  <!-- HERO -->
+  <section class="hero" id="top">
+    <div>
+      <div class="label">Senior Data Asset Manager · Trane Technologies</div>
+      <h1>Messy marketing data in. <em>Clear decisions</em> out.</h1>
+      <p class="lede">I build the data structures, dashboards and self-service tools that show marketers what's working across every channel. Nine years in HVAC marketing, digital and dealer analytics.</p>
+      <div class="hero-actions">
+        <a class="btn primary" href="#projects">Try the project demos</a>
+        <a class="btn" href="#contact">Get in touch</a>
+      </div>
+      <div class="stats">
+        <div class="stat"><b>9 yrs</b><span>in marketing &amp; digital analytics</span></div>
+        <div class="stat"><b>8</b><span>sources joined in one dealer ROI dashboard</span></div>
+        <div class="stat"><b>5</b><span>roles across 3 companies</span></div>
+      </div>
+    </div>
+    <div class="pipe">
+      <div class="pipe-top">
+        <span class="label">What I do, in one picture</span>
+        <div class="seg" role="group" aria-label="Pipeline view">
+          <button id="modeRaw" aria-pressed="false">raw</button>
+          <button id="modeClean" aria-pressed="true">modeled</button>
+        </div>
+      </div>
+      <canvas id="pipeCanvas" aria-label="Animated diagram: marketing data sources flow into one clean model that feeds ROI, landing page and self-serve dashboards"></canvas>
+      <p class="pipe-cap" id="pipeCap"></p>
+    </div>
+  </section>
+
+  <!-- CAREER -->
+  <section id="career">
+    <div class="sec-head">
+      <div class="label">Career</div>
+      <h2>Nine years, one thread: making HVAC marketing measurable.</h2>
+      <p>Click any bar to open that role. I started in marketing, moved into analytics, led a team, and came back to Trane to run marketing data for the Americas.</p>
+    </div>
+    <div class="gantt" id="gantt" role="tablist" aria-label="Roles"></div>
+    <div class="role" id="roleDetail" role="tabpanel"></div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects">
+    <div class="sec-head">
+      <div class="label">Project lab</div>
+      <h2>Working demos of the kind of problems I solve.</h2>
+      <p>Each demo is a simplified rebuild with made-up data. The real work used company data I can't share.</p>
+    </div>
+    <div class="tabs" role="tablist" aria-label="Projects">
+      <button class="tab" role="tab" aria-selected="true" aria-controls="p-model" id="t-model">Marketing data model</button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="p-loc" id="t-loc">Dealer locator</button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="p-btu" id="t-btu">BTU calculator</button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="p-ab" id="t-ab">A/B testing</button>
+    </div>
+
+    <!-- model -->
+    <div class="proj" role="tabpanel" id="p-model" aria-labelledby="t-model">
+      <div>
+        <h3>One model for every marketing channel</h3>
+        <div class="where">Trane Technologies · 2024–present</div>
+        <div class="psa">
+          <div><span class="label">Problem</span><p>Campaign data lived in separate platforms. GA4, Campaign Manager, Meta and LinkedIn each told part of the story, and none of them connected to leads or dealers.</p></div>
+          <div><span class="label">What I did</span><p>Designed the data structures that join those sources into one clean model. Automated the prep with Alteryx and Python on cloud infrastructure, then built performance dashboards and trained marketers to use them on their own.</p></div>
+          <div><span class="label">Result</span><p>Marketers measure outcomes by tactic and channel without waiting on an analyst, and leadership sees one version of return on marketing spend.</p></div>
+        </div>
+      </div>
+      <div class="demo">
+        <p class="demo-cap">Turn sources on and off. Each question below needs specific sources joined before anyone can answer it.</p>
+        <div class="srcs" id="srcs"></div>
+        <div class="meter"><i id="meter"></i></div>
+        <div class="ctrl-row"><span class="label">Answerable questions</span><span class="mono" id="qCount"></span></div>
+        <ul class="qs" id="qs"></ul>
+      </div>
+    </div>
+
+    <!-- locator -->
+    <div class="proj" role="tabpanel" id="p-loc" aria-labelledby="t-loc" hidden>
+      <div>
+        <h3>Tuning the dealer locator</h3>
+        <div class="where">Magenta Technologies (Trane × Red Ventures JV) · 2022–2024</div>
+        <div class="psa">
+          <div><span class="label">Problem</span><p>Homeowners use the dealer locator to find someone to call. The search radius and ranking decide whether they see a good match or nothing at all.</p></div>
+          <div><span class="label">What I did</span><p>Coordinated locator strategy, analysis, monitoring and testing with the Trane team, dealers and developers.</p></div>
+          <div><span class="label">Result</span><p>A locator tuned with data for both sides: homeowners see relevant dealers and dealers get better-matched leads.</p></div>
+        </div>
+      </div>
+      <div class="demo">
+        <p class="demo-cap">Click the map to move the homeowner. Drag the radius to see the tradeoff. <span class="flag">SAMPLE DATA</span></p>
+        <svg class="loc-svg" id="locSvg" viewBox="0 0 400 260" role="img" aria-label="Map of sample dealers with a search radius around the homeowner"></svg>
+        <div class="ctrl">
+          <div class="ctrl-row"><label for="radius">Search radius</label><span class="mono" id="radOut"></span></div>
+          <input type="range" id="radius" min="10" max="60" step="5" value="25">
+        </div>
+        <div class="loc-out">
+          <div><span class="label">Nearest dealers</span><ol id="nearest"></ol></div>
+          <div>
+            <span class="label">Searches that find nobody</span>
+            <div class="big" id="zeroRate"></div>
+            <svg class="spark" id="zeroSpark" viewBox="0 0 220 70" aria-label="Share of searches with no results by radius"></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- btu -->
+    <div class="proj" role="tabpanel" id="p-btu" aria-labelledby="t-btu" hidden>
+      <div>
+        <h3>A BTU calculator for homeowners</h3>
+        <div class="where">Magenta Technologies (Trane × Red Ventures JV) · 2022–2024</div>
+        <div class="psa">
+          <div><span class="label">Problem</span><p>Most homeowners have no idea what size system they need, and that uncertainty stalls them before they ever call a dealer.</p></div>
+          <div><span class="label">What I did</span><p>Researched, built and developed a BTU calculator for the website with dealers, the Trane team, engineering and developers.</p></div>
+          <div><span class="label">Result</span><p>Shoppers get a starting number and arrive at the dealer conversation with better context.</p></div>
+        </div>
+      </div>
+      <div class="demo">
+        <p class="demo-cap">A rule-of-thumb version. Real sizing uses a Manual J load calculation done by a dealer. <span class="flag">SIMPLIFIED</span></p>
+        <div class="field">
+          <div class="ctrl-row"><label for="sqft">Home size</label><span class="mono" id="sqftOut"></span></div>
+          <input type="range" id="sqft" min="600" max="4000" step="50" value="1800">
+        </div>
+        <div class="form-grid" id="btuOpts" style="margin-top:14px"></div>
+        <div class="btu-out">
+          <svg id="gauge" viewBox="0 0 200 120" role="img" aria-label="System size gauge"></svg>
+          <div>
+            <span class="label">Estimated cooling load</span>
+            <div class="big" id="btuOut"></div>
+            <p id="btuNote" style="font-size:14px;color:var(--muted);margin-top:4px"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ab -->
+    <div class="proj" role="tabpanel" id="p-ab" aria-labelledby="t-ab" hidden>
+      <div>
+        <h3>Testing the site instead of guessing</h3>
+        <div class="where">Magenta Technologies (Trane × Red Ventures JV) · 2021–2022</div>
+        <div class="psa">
+          <div><span class="label">Problem</span><p>Pages and calls to action were designed on instinct, and the team couldn't tell where a visitor was in their buying journey.</p></div>
+          <div><span class="label">What I did</span><p>Worked with data engineers, developers and creative to A/B test CTAs, pages and site paths. Reworked how on-site journeys are classified so we could read visitor intent.</p></div>
+          <div><span class="label">Result</span><p>Changes shipped on evidence, and new KPIs for site health and customer journeys fed business reviews with Trane.</p></div>
+        </div>
+      </div>
+      <div class="demo">
+        <p class="demo-cap">Enter results from a test to read out lift and significance. <span class="flag">EXAMPLE NUMBERS</span></p>
+        <div class="ab-in">
+          <span></span><span class="label">Visitors</span><span class="label">Conversions</span>
+          <label for="nA">A · current</label><input id="nA" type="number" min="1" value="12400"><input id="cA" type="number" min="0" value="310" aria-label="Conversions A">
+          <label for="nB">B · new CTA</label><input id="nB" type="number" min="1" value="12380"><input id="cB" type="number" min="0" value="372" aria-label="Conversions B">
+        </div>
+        <div class="ab-bars" id="abBars"></div>
+        <div class="kv" id="abKv"></div>
+        <div class="verdict" id="abVerdict"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills">
+    <div class="sec-head">
+      <div class="label">Toolkit</div>
+      <h2>Tools grouped by the job they do.</h2>
+      <p>Pick a skill to see where I've used it. The career chart above updates to match.</p>
+    </div>
+    <div class="skills" id="skillGroups"></div>
+    <div class="skill-read" id="skillRead" aria-live="polite">Pick a skill to trace it through my career.</div>
+  </section>
+
+  <!-- OFF HOURS -->
+  <section id="off">
+    <div class="sec-head">
+      <div class="label">Off the clock</div>
+      <h2>I build things after hours too.</h2>
+    </div>
+    <div class="off">
+      <article><span class="label">E-commerce</span><h3>Runs a Shopify store</h3><p>I own Classic Lollipop end to end: products, email marketing and the analytics behind both. It's where I test marketing ideas with my own money.</p></article>
+      <article><span class="label">Hands-on</span><h3>DIY builds</h3><p>Truck upgrades, home AV and security systems, electronics. If it can be wired, mounted or tuned, I'd rather do it myself.</p></article>
+      <article><span class="label">Craft</span><h3>Miniature painting</h3><p>Patience, steady hands and a lot of layering. Good practice for detail work.</p></article>
+      <article><span class="label">Fuel</span><h3>Coffee and brewing</h3><p>Dialing in a recipe is just another experiment with variables to control.</p></article>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="contact">
+      <div>
+        <div class="label">Contact</div>
+        <h2 style="margin-top:12px">Need your marketing data to make sense? Let's talk.</h2>
+        <p style="margin-top:14px;color:var(--muted);max-width:52ch">I'm interested in marketing analytics, data strategy and analytics leadership roles.</p>
+      </div>
+      <div class="card">
+        <div>
+          <span class="label">Email</span>
+          <div class="copy-row"><code id="email">chasealondon@gmail.com</code><button class="copy-btn" id="copyEmail">Copy</button></div>
+        </div>
+        <div>
+          <span class="label">LinkedIn</span>
+          <div><a href="https://www.linkedin.com/in/londonchase/" target="_blank" rel="noopener">linkedin.com/in/londonchase</a></div>
+        </div>
+        <div>
+          <span class="label">Based in</span>
+          <div>Charlotte, NC area · open to hybrid</div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <footer>Built by hand, with sample data in every demo.</footer>
+</main>
+
+<div id="skim" class="wrap" hidden>
+  <div class="skim-sheet" id="skimSheet"></div>
+</div>
+
+<script>
+(() => {
+const $ = s => document.querySelector(s);
+const cssv = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------- DATA ---------- */
+const roles = [
+  {id:'ir', co:'Ingersoll Rand', color:'--c-ir', start:2017, end:2018, title:'Marketing Associate', loc:'Davidson, NC',
+   div:'Residential HVAC Division',
+   sum:"Supported Trane's residential HVAC digital strategy across brands, with a focus on omni-channel experiences and channel growth. Managed the customer experience for an HVAC online catalog and led reporting on major SBU projects.",
+   bullets:["Led a nationwide software rollout for dealers, distributors and corporate users.","Turned external vendor data into reports for decision-making.","Built the database behind a new online shopping tool."],
+   tools:['Excel','Vendor data','Training']},
+  {id:'t1', co:'Trane Technologies', color:'--c-trane', start:2018, end:2021, title:'Digital Marketing Specialist', loc:'Davidson, NC',
+   div:'Residential Division',
+   sum:"Worked with Marketing, Customer Experience and Sales to build data strategy. Connected new data sources through APIs and FTPs and joined mismatched data sets for goal tracking.",
+   bullets:["Built the Elite Dealer ROI Dashboard for Sales leaders, joining 8 data sources in Alteryx for Tableau Server.","Automated e-commerce product scraping to enforce pricing and branding rules.","Built a web scraping agent for competitive analysis that found market gaps and potential customers."],
+   tools:['Alteryx','Tableau','APIs & scraping','Dashboards']},
+  {id:'m1', co:'Magenta Technologies', color:'--c-magenta', start:2021, end:2022, title:'Marketing Data Analyst', loc:'Fort Mill, SC',
+   div:'Data Delivery & Technical Solutions, Residential HVAC',
+   sum:"Helped grow the data insights and strategy team, leading testing, reporting and new analysis processes that supported Trane's business goals.",
+   bullets:["Rebuilt how on-site customer journeys are classified to read visitor intent.","Ran A/B tests on CTAs, pages and site paths with engineering, development and creative.","Defined new KPIs for site health and customer journeys and built the reporting for business reviews.","Improved forecasting accuracy for annual KPI plans."],
+   tools:['SQL','Tableau','Alteryx','A/B testing','Forecasting','Web analytics']},
+  {id:'m2', co:'Magenta Technologies', color:'--c-magenta', start:2022, end:2024, title:'Senior Data Analyst', loc:'Fort Mill, SC',
+   div:'Data Delivery & Technical Solutions, Residential HVAC', promo:true,
+   sum:"Promoted to senior analyst and took the lead coordinating the team. Centralized communication with partners, built new tools and methods, and cleared project roadblocks.",
+   bullets:["Led a team of analysts as primary point of contact for partners and adjacent teams.","Coordinated dealer locator strategy, analysis, monitoring and testing.","Owned data and reporting for a phone system migration.","Built the BTU Calculator for the website with dealers, engineering and developers.","Applied machine learning and third-party data to customer behavior analysis."],
+   tools:['Team leadership','Machine learning','Forecasting','A/B testing','Web analytics','Dashboards']},
+  {id:'t2', co:'Trane Technologies', color:'--c-trane', start:2024, end:2026.75, title:'Senior Data Asset Manager', loc:'Davidson, NC', current:true,
+   div:'Marketing Strategy & Operations, Americas',
+   sum:"Came back to Trane to speed up marketing analytics across channels and campaigns, reporting to the Marketing Strategy & Operations Leader for the Americas. I own how marketing data is architected, stored and kept clean.",
+   bullets:["Build reports that measure the outcome of each marketing tactic and improve return on marketing investment.","Design the data structures that join GA4, Campaign Manager, Meta and LinkedIn data for exploration and performance dashboards.","Analyze site performance and landing page strategy for paid campaigns.","Deploy self-service analytics with standard work, training sessions and ongoing support.","Present findings to marketing leadership."],
+   tools:['GA4','Campaign Manager','Meta & LinkedIn Ads','Alteryx','Python','Cloud','Dashboards','Training']},
+];
+const T0 = 2017, T1 = 2026.75;
+const pct = y => ((y - T0) / (T1 - T0)) * 100;
+
+/* ---------- GANTT ---------- */
+const gantt = $('#gantt');
+let selected = 't2';
+roles.slice().reverse().forEach(r => {
+  const row = document.createElement('div'); row.className = 'g-row'; row.dataset.id = r.id;
+  row.innerHTML = `<div class="g-name">${r.title}${r.promo ? ' ↑' : ''}<small>${r.co} · ${r.start}–${r.current ? 'now' : r.end}</small></div>
+    <div class="g-track"><button class="g-bar" role="tab" aria-label="${r.title}, ${r.co}" style="--co:var(${r.color});left:${pct(r.start)}%;width:${pct(r.end) - pct(r.start)}%"></button></div>`;
+  row.querySelector('button').addEventListener('click', () => selectRole(r.id));
+  gantt.appendChild(row);
+});
+const axis = document.createElement('div'); axis.className = 'g-axis';
+axis.innerHTML = '<div></div><div class="g-ticks">' + [2017,2019,2021,2023,2025].map(y => `<span style="left:${pct(y)}%">${y}</span>`).join('') + `<span style="left:97%">now</span></div>`;
+gantt.appendChild(axis);
+const note = document.createElement('p'); note.className = 'g-note'; note.textContent = 'Magenta Technologies was a joint venture between Trane and Red Ventures. It ran like a startup, which let me build fast, lead a team and ship tools before moving back inside Trane in 2024.';
+gantt.appendChild(note);
+
+function selectRole(id){
+  selected = id;
+  const r = roles.find(x => x.id === id);
+  gantt.querySelectorAll('.g-row').forEach(row => row.querySelector('.g-bar').setAttribute('aria-selected', row.dataset.id === id));
+  const d = $('#roleDetail'); d.style.setProperty('--co', `var(${r.color})`);
+  d.innerHTML = `<div><div class="label">${r.current ? 'Current role' : r.co}</div><h3 style="margin-top:8px">${r.title}</h3>
+    <div class="meta">${r.co} · ${r.div} · ${r.loc} · ${r.start}–${r.current ? 'present' : r.end}</div>
+    <p class="sum">${r.sum}</p><div class="chips">${r.tools.map(t => `<span class="chip">${t}</span>`).join('')}</div></div>
+    <ul>${r.bullets.map(b => `<li>${b}</li>`).join('')}</ul>`;
+}
+selectRole('t2');
+
+/* ---------- HERO PIPELINE ---------- */
+const cv = $('#pipeCanvas'), ctx = cv.getContext('2d');
+const sources = ['GA4','Campaign Mgr','Meta Ads','LinkedIn','CRM leads','Dealer data'];
+const outputs = ['Marketing ROI','Landing pages','Self-serve BI'];
+let mode = 'clean', W = 0, H = 0, parts = [];
+const caps = {clean:'Modeled: every source is cleaned, joined on shared keys and loaded into one model that feeds the reports marketers use.',
+  raw:'Raw: six platforms, six definitions of a "conversion," and nothing joins. This is where most marketing teams start.'};
+function size(){ const dpr = devicePixelRatio || 1; const r = cv.getBoundingClientRect(); W = r.width; H = r.height; cv.width = W*dpr; cv.height = H*dpr; ctx.setTransform(dpr,0,0,dpr,0,0); }
+function geo(){
+  const small = W < 480, fs = small ? 10 : 12, lw = small ? 70 : 92, rw = small ? 92 : 128;
+  const x0 = lw + 8, x1 = W - rw - 8, hx = (x0 + x1) / 2, hw = small ? 54 : 74, hh = H * .56;
+  return {fs, x0, x1, hx, hw, hh, sy: i => 22 + i * (H - 44) / (sources.length - 1), oy: i => H*.25 + i * H*.25};
+}
+function spawn(){ return {s: Math.random()*sources.length|0, o: Math.random()*outputs.length|0, t: Math.random()*2, v: .004 + Math.random()*.004, ph: Math.random()*6.28}; }
+for (let i = 0; i < 90; i++) parts.push(spawn());
+function bez(a,b,t){ const cx = (a[0]+b[0])/2; const u = 1-t; return [u*u*u*a[0]+3*u*u*t*cx+3*u*t*t*cx+t*t*t*b[0], u*u*u*a[1]+3*u*u*t*a[1]+3*u*t*t*b[1]+t*t*t*b[1]]; }
+function draw(time){
+  const g = geo(), ink = cssv('--ink'), muted = cssv('--muted'), line = cssv('--line'), acc = cssv('--accent'), heat = cssv('--heat'), surf = cssv('--surface-2');
+  ctx.clearRect(0,0,W,H);
+  ctx.font = `${g.fs}px "JetBrains Mono", monospace`; ctx.textBaseline = 'middle';
+  const hub = [g.hx - g.hw/2, H/2 - g.hh/2];
+  // paths
+  ctx.lineWidth = 1; ctx.strokeStyle = line;
+  sources.forEach((s,i) => { ctx.beginPath(); const a=[g.x0,g.sy(i)], b=[hub[0], H/2 + (i-2.5)*g.hh/7]; ctx.moveTo(...a); ctx.bezierCurveTo((a[0]+b[0])/2,a[1],(a[0]+b[0])/2,b[1],...b); ctx.stroke(); });
+  outputs.forEach((o,i) => { ctx.beginPath(); const a=[hub[0]+g.hw, H/2 + (i-1)*g.hh/4], b=[g.x1,g.oy(i)]; ctx.moveTo(...a); ctx.bezierCurveTo((a[0]+b[0])/2,a[1],(a[0]+b[0])/2,b[1],...b); ctx.globalAlpha = mode==='clean'?1:.35; ctx.stroke(); ctx.globalAlpha = 1; });
+  // particles
+  parts.forEach(p => {
+    if (!reduce) p.t += p.v * (mode==='raw' && p.t < 1 ? .6 : 1);
+    if (mode === 'raw' && p.t >= 1) p.t = 0;
+    if (p.t >= 2) Object.assign(p, spawn(), {t:0});
+    let x, y;
+    if (p.t < 1){
+      const a=[g.x0,g.sy(p.s)], b=[hub[0], H/2 + (p.s-2.5)*g.hh/7];
+      [x,y] = bez(a,b,p.t);
+      if (mode==='raw'){ y += Math.sin(time/300 + p.ph) * 14 * p.t; x += Math.cos(time/400 + p.ph) * 8 * p.t; }
+      ctx.fillStyle = mode==='raw' ? heat : muted;
+    } else {
+      const a=[hub[0]+g.hw, H/2 + (p.o-1)*g.hh/4], b=[g.x1,g.oy(p.o)];
+      [x,y] = bez(a,b,p.t-1); ctx.fillStyle = acc;
+    }
+    ctx.beginPath(); ctx.arc(x,y,2.2,0,6.283); ctx.fill();
+  });
+  // hub
+  ctx.fillStyle = surf; ctx.strokeStyle = mode==='clean' ? acc : heat; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.roundRect(hub[0],hub[1],g.hw,g.hh,10); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = ink; ctx.textAlign = 'center';
+  const hl = mode==='clean' ? ['clean','model'] : ['no','joins'];
+  ctx.fillText(hl[0], g.hx, H/2 - g.fs*.7); ctx.fillText(hl[1], g.hx, H/2 + g.fs*.7);
+  // labels
+  ctx.textAlign = 'right'; ctx.fillStyle = muted;
+  sources.forEach((s,i) => { ctx.fillText(s, g.x0 - 8, g.sy(i)); ctx.beginPath(); ctx.arc(g.x0, g.sy(i), 3, 0, 6.283); ctx.fill(); });
+  ctx.textAlign = 'left';
+  outputs.forEach((o,i) => { ctx.globalAlpha = mode==='clean'?1:.35; ctx.fillStyle = acc; ctx.beginPath(); ctx.arc(g.x1, g.oy(i), 3.5, 0, 6.283); ctx.fill(); ctx.fillStyle = ink; ctx.fillText(o, g.x1 + 8, g.oy(i)); ctx.globalAlpha = 1; });
+  if (!reduce) requestAnimationFrame(draw);
+}
+function setMode(m){ mode = m; $('#modeRaw').setAttribute('aria-pressed', m==='raw'); $('#modeClean').setAttribute('aria-pressed', m==='clean'); $('#pipeCap').textContent = caps[m]; if (reduce) draw(0); }
+$('#modeRaw').onclick = () => setMode('raw'); $('#modeClean').onclick = () => setMode('clean');
+size(); setMode('clean'); requestAnimationFrame(draw);
+addEventListener('resize', () => { size(); if (reduce) draw(0); });
+
+/* ---------- TABS ---------- */
+const tabs = [...document.querySelectorAll('.tab')];
+tabs.forEach(t => t.addEventListener('click', () => {
+  tabs.forEach(x => { const on = x === t; x.setAttribute('aria-selected', on); $('#' + x.getAttribute('aria-controls')).hidden = !on; });
+  if (t.id === 't-loc') renderLoc();
+}));
+
+/* ---------- DATA MODEL DEMO ---------- */
+const srcList = ['GA4','Campaign Mgr','Meta','LinkedIn','CRM leads','Dealers'];
+const active = new Set(['GA4','Campaign Mgr']);
+const questions = [
+  ['Sessions and engagement by landing page', ['GA4']],
+  ['Paid spend and clicks across every channel', ['Campaign Mgr','Meta','LinkedIn']],
+  ['Which paid landing pages convert?', ['GA4','Campaign Mgr']],
+  ['Cost per lead by channel', ['Campaign Mgr','Meta','LinkedIn','CRM leads']],
+  ['How many leads reached a dealer?', ['CRM leads','Dealers']],
+  ['Return on marketing spend by region', ['Campaign Mgr','Meta','LinkedIn','CRM leads','Dealers']],
+  ['Full funnel: ad → visit → lead → dealer', srcList],
+];
+const srcBox = $('#srcs');
+srcList.forEach(s => { const b = document.createElement('button'); b.className = 'src'; b.textContent = s; b.onclick = () => { active.has(s) ? active.delete(s) : active.add(s); renderModel(); }; srcBox.appendChild(b); });
+function renderModel(){
+  [...srcBox.children].forEach(b => b.setAttribute('aria-pressed', active.has(b.textContent)));
+  let n = 0;
+  $('#qs').innerHTML = questions.map(([q, need]) => { const ok = need.every(x => active.has(x)); if (ok) n++;
+    const missing = need.filter(x => !active.has(x));
+    return `<li class="${ok?'on':''}"><span class="ck">${ok?'✓':''}</span><span>${q}<small>${ok ? 'needs ' + need.join(' + ') : 'missing ' + missing.join(', ')}</small></span></li>`; }).join('');
+  $('#qCount').textContent = `${n} of ${questions.length}`;
+  $('#meter').style.width = (n / questions.length * 100) + '%';
+}
+renderModel();
+
+/* ---------- LOCATOR DEMO ---------- */
+let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+const MI = 0.5; // 1 svg unit = 0.5 mi -> map is 200 x 130 mi
+const metros = [[110,90,28],[290,150,34],[210,60,18]];
+const dealers = [];
+metros.forEach(([x,y,s]) => { for (let i = 0; i < 12; i++){ const a = rnd()*6.283, r = Math.sqrt(rnd())*s*2.2; dealers.push([x+Math.cos(a)*r, y+Math.sin(a)*r]); } });
+for (let i = 0; i < 9; i++) dealers.push([20 + rnd()*360, 20 + rnd()*220]);
+const names = ['Comfort Pros','Blue Ridge Air','Piedmont Heating','Lakeside HVAC','Summit Climate','Carolina Cooling','Northside Air','Ironwood Mechanical','Redbud Heat & Air','Crescent Comfort'];
+dealers.forEach((d,i) => d.push(names[i % names.length] + (i >= names.length ? ' ' + (Math.floor(i/names.length)+1) : '')));
+const home = [135,105];
+const samples = []; for (let i = 0; i < 600; i++) samples.push([rnd()*400, rnd()*260]);
+const dist = (a,b) => Math.hypot(a[0]-b[0], a[1]-b[1]) * MI;
+const zeroCurve = []; for (let r = 10; r <= 60; r += 5){ const z = samples.filter(s => !dealers.some(d => dist(s,d) <= r)).length / samples.length; zeroCurve.push([r,z]); }
+const svg = $('#locSvg'), rad = $('#radius');
+function renderLoc(){
+  const r = +rad.value, acc = 'var(--accent)';
+  $('#radOut').textContent = r + ' mi';
+  const inR = dealers.map(d => ({d, m: dist(home,d)})).sort((a,b) => a.m - b.m);
+  let html = `<circle cx="${home[0]}" cy="${home[1]}" r="${r/MI}" fill="var(--accent-soft)" stroke="var(--accent)" stroke-dasharray="4 3"/>`;
+  html += dealers.map(d => { const on = dist(home,d) <= r; return `<circle cx="${d[0]}" cy="${d[1]}" r="${on?4:3}" fill="${on?'var(--accent)':'var(--muted)'}" opacity="${on?1:.45}"/>`; }).join('');
+  html += `<g transform="translate(${home[0]},${home[1]})"><circle r="7" fill="var(--heat)" stroke="var(--surface)" stroke-width="2"/></g>`;
+  html += `<text x="8" y="252" font-family="JetBrains Mono, monospace" font-size="10" fill="var(--muted)">200 × 130 mi sample region</text>`;
+  svg.innerHTML = html;
+  const hits = inR.filter(x => x.m <= r);
+  $('#nearest').innerHTML = hits.length ? hits.slice(0,3).map(x => `<li>${x.d[2]} · ${x.m.toFixed(1)} mi</li>`).join('') + (hits.length > 3 ? `<li style="list-style:none;color:var(--muted)">+${hits.length-3} more in range</li>` : '') : `<li style="list-style:none;color:var(--heat)">No dealers in range. Closest is ${inR[0].m.toFixed(1)} mi away.</li>`;
+  const z = zeroCurve.find(p => p[0] === r)[1];
+  $('#zeroRate').textContent = Math.round(z*100) + '%';
+  const sx = r => 10 + (r-10)/50*200, sy = z => 60 - z*52;
+  const maxZ = 1;
+  let sp = `<line x1="10" y1="60" x2="210" y2="60" stroke="var(--line)"/>`;
+  sp += `<polyline fill="none" stroke="var(--accent)" stroke-width="2" points="${zeroCurve.map(p => sx(p[0])+','+sy(p[1]/maxZ)).join(' ')}"/>`;
+  sp += `<circle cx="${sx(r)}" cy="${sy(z)}" r="4" fill="var(--heat)"/>`;
+  sp += `<text x="10" y="69" font-size="9" font-family="JetBrains Mono, monospace" fill="var(--muted)">10 mi</text><text x="210" y="69" font-size="9" text-anchor="end" font-family="JetBrains Mono, monospace" fill="var(--muted)">60 mi</text>`;
+  $('#zeroSpark').innerHTML = sp;
+}
+rad.addEventListener('input', renderLoc);
+svg.addEventListener('click', e => { const b = svg.getBoundingClientRect(); home[0] = (e.clientX - b.left) / b.width * 400; home[1] = (e.clientY - b.top) / b.height * 260; renderLoc(); });
+renderLoc();
+
+/* ---------- BTU DEMO ---------- */
+const btuFields = [
+  {k:'climate', label:'Climate', opts:[['Cold',.9],['Mixed',1],['Hot',1.2]], v:1},
+  {k:'sun', label:'Sun exposure', opts:[['Shady',.9],['Average',1],['Sunny',1.1]], v:1},
+  {k:'ceil', label:'Ceiling height', opts:[['8 ft',1],['9 ft',1.1],['10+ ft',1.2]], v:0},
+  {k:'ins', label:'Insulation', opts:[['Poor',1.15],['Average',1],['Good',.9]], v:1},
+];
+const btuBox = $('#btuOpts');
+btuFields.forEach(f => {
+  const el = document.createElement('div'); el.className = 'field';
+  el.innerHTML = `<span>${f.label}</span><div class="opts">${f.opts.map((o,i) => `<button class="opt" data-i="${i}">${o[0]}</button>`).join('')}</div>`;
+  el.querySelectorAll('.opt').forEach(b => b.onclick = () => { f.v = +b.dataset.i; renderBtu(); });
+  f.el = el; btuBox.appendChild(el);
+});
+function renderBtu(){
+  const sq = +$('#sqft').value; $('#sqftOut').textContent = sq.toLocaleString() + ' sq ft';
+  btuFields.forEach(f => f.el.querySelectorAll('.opt').forEach(b => b.setAttribute('aria-pressed', +b.dataset.i === f.v)));
+  const mult = btuFields.reduce((m,f) => m * f.opts[f.v][1], 1);
+  const btu = Math.round(sq * 20 * mult / 100) * 100;
+  const tons = btu / 12000, nominal = Math.min(5, Math.max(1.5, Math.ceil(tons * 2) / 2));
+  $('#btuOut').textContent = btu.toLocaleString() + ' BTU/h';
+  $('#btuNote').textContent = tons > 5 ? `About ${tons.toFixed(1)} tons, above a single 5-ton residential system. A dealer would likely look at two systems or zoning.` : `About ${tons.toFixed(1)} tons. A dealer would likely start the conversation around a ${nominal}-ton system.`;
+  // gauge 1.5 -> 5 tons
+  const f = Math.max(0, Math.min(1, (tons - 1.5) / 3.5)), a0 = Math.PI, a = a0 - f*Math.PI;
+  const P = t => [100 + 80*Math.cos(t), 100 - 80*Math.sin(t)];
+  const [ex,ey] = P(a);
+  let s = `<path d="M20 100 A80 80 0 0 1 180 100" fill="none" stroke="var(--surface-2)" stroke-width="14" stroke-linecap="round"/>`;
+  if (f > 0) s += `<path d="M20 100 A80 80 0 0 1 ${ex.toFixed(1)} ${ey.toFixed(1)}" fill="none" stroke="var(--heat)" stroke-width="14" stroke-linecap="round"/>`;
+  [1.5,2.5,3.5,5].forEach(t => { const [x,y] = P(a0 - (t-1.5)/3.5*Math.PI); const [lx,ly] = [100 + 62*Math.cos(a0 - (t-1.5)/3.5*Math.PI), 100 - 62*Math.sin(a0 - (t-1.5)/3.5*Math.PI)]; s += `<text x="${lx}" y="${ly+3}" text-anchor="middle" font-size="9" font-family="JetBrains Mono, monospace" fill="var(--muted)">${t}</text>`; });
+  s += `<text x="100" y="96" text-anchor="middle" font-size="24" font-weight="800" font-family="Bricolage Grotesque, sans-serif" fill="var(--ink)">${tons.toFixed(1)}</text><text x="100" y="112" text-anchor="middle" font-size="10" font-family="JetBrains Mono, monospace" fill="var(--muted)">tons</text>`;
+  $('#gauge').innerHTML = s;
+}
+$('#sqft').addEventListener('input', renderBtu); renderBtu();
+
+/* ---------- A/B DEMO ---------- */
+function erf(x){ const s = Math.sign(x); x = Math.abs(x); const t = 1/(1+.3275911*x); const y = 1 - (((((1.061405429*t - 1.453152027)*t) + 1.421413741)*t - .284496736)*t + .254829592)*t*Math.exp(-x*x); return s*y; }
+const Phi = z => .5 * (1 + erf(z / Math.SQRT2));
+function renderAB(){
+  const nA = Math.max(1, +$('#nA').value||1), cA = Math.min(nA, Math.max(0, +$('#cA').value||0)), nB = Math.max(1, +$('#nB').value||1), cB = Math.min(nB, Math.max(0, +$('#cB').value||0));
+  const pA = cA/nA, pB = cB/nB, p = (cA+cB)/(nA+nB);
+  const se = Math.sqrt(p*(1-p)*(1/nA+1/nB)) || 1e-9, z = (pB-pA)/se, pv = 2*(1-Phi(Math.abs(z)));
+  const ciA = 1.96*Math.sqrt(pA*(1-pA)/nA), ciB = 1.96*Math.sqrt(pB*(1-pB)/nB);
+  const max = Math.max(pA+ciA, pB+ciB, .0001) * 1.15;
+  const bar = (lab, pr, ci, col) => `<div class="ab-bar"><span>${lab}</span><div class="ab-track"><div class="ab-fill" style="width:${pr/max*100}%;background:${col}"></div><div class="ab-ci" style="left:${Math.max(0,pr-ci)/max*100}%;width:${(Math.min(max,pr+ci)-Math.max(0,pr-ci))/max*100}%"></div></div><span class="mono">${(pr*100).toFixed(2)}%</span></div>`;
+  $('#abBars').innerHTML = bar('A', pA, ciA, 'var(--muted)') + bar('B', pB, ciB, 'var(--accent)');
+  const lift = pA ? (pB-pA)/pA*100 : 0, conf = (1-pv)*100;
+  $('#abKv').innerHTML = `<div><span class="label">Relative lift</span><b>${lift>=0?'+':''}${lift.toFixed(1)}%</b></div><div><span class="label">p-value</span><b>${pv < .001 ? '<0.001' : pv.toFixed(3)}</b></div><div><span class="label">Confidence</span><b>${Math.min(conf,99.9).toFixed(1)}%</b></div>`;
+  const sig = pv < .05;
+  $('#abVerdict').innerHTML = `<span class="pill ${sig?'good':'warn'}">${sig ? 'Significant at 95%' : 'Not significant yet'}</span><span style="font-size:14px;color:var(--muted)">${sig ? (lift > 0 ? 'Ship B, then keep monitoring.' : 'B is worse. Keep A.') : 'Keep the test running or test a bigger change.'}</span>`;
+}
+['nA','cA','nB','cB'].forEach(id => $('#'+id).addEventListener('input', renderAB)); renderAB();
+
+/* ---------- SKILLS ---------- */
+const groups = {
+  'Collect & prep': ['Alteryx','Python','SQL','APIs & scraping','Cloud'],
+  'Measure & analyze': ['GA4','Web analytics','Campaign Manager','Meta & LinkedIn Ads','A/B testing','Forecasting','Machine learning'],
+  'Share & enable': ['Tableau','Dashboards','Excel','Training','Team leadership'],
+};
+const sg = $('#skillGroups'); let curSkill = null;
+Object.entries(groups).forEach(([g, list]) => {
+  const col = document.createElement('div'); col.innerHTML = `<h3>${g}</h3>`;
+  list.forEach(s => { const b = document.createElement('button'); b.className = 'skill'; b.textContent = s; b.setAttribute('aria-pressed','false'); b.onclick = () => pickSkill(s === curSkill ? null : s); col.appendChild(b); });
+  sg.appendChild(col);
+});
+function pickSkill(s){
+  curSkill = s;
+  sg.querySelectorAll('.skill').forEach(b => b.setAttribute('aria-pressed', b.textContent === s));
+  const used = s ? roles.filter(r => r.tools.includes(s)) : roles;
+  gantt.querySelectorAll('.g-row').forEach(row => { const on = !s || used.some(r => r.id === row.dataset.id); row.classList.toggle('dim', !on); row.querySelector('.g-bar').classList.toggle('dim', !on); });
+  $('#skillRead').innerHTML = s ? `<b>${s}</b>: used in ${used.length} of ${roles.length} roles (${used.map(r => r.title + ', ' + r.start).join('; ')}). <a href="#career">See it on the career chart ↑</a>` : 'Pick a skill to trace it through my career.';
+}
+
+/* ---------- COPY ---------- */
+$('#copyEmail').onclick = async e => { const b = e.currentTarget; try { await navigator.clipboard.writeText($('#email').textContent); b.textContent = 'Copied'; } catch { const r = document.createRange(); r.selectNodeContents($('#email')); const s = getSelection(); s.removeAllRanges(); s.addRange(r); b.textContent = 'Selected'; } setTimeout(() => b.textContent = 'Copy', 1600); };
+
+/* ---------- SKIM MODE ---------- */
+$('#skimSheet').innerHTML = `<h1>Chase London</h1><p class="sub">Senior Data Asset Manager · Marketing analytics · Charlotte, NC area · chasealondon@gmail.com</p>
+  <h4>Summary</h4><p>Senior Data Asset Manager with nearly a decade of marketing and digital analytics experience. I architect marketing data, build self-service analytics and turn insights into better online experiences and marketing return.</p>
+  <h4>Experience</h4>` + roles.slice().reverse().map(r => `<div class="sk-job"><div class="top">${r.title}, ${r.co}<span>${r.start}–${r.current?'present':r.end}</span></div><ul>${r.bullets.slice(0,3).map(b => `<li>${b}</li>`).join('')}</ul></div>`).join('') +
+  `<h4>Skills</h4><p>${Object.values(groups).flat().join(' · ')}</p>`;
+$('#skimBtn').onclick = e => { const on = e.currentTarget.getAttribute('aria-pressed') !== 'true'; e.currentTarget.setAttribute('aria-pressed', on); e.currentTarget.textContent = on ? 'Full site' : '60-second version'; $('#explore').hidden = on; $('#skim').hidden = !on; scrollTo(0,0); if (!on){ size(); } };
+})();
+</script>
+</body>
+</html>

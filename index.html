@@ -88,7 +88,13 @@ section:last-of-type{border-bottom:0}
 .seg button{border:0;background:transparent;border-radius:999px;padding:4px 12px;font-size:12px;font-family:var(--mono);cursor:pointer;color:var(--muted)}
 .seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgb(0 0 0/.12)}
 #pipeCanvas{display:block;width:100%;height:300px}
-.pipe-cap{font-size:13px;color:var(--muted);margin-top:6px;min-height:2.6em}
+.pipe-cap{font-size:13px;color:var(--muted);margin-top:6px;min-height:4.2em}
+.pipe-cap a{white-space:nowrap}
+.cases{display:flex;flex-wrap:wrap;gap:6px;margin:2px 0 4px}
+.case{border:1px solid var(--line);background:var(--surface-2);border-radius:999px;padding:4px 11px;font-size:12px;cursor:pointer;color:var(--muted);font-family:var(--mono);position:relative;overflow:hidden}
+.case[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);color:var(--ink)}
+.case[aria-pressed="true"].timing::after{content:"";position:absolute;left:0;bottom:0;height:2px;background:var(--accent);animation:caseTimer 9s linear forwards}
+@keyframes caseTimer{from{width:0}to{width:100%}}
 .stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin-top:30px}
 .stat{background:var(--bg);padding:14px 16px}
 .stat b{display:block;font-family:var(--display);font-size:30px;font-weight:800;font-variant-numeric:tabular-nums}
@@ -351,14 +357,15 @@ footer{padding-block:28px;font-size:13px;color:var(--muted);font-family:var(--mo
     </div>
     <div class="pipe">
       <div class="pipe-top">
-        <span class="label">What I do, in one picture</span>
-        <div class="seg" role="group" aria-label="Pipeline view">
-          <button id="modeRaw" aria-pressed="false">raw</button>
-          <button id="modeClean" aria-pressed="true">modeled</button>
+        <span class="label">Four problems I've solved</span>
+        <div class="seg" role="group" aria-label="Before or after">
+          <button id="modeRaw" aria-pressed="false">before</button>
+          <button id="modeClean" aria-pressed="true">after</button>
         </div>
       </div>
-      <canvas id="pipeCanvas" aria-label="Animated diagram: marketing data sources flow into one clean model that feeds ROI, landing page and self-serve dashboards"></canvas>
-      <p class="pipe-cap" id="pipeCap"></p>
+      <div class="cases" role="group" aria-label="Pick a problem" id="caseBtns"></div>
+      <canvas id="pipeCanvas" aria-label="Animated diagram of the selected project: its data inputs flow through the fix I designed into the results"></canvas>
+      <p class="pipe-cap"><span id="pipeCap"></span> <a href="#projects" id="pipeLink">See the project →</a></p>
     </div>
   </section>
 
@@ -749,62 +756,97 @@ selectRole('t2');
 
 /* ---------- HERO PIPELINE ---------- */
 const cv = $('#pipeCanvas'), ctx = cv.getContext('2d');
-const sources = ['GA4','Campaign Mgr','Meta Ads','LinkedIn','CRM leads','Dealer data'];
-const outputs = ['Marketing ROI','Landing pages','Self-serve BI'];
-let mode = 'clean', W = 0, H = 0, parts = [];
-const caps = {clean:'Modeled: every source is cleaned, joined on shared keys and loaded into one model that feeds the reports marketers use.',
-  raw:'Raw: six platforms, six definitions of a "conversion," and nothing joins. This is where most marketing teams start.'};
+const CASES = [
+  {id:'roi', name:'Dealer ROI', tab:'t-roi',
+   src:['Enrollment','Purchases','Financing','Lead programs','Warranty','Partner files'],
+   hub:{raw:['table per','source'], clean:['1 dealer key','+ date']},
+   out:{raw:['1 year at a time','days to refresh','distributors blind'], clean:['year over year','1-morning refresh','3,000+ dealers']},
+   cap:{raw:'Before: a separate table for every source, rebuilt every year. The dashboard could only show one year, and each refresh took days.',
+        clean:'After: every source keyed to one dealer ID and a date. Data appends monthly, the refresh takes a morning, and managers use it across 3,000+ dealers.'}},
+  {id:'loc', name:'Dealer locator', tab:'t-loc',
+   src:['Feedback','Response speed','Google reviews','Dealer level','Search logs'],
+   hub:{raw:['closest','= first'], clean:['dealer','score']},
+   out:{raw:['nearest, not best','fake "frustration"','empty results'], clean:['best dealer first','clean search data','3 choices, always']},
+   cap:{raw:'Before: dealers ranked by distance, and search logs made it look like homeowners kept searching in frustration.',
+        clean:'After: a score from feedback, response speed, reviews and dealer level. The "frustration" was searches logged on page load, and empty results now show a contact card.'}},
+  {id:'call', name:'Call tracking', tab:'t-call',
+   src:['Web sessions','Number pool','Bot dials','Dealer calls','Lead records'],
+   hub:{raw:['millions','of numbers'], clean:['few thousand','rotating']},
+   out:{raw:['inflated volume','~30-second calls','hard to trust'], clean:['junk calls gone','~1-minute calls','true lead volume']},
+   cap:{raw:'Before: a pool of millions of tracking numbers. Bots and random dials padded call volume and dragged average call time under 30 seconds.',
+        clean:'After: a few thousand rotating numbers. The "lost" calls were almost all junk, and average dealer call time doubled to about a minute.'}},
+  {id:'auto', name:'Automation', tab:'t-auto',
+   src:['Exports','Alteryx flows','Emailed files','Manual QA','Tableau refresh'],
+   hub:{raw:['by hand,','every cycle'], clean:['Dataiku','pipelines']},
+   out:{raw:['days of work','fragile flows','one-person bottleneck'], clean:['20+ automated flows','~5 hrs/week back','team trained']},
+   cap:{raw:'Before: recurring reports rebuilt by hand every cycle, on workflows that broke often.',
+        clean:'After: I led the move to Dataiku and Power Automate pipelines. 20+ flows run on schedule, and I trained the team to own them.'}},
+];
+let ci = 0, mode = 'clean', W = 0, H = 0, parts = [], auto = !reduce, timer = null;
+const cur = () => CASES[ci];
+const caseBox = $('#caseBtns');
+CASES.forEach((c, i) => { const b = document.createElement('button'); b.className = 'case'; b.textContent = c.name; b.onclick = () => { auto = false; clearInterval(timer); setCase(i); }; caseBox.appendChild(b); });
 function size(){ const dpr = devicePixelRatio || 1; const r = cv.getBoundingClientRect(); W = r.width; H = r.height; cv.width = W*dpr; cv.height = H*dpr; ctx.setTransform(dpr,0,0,dpr,0,0); }
 function geo(){
-  const small = W < 480, fs = small ? 10 : 12, lw = small ? 70 : 92, rw = small ? 92 : 128;
-  const x0 = lw + 8, x1 = W - rw - 8, hx = (x0 + x1) / 2, hw = small ? 54 : 74, hh = H * .56;
-  return {fs, x0, x1, hx, hw, hh, sy: i => 22 + i * (H - 44) / (sources.length - 1), oy: i => H*.25 + i * H*.25};
+  const c = cur(), small = W < 480, fs = small ? 9 : 12;
+  ctx.font = `${fs}px "JetBrains Mono", monospace`;
+  const lw = Math.max(...c.src.map(t => ctx.measureText(t).width)) + 14;
+  const rw = Math.max(...c.out.raw.concat(c.out.clean).map(t => ctx.measureText(t).width)) + 16;
+  const hw = Math.max(...c.hub.raw.concat(c.hub.clean).map(t => ctx.measureText(t).width)) + (small ? 10 : 18);
+  const x0 = lw + 4, x1 = W - rw - 4, hx = x0 + (x1 - x0) * .48, hh = H * .5, n = c.src.length;
+  return {fs, x0, x1, hx, hw, hh, n, sy: i => 20 + i * (H - 40) / (n - 1), hy: i => H/2 + (i - (n - 1) / 2) * hh / (n + 1), oy: i => H*.22 + i * H*.28};
 }
-function spawn(){ return {s: Math.random()*sources.length|0, o: Math.random()*outputs.length|0, t: Math.random()*2, v: .004 + Math.random()*.004, ph: Math.random()*6.28}; }
-for (let i = 0; i < 90; i++) parts.push(spawn());
+function spawn(){ const c = cur(); return {s: Math.random()*c.src.length|0, o: Math.random()*3|0, t: Math.random()*2, v: .004 + Math.random()*.004, ph: Math.random()*6.28}; }
+function resetParts(){ parts = []; for (let i = 0; i < 80; i++) parts.push(spawn()); }
 function bez(a,b,t){ const cx = (a[0]+b[0])/2; const u = 1-t; return [u*u*u*a[0]+3*u*u*t*cx+3*u*t*t*cx+t*t*t*b[0], u*u*u*a[1]+3*u*u*t*a[1]+3*u*t*t*b[1]+t*t*t*b[1]]; }
 function draw(time){
-  const g = geo(), ink = cssv('--ink'), muted = cssv('--muted'), line = cssv('--line'), acc = cssv('--accent'), heat = cssv('--heat'), surf = cssv('--surface-2');
+  const c = cur(), g = geo(), ink = cssv('--ink'), muted = cssv('--muted'), line = cssv('--line'), acc = cssv('--accent'), heat = cssv('--heat'), surf = cssv('--surface-2');
+  const clean = mode === 'clean';
   ctx.clearRect(0,0,W,H);
   ctx.font = `${g.fs}px "JetBrains Mono", monospace`; ctx.textBaseline = 'middle';
   const hub = [g.hx - g.hw/2, H/2 - g.hh/2];
-  // paths
   ctx.lineWidth = 1; ctx.strokeStyle = line;
-  sources.forEach((s,i) => { ctx.beginPath(); const a=[g.x0,g.sy(i)], b=[hub[0], H/2 + (i-2.5)*g.hh/7]; ctx.moveTo(...a); ctx.bezierCurveTo((a[0]+b[0])/2,a[1],(a[0]+b[0])/2,b[1],...b); ctx.stroke(); });
-  outputs.forEach((o,i) => { ctx.beginPath(); const a=[hub[0]+g.hw, H/2 + (i-1)*g.hh/4], b=[g.x1,g.oy(i)]; ctx.moveTo(...a); ctx.bezierCurveTo((a[0]+b[0])/2,a[1],(a[0]+b[0])/2,b[1],...b); ctx.globalAlpha = mode==='clean'?1:.35; ctx.stroke(); ctx.globalAlpha = 1; });
-  // particles
+  c.src.forEach((s,i) => { ctx.beginPath(); const a=[g.x0,g.sy(i)], b=[hub[0], g.hy(i)]; ctx.moveTo(...a); ctx.bezierCurveTo((a[0]+b[0])/2,a[1],(a[0]+b[0])/2,b[1],...b); ctx.stroke(); });
+  [0,1,2].forEach(i => { ctx.beginPath(); const a=[hub[0]+g.hw, H/2 + (i-1)*g.hh/4], b=[g.x1,g.oy(i)]; ctx.moveTo(...a); ctx.bezierCurveTo((a[0]+b[0])/2,a[1],(a[0]+b[0])/2,b[1],...b); ctx.stroke(); });
   parts.forEach(p => {
-    if (!reduce) p.t += p.v * (mode==='raw' && p.t < 1 ? .6 : 1);
-    if (mode === 'raw' && p.t >= 1) p.t = 0;
+    if (!reduce) p.t += p.v * (!clean && p.t < 1 ? .6 : 1);
     if (p.t >= 2) Object.assign(p, spawn(), {t:0});
     let x, y;
     if (p.t < 1){
-      const a=[g.x0,g.sy(p.s)], b=[hub[0], H/2 + (p.s-2.5)*g.hh/7];
-      [x,y] = bez(a,b,p.t);
-      if (mode==='raw'){ y += Math.sin(time/300 + p.ph) * 14 * p.t; x += Math.cos(time/400 + p.ph) * 8 * p.t; }
-      ctx.fillStyle = mode==='raw' ? heat : muted;
+      [x,y] = bez([g.x0,g.sy(p.s)], [hub[0], g.hy(p.s)], p.t);
+      if (!clean){ y += Math.sin(time/300 + p.ph) * 12 * p.t; x += Math.cos(time/400 + p.ph) * 7 * p.t; }
+      ctx.fillStyle = clean ? muted : heat;
     } else {
-      const a=[hub[0]+g.hw, H/2 + (p.o-1)*g.hh/4], b=[g.x1,g.oy(p.o)];
-      [x,y] = bez(a,b,p.t-1); ctx.fillStyle = acc;
+      [x,y] = bez([hub[0]+g.hw, H/2 + (p.o-1)*g.hh/4], [g.x1,g.oy(p.o)], p.t-1);
+      if (!clean){ y += Math.sin(time/250 + p.ph) * 6; }
+      ctx.fillStyle = clean ? acc : heat; ctx.globalAlpha = clean ? 1 : .5;
     }
-    ctx.beginPath(); ctx.arc(x,y,2.2,0,6.283); ctx.fill();
+    ctx.beginPath(); ctx.arc(x,y,2.2,0,6.283); ctx.fill(); ctx.globalAlpha = 1;
   });
-  // hub
-  ctx.fillStyle = surf; ctx.strokeStyle = mode==='clean' ? acc : heat; ctx.lineWidth = 1.5;
+  ctx.fillStyle = surf; ctx.strokeStyle = clean ? acc : heat; ctx.lineWidth = 1.5;
   ctx.beginPath(); ctx.roundRect(hub[0],hub[1],g.hw,g.hh,10); ctx.fill(); ctx.stroke();
   ctx.fillStyle = ink; ctx.textAlign = 'center';
-  const hl = mode==='clean' ? ['clean','model'] : ['no','joins'];
-  ctx.fillText(hl[0], g.hx, H/2 - g.fs*.7); ctx.fillText(hl[1], g.hx, H/2 + g.fs*.7);
-  // labels
+  const hl = c.hub[mode];
+  ctx.fillText(hl[0], g.hx, H/2 - g.fs*.75); ctx.fillText(hl[1], g.hx, H/2 + g.fs*.75);
   ctx.textAlign = 'right'; ctx.fillStyle = muted;
-  sources.forEach((s,i) => { ctx.fillText(s, g.x0 - 8, g.sy(i)); ctx.beginPath(); ctx.arc(g.x0, g.sy(i), 3, 0, 6.283); ctx.fill(); });
+  c.src.forEach((s,i) => { ctx.fillText(s, g.x0 - 8, g.sy(i)); ctx.beginPath(); ctx.arc(g.x0, g.sy(i), 3, 0, 6.283); ctx.fill(); });
   ctx.textAlign = 'left';
-  outputs.forEach((o,i) => { ctx.globalAlpha = mode==='clean'?1:.35; ctx.fillStyle = acc; ctx.beginPath(); ctx.arc(g.x1, g.oy(i), 3.5, 0, 6.283); ctx.fill(); ctx.fillStyle = ink; ctx.fillText(o, g.x1 + 8, g.oy(i)); ctx.globalAlpha = 1; });
+  c.out[mode].forEach((o,i) => { ctx.fillStyle = clean ? acc : heat; ctx.beginPath(); ctx.arc(g.x1, g.oy(i), 3.5, 0, 6.283); ctx.fill(); ctx.fillStyle = clean ? ink : heat; ctx.font = `${clean ? 600 : 400} ${g.fs}px "JetBrains Mono", monospace`; ctx.fillText(o, g.x1 + 8, g.oy(i)); });
   if (!reduce) requestAnimationFrame(draw);
 }
-function setMode(m){ mode = m; $('#modeRaw').setAttribute('aria-pressed', m==='raw'); $('#modeClean').setAttribute('aria-pressed', m==='clean'); $('#pipeCap').textContent = caps[m]; if (reduce) draw(0); }
+function refresh(){
+  const c = cur();
+  caseBox.querySelectorAll('.case').forEach((b, i) => { b.setAttribute('aria-pressed', i === ci); b.classList.remove('timing'); if (i === ci && auto){ void b.offsetWidth; b.classList.add('timing'); } });
+  $('#modeRaw').setAttribute('aria-pressed', mode === 'raw'); $('#modeClean').setAttribute('aria-pressed', mode === 'clean');
+  $('#pipeCap').textContent = c.cap[mode];
+  if (reduce) draw(0);
+}
+function setCase(i){ ci = i; resetParts(); refresh(); }
+function setMode(m){ mode = m; refresh(); }
 $('#modeRaw').onclick = () => setMode('raw'); $('#modeClean').onclick = () => setMode('clean');
-size(); setMode('clean'); requestAnimationFrame(draw);
+$('#pipeLink').onclick = e => { e.preventDefault(); $('#' + cur().tab).click(); $('#projects').scrollIntoView({behavior: reduce ? 'auto' : 'smooth'}); };
+size(); resetParts(); refresh(); requestAnimationFrame(draw);
+if (auto) timer = setInterval(() => { if (auto) setCase((ci + 1) % CASES.length); }, 9000);
 addEventListener('resize', () => { size(); if (reduce) draw(0); });
 
 /* ---------- TABS ---------- */

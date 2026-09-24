@@ -305,6 +305,14 @@ section:last-of-type{border-bottom:0}
 .qs li .ck{width:16px;height:16px;border-radius:4px;border:1.5px solid var(--line);margin-top:3px;display:grid;place-items:center;font-size:11px;line-height:1}
 .qs li.on .ck{background:var(--accent);border-color:var(--accent);color:var(--bg)}
 .qs li small{display:block;font-family:var(--mono);font-size:11px;color:var(--muted)}
+.src-tools{display:flex;gap:6px;margin:-4px 0 10px}
+.qs li{transition:background .25s,box-shadow .25s}
+.qs li.touch{box-shadow:inset 3px 0 0 var(--accent)}
+.qtags{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px}
+.qtag{font-family:var(--mono);font-size:10.5px;border-radius:4px;padding:1px 6px;border:1px dashed var(--line);color:var(--muted)}
+.qtag.have{border-style:solid;border-color:var(--accent);color:var(--ink);background:var(--surface)}
+.qtag.last{outline:2px solid var(--accent);outline-offset:1px}
+.qs li .qn{color:var(--ink)}
 
 /* locator */
 .loc-svg{width:100%;height:auto;display:block;border-radius:8px;background:var(--surface-2);cursor:crosshair;touch-action:manipulation}
@@ -624,7 +632,8 @@ footer{padding-block:28px;font-size:13px;color:var(--muted);font-family:var(--mo
         </div>
       </div>
       <div class="demo">
-        <p class="demo-cap">Turn sources on and off. Each question below needs specific sources joined before anyone can answer it.</p>
+        <p class="demo-cap">Turn sources on and off. A question lights up once every source it needs is joined in; the tags under each question show what's connected and what's still missing.</p>
+        <div class="src-tools"><button class="copy-btn" id="srcAll">Connect all</button><button class="copy-btn" id="srcNone">Clear</button></div>
         <div class="srcs" id="srcs"></div>
         <div class="meter"><i id="meter"></i></div>
         <div class="ctrl-row"><span class="label">Answerable questions</span><span class="mono" id="qCount"></span></div>
@@ -1272,13 +1281,19 @@ const questions = [
   ['Full funnel: ad → visit → lead → dealer', srcList],
 ];
 const srcBox = $('#srcs');
-srcList.forEach(s => { const b = document.createElement('button'); b.className = 'src'; b.textContent = s; b.onclick = () => { active.has(s) ? active.delete(s) : active.add(s); renderModel(); }; srcBox.appendChild(b); });
+let lastSrc = null;
+srcList.forEach(s => { const b = document.createElement('button'); b.className = 'src'; b.textContent = s; b.dataset.s = s; b.onclick = () => { active.has(s) ? active.delete(s) : active.add(s); lastSrc = s; renderModel(); }; srcBox.appendChild(b); });
+$('#srcAll').onclick = () => { srcList.forEach(x => active.add(x)); lastSrc = null; renderModel(); };
+$('#srcNone').onclick = () => { active.clear(); lastSrc = null; renderModel(); };
 function renderModel(){
-  [...srcBox.children].forEach(b => b.setAttribute('aria-pressed', active.has(b.textContent)));
+  [...srcBox.children].forEach(b => b.setAttribute('aria-pressed', active.has(b.dataset.s)));
   let n = 0;
-  $('#qs').innerHTML = questions.map(([q, need]) => { const ok = need.every(x => active.has(x)); if (ok) n++;
-    const missing = need.filter(x => !active.has(x));
-    return `<li class="${ok?'on':''}"><span class="ck">${ok?'✓':''}</span><span>${q}<small>${ok ? 'needs ' + need.join(' + ') : 'missing ' + missing.join(', ')}</small></span></li>`; }).join('');
+  $('#qs').innerHTML = questions.map(([q, need]) => {
+    const have = need.filter(x => active.has(x)), ok = have.length === need.length; if (ok) n++;
+    const touch = lastSrc && need.includes(lastSrc);
+    const status = ok ? 'answerable' : `${have.length} of ${need.length} sources connected`;
+    return `<li class="${ok ? 'on' : ''} ${touch ? 'touch' : ''}"><span class="ck">${ok ? '✓' : ''}</span><span><span class="qn">${q}</span><small>${status}</small><span class="qtags">${need.map(x => `<span class="qtag ${active.has(x) ? 'have' : ''} ${x === lastSrc ? 'last' : ''}">${x}</span>`).join('')}</span></span></li>`;
+  }).join('');
   $('#qCount').textContent = `${n} of ${questions.length}`;
   $('#meter').style.width = (n / questions.length * 100) + '%';
 }

@@ -150,6 +150,25 @@ section:last-of-type{border-bottom:0}
 .flag{display:inline-block;font-family:var(--mono);font-size:11px;background:var(--heat-soft);color:var(--heat);border-radius:4px;padding:2px 6px;margin-left:6px;vertical-align:middle;letter-spacing:.04em}
 @media (max-width:880px){.proj{grid-template-columns:1fr}}
 
+/* church finance demo */
+.fin-top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.fin-exp{font-size:12px;color:var(--muted)}
+.fin-bars{display:grid;gap:7px;margin-top:14px}
+.fin-row{display:grid;grid-template-columns:130px 1fr 48px;gap:10px;align-items:center;font-size:13px;font-variant-numeric:tabular-nums}
+.fin-trk{position:relative;height:16px;background:var(--surface-2);border-radius:4px}
+.fin-trk i{position:absolute;left:0;top:0;bottom:0;border-radius:4px;transition:width .35s}
+.fin-trk b{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--ink)}
+.fin-row span:last-child{font-family:var(--mono);text-align:right}
+.fin-row.over{color:var(--heat)}
+.fin-sum{font-size:14px;margin-top:6px}
+.fin-aud{margin-top:18px;padding-top:14px;border-top:1px solid var(--line);display:grid;gap:10px}
+.fin-out{background:var(--surface-2);border-radius:8px;padding:12px 14px;font-size:14px;display:grid;gap:6px;min-height:150px}
+.fin-out ul{margin:0;padding-left:18px;display:grid;gap:4px}
+.fin-out .q{font-style:italic;color:var(--muted)}
+.fin-out table{width:100%;border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums}
+.fin-out td{padding:3px 0;border-bottom:1px solid var(--line)}
+.fin-out td:not(:first-child){text-align:right;font-family:var(--mono)}
+@media (max-width:520px){.fin-row{grid-template-columns:100px 1fr 44px}}
 /* dealer source-of-truth diagram */
 .sot{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,.75fr) auto minmax(0,1.25fr);gap:16px;align-items:start;margin-top:4px;padding-top:18px;border-top:1px solid var(--line)}
 .sot-col{display:grid;gap:8px;min-width:0}
@@ -378,6 +397,7 @@ footer{padding-block:28px;font-size:13px;color:var(--muted);font-family:var(--mo
     </div>
     <div class="tabs" role="tablist" aria-label="Projects">
       <button class="tab" role="tab" aria-selected="true" aria-controls="p-roi" id="t-roi">Dealer ROI dashboard</button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="p-fin" id="t-fin">Church finance</button>
       <button class="tab" role="tab" aria-selected="false" aria-controls="p-auto" id="t-auto">Reporting automation</button>
       <button class="tab" role="tab" aria-selected="false" aria-controls="p-model" id="t-model">Marketing data model</button>
       <button class="tab" role="tab" aria-selected="false" aria-controls="p-loc" id="t-loc">Dealer locator</button>
@@ -419,6 +439,33 @@ footer{padding-block:28px;font-size:13px;color:var(--muted);font-family:var(--mo
           <span class="label">After · one dealer key + date</span>
           <div class="sot-wide" id="sotWide"></div>
           <div class="sot-foot"><button class="copy-btn" id="sotAdd">Append next month</button><span class="mono" id="sotMsg"></span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- church finance -->
+    <div class="proj" role="tabpanel" id="p-fin" aria-labelledby="t-fin" hidden>
+      <div>
+        <h3>A budget everyone can read</h3>
+        <div class="where">Volunteer Finance Chair · United Methodist church, Mooresville, NC · 2024–present</div>
+        <div class="psa">
+          <div><span class="label">Problem</span><p>I stepped in during a season of big change: a new pastor and the loss of the youth minister. The church's finances lived in dense system exports few leaders could read. Year-to-date totals looked on track, but that hid problems account by account, and department leaders had no practical view of their own budgets.</p></div>
+          <div><span class="label">What I did</span><p>I own the monthly reporting cycle between the Finance Committee and the Administrative Council. I built one dataset that feeds three outputs: a narrative council report with flagged items and discussion questions, operational flags for the finance team, and one-page budget sheets for each department leader with personnel detail removed. I also wrote a four-question guide for when to use restricted funds versus the operating budget, to protect donor intent.</p></div>
+          <div><span class="label">What it surfaced</span><p>Several accounts were past their full-year budget by mid-year. The monthly operating gap was widening and general-fund cash was falling. One ministry's restricted fund was nearly empty while its operating line ran over, and some restricted accounts had gone negative, which I raised as a donor-compliance concern.</p></div>
+          <div><span class="label">Result</span><p>Leaders and the congregation now start budget conversations from the same facts. Reporting went from raw exports to a repeatable monthly package. I'm using the leadership change to rebuild the 2027 budget: retiring old account codes, consolidating overlapping accounts and moving from position-based to program-based budgeting.</p></div>
+        </div>
+      </div>
+      <div class="demo">
+        <p class="demo-cap">Seven months into the year. Switch views to see what a year-to-date total can hide, then pick who the report is for. <span class="flag">MADE-UP NUMBERS</span></p>
+        <div class="fin-top">
+          <div class="seg" role="group" aria-label="View"><button id="finTotal" aria-pressed="true">YTD total</button><button id="finAcct" aria-pressed="false">By account</button></div>
+          <span class="mono fin-exp">expected by July: 58%</span>
+        </div>
+        <div id="finBars" class="fin-bars"></div>
+        <div class="fin-aud">
+          <span class="label">Same data, three audiences</span>
+          <div class="seg" role="group" aria-label="Audience" id="finAudSeg"><button data-a="council" aria-pressed="true">Council</button><button data-a="finance" aria-pressed="false">Finance team</button><button data-a="dept" aria-pressed="false">Dept. leader</button></div>
+          <div class="fin-out" id="finOut"></div>
         </div>
       </div>
     </div>
@@ -767,6 +814,43 @@ tabs.forEach(t => t.addEventListener('click', () => {
   if (t.id === 't-loc') renderLoc();
 }));
 
+/* ---------- CHURCH FINANCE DEMO ---------- */
+const finAccts = [
+  // name, annual budget, YTD actual, note
+  ['Personnel', 210000, 118000],
+  ['Facilities & utilities', 48000, 36500],
+  ['Youth ministry', 9000, 9600, 'past full-year budget'],
+  ['Worship & music', 14000, 6800],
+  ['Children\'s ministry', 6500, 4700],
+  ['Office & admin', 12000, 7200],
+  ['Missions', 30000, 11200],
+  ['Building repairs', 8000, 8350, 'past full-year budget'],
+];
+const finExp = 7 / 12;
+let finView = 'total', finAud = 'council';
+function finRender(){
+  $('#finTotal').setAttribute('aria-pressed', finView === 'total'); $('#finAcct').setAttribute('aria-pressed', finView === 'acct');
+  document.querySelectorAll('#finAudSeg button').forEach(b => b.setAttribute('aria-pressed', b.dataset.a === finAud));
+  const row = (n, pct, over) => `<div class="fin-row ${over ? 'over' : ''}"><span>${n}</span><div class="fin-trk"><i style="width:${Math.min(pct, 1.15) / 1.15 * 100}%;background:${over ? 'var(--heat)' : pct > finExp + .05 ? 'var(--warn)' : 'var(--accent)'}"></i><b style="left:${finExp / 1.15 * 100}%"></b></div><span>${Math.round(pct * 100)}%</span></div>`;
+  const bud = finAccts.reduce((a, x) => a + x[1], 0), act = finAccts.reduce((a, x) => a + x[2], 0);
+  if (finView === 'total'){
+    $('#finBars').innerHTML = row('All accounts', act / bud, false) + `<p class="fin-sum">${Math.round(act / bud * 100)}% of the annual budget spent, right around the 58% you'd expect by July. On this view, everything looks fine.</p>`;
+  } else {
+    $('#finBars').innerHTML = finAccts.map(([n, b, a]) => row(n, a / b, a > b)).join('') + `<p class="fin-sum">Two accounts are already past their full-year budget and two more are running well ahead of pace. None of that shows up in the total.</p>`;
+  }
+  const money = v => (v < 0 ? '-$' : '$') + Math.abs(Math.round(v)).toLocaleString();
+  const out = {
+    council: `<b>Council report · July</b><ul><li>Overall spending is on pace, but two accounts have passed their annual budget.</li><li>The monthly gap between income and expenses has widened three months running.</li><li>General-fund cash is down from the start of the year.</li></ul><p class="q">For discussion: which ministries should we protect first if the gap keeps growing?</p>`,
+    finance: `<b>Finance team flags</b><ul><li>Youth ministry: operating line over budget; its restricted fund is nearly empty.</li><li>Building repairs: over budget. Check whether the roof repair should come from the restricted building fund.</li><li>Two restricted accounts are showing negative balances. Review for donor compliance.</li></ul>`,
+    dept: `<b>Youth ministry · budget sheet</b><table><tr><td>Annual budget</td><td>${money(9000)}</td></tr><tr><td>Spent through July</td><td>${money(9600)}</td></tr><tr><td>Remaining</td><td style="color:var(--heat)">${money(-600)}</td></tr><tr><td>Expected pace by July</td><td>${money(9000 * finExp)}</td></tr></table><p class="q">Personnel costs removed. Talk to the Finance Chair before new purchases.</p>`,
+  };
+  $('#finOut').innerHTML = out[finAud];
+}
+$('#finTotal').onclick = () => { finView = 'total'; finRender(); };
+$('#finAcct').onclick = () => { finView = 'acct'; finRender(); };
+document.querySelectorAll('#finAudSeg button').forEach(b => b.onclick = () => { finAud = b.dataset.a; finRender(); });
+finRender();
+
 /* ---------- DEALER SOURCE-OF-TRUTH DIAGRAM ---------- */
 const sotSrc = [['Financing','--c-trane'],['Leads','--c-magenta'],['Warranty','--heat'],['Incentives','--c-ir'],['Training','--good'],['Purchases','--warn']];
 $('#sotMinis').innerHTML = sotSrc.map(([n, c]) => `<div class="sot-mini" style="--c:var(${c})"><b>${n}</b><i><span>dealer</span><span>value</span><span>·</span><span>·</span></i></div>`).join('');
@@ -1016,6 +1100,7 @@ $('#skimSheet').innerHTML = `<h1>Chase London</h1><p class="sub">Senior Data Ass
   <h4>Summary</h4><p>Data leader who turns messy business problems into working data solutions. In nine years at Trane Technologies and a Trane venture, I've found where data was failing the business, designed the fix and led analysts, developers and stakeholders to deliver it. Today I own 20+ automated data flows and the dealer ROI dashboard managers use across a 3,000–5,000-dealer network. Looking for a data lead or analytics consulting role.</p>
   <h4>Experience</h4>` + roles.slice().reverse().map(r => `<div class="sk-job"><div class="top">${r.title}, ${r.co}<span>${r.start}–${r.current?'present':r.end}</span></div><ul>${r.bullets.slice(0,3).map(b => `<li>${b}</li>`).join('')}</ul></div>`).join('') +
   `<h4>Skills</h4><p>${Object.values(groups).flat().join(' · ')}</p>
+  <h4>Leadership &amp; volunteer</h4><p>Finance Chair, United Methodist church (2024–present): built an audience-segmented monthly reporting system, surfaced account-level overruns and restricted-fund issues hidden by on-track totals, and leading the 2027 move to program-based budgeting.</p>
   <h4>Education &amp; training</h4><p>UNC Charlotte: double major in Marketing and Management, plus Marketing Analytics coursework. Tableau, Alteryx and Dataiku courses; Trane Dataiku Champions group.</p>`;
 $('#skimBtn').onclick = e => { const on = e.currentTarget.getAttribute('aria-pressed') !== 'true'; e.currentTarget.setAttribute('aria-pressed', on); e.currentTarget.textContent = on ? 'Full site' : '60-second version'; $('#explore').hidden = on; $('#skim').hidden = !on; scrollTo(0,0); if (!on){ size(); } };
 })();

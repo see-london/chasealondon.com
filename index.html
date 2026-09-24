@@ -83,7 +83,14 @@ section:last-of-type{border-bottom:0}
 .hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}
 .btn{display:inline-flex;align-items:center;gap:8px;border-radius:8px;padding:10px 16px;font-weight:600;font-size:15px;text-decoration:none;cursor:pointer;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
 .btn.primary{background:var(--accent);border-color:var(--accent);color:var(--bg)}
-.pipe{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px}
+.pipe{background:var(--surface);border:1.5px solid var(--line);border-radius:14px;padding:14px;transition:border-color .5s,box-shadow .5s}
+.pipe.is-before{border-color:var(--heat);box-shadow:0 0 0 4px color-mix(in srgb,var(--heat) 14%,transparent)}
+.pipe.is-after{border-color:var(--accent);box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 14%,transparent)}
+.ba{display:inline-flex;border-radius:999px;padding:3px;background:var(--surface-2);border:1px solid var(--line)}
+.ba button{border:0;background:transparent;border-radius:999px;padding:6px 14px;font-family:var(--mono);font-size:13px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;color:var(--muted);transition:background .35s,color .35s,transform .35s}
+.ba #modeRaw[aria-pressed="true"]{background:var(--heat);color:#fff;transform:scale(1.06)}
+.ba #modeClean[aria-pressed="true"]{background:var(--accent);color:var(--bg);transform:scale(1.06)}
+.pipe-top .label b{font-weight:600}
 .pipe-top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}
 .seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:2px;background:var(--surface-2)}
 .seg button{border:0;background:transparent;border-radius:999px;padding:4px 12px;font-size:12px;font-family:var(--mono);cursor:pointer;color:var(--muted)}
@@ -94,7 +101,7 @@ section:last-of-type{border-bottom:0}
 .cases{display:flex;flex-wrap:wrap;gap:6px;margin:2px 0 4px}
 .case{border:1px solid var(--line);background:var(--surface-2);border-radius:999px;padding:4px 11px;font-size:12px;cursor:pointer;color:var(--muted);font-family:var(--mono);position:relative;overflow:hidden}
 .case[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);color:var(--ink)}
-.case[aria-pressed="true"].timing::after{content:"";position:absolute;left:0;bottom:0;height:2px;background:var(--accent);animation:caseTimer 9s linear forwards}
+.case[aria-pressed="true"].timing::after{content:"";position:absolute;left:0;bottom:0;height:2px;background:var(--accent);animation:caseTimer 10s linear forwards}
 @keyframes caseTimer{from{width:0}to{width:100%}}
 .stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin-top:30px}
 .stat{background:var(--bg);padding:14px 16px}
@@ -366,7 +373,7 @@ footer{padding-block:28px;font-size:13px;color:var(--muted);font-family:var(--mo
     <div class="pipe">
       <div class="pipe-top">
         <span class="label">Four problems I've solved</span>
-        <div class="seg" role="group" aria-label="Before or after">
+        <div class="ba" role="group" aria-label="Before or after">
           <button id="modeRaw" aria-pressed="false">before</button>
           <button id="modeClean" aria-pressed="true">after</button>
         </div>
@@ -782,10 +789,10 @@ const CASES = [
    cap:{raw:'Before: recurring reports rebuilt by hand every cycle, on workflows that broke often.',
         clean:'After: I redesigned recurring reporting end to end, from collecting files to checks and publishing, so it runs on schedule. 20+ pipelines across 6 brands and 4 BUs now feed 15+ dashboards leadership uses to make decisions.'}},
 ];
-let ci = 0, mode = 'clean', mix = 1, W = 0, H = 0, parts = [], auto = !reduce, timer = null;
+let ci = 0, mode = reduce ? 'clean' : 'raw', mix = reduce ? 1 : 0, W = 0, H = 0, parts = [], auto = !reduce, timer = null;
 const cur = () => CASES[ci];
 const caseBox = $('#caseBtns');
-CASES.forEach((c, i) => { const b = document.createElement('button'); b.className = 'case'; b.textContent = c.name; b.onclick = () => { auto = false; clearInterval(timer); setCase(i); }; caseBox.appendChild(b); });
+CASES.forEach((c, i) => { const b = document.createElement('button'); b.className = 'case'; b.textContent = c.name; b.onclick = () => { stopAuto(); setCase(i); }; caseBox.appendChild(b); });
 function size(){ const dpr = devicePixelRatio || 1; const r = cv.getBoundingClientRect(); W = r.width; H = r.height; cv.width = W*dpr; cv.height = H*dpr; ctx.setTransform(dpr,0,0,dpr,0,0); }
 const lerp = (a, b, t) => a + (b - a) * t;
 const mono = (px, w) => `${w || 400} ${px}px "JetBrains Mono", monospace`;
@@ -920,15 +927,18 @@ function refresh(){
   const c = cur();
   caseBox.querySelectorAll('.case').forEach((b, i) => { b.setAttribute('aria-pressed', i === ci); b.classList.remove('timing'); if (i === ci && auto){ void b.offsetWidth; b.classList.add('timing'); } });
   $('#modeRaw').setAttribute('aria-pressed', mode === 'raw'); $('#modeClean').setAttribute('aria-pressed', mode === 'clean');
+  const pp = document.querySelector('.pipe'); pp.classList.toggle('is-before', mode === 'raw'); pp.classList.toggle('is-after', mode === 'clean');
   $('#pipeCap').textContent = c.cap[mode];
   if (reduce) draw(0);
 }
 function setCase(i){ ci = i; resetParts(); refresh(); }
 function setMode(m){ mode = m; refresh(); }
-$('#modeRaw').onclick = () => setMode('raw'); $('#modeClean').onclick = () => setMode('clean');
+$('#modeRaw').onclick = () => { stopAuto(); setMode('raw'); }; $('#modeClean').onclick = () => { stopAuto(); setMode('clean'); };
 $('#pipeLink').onclick = e => { e.preventDefault(); $('#' + cur().tab).click(); $('#projects').scrollIntoView({behavior: reduce ? 'auto' : 'smooth'}); };
 size(); resetParts(); refresh(); requestAnimationFrame(draw);
-if (auto) timer = setInterval(() => { if (auto) setCase((ci + 1) % CASES.length); }, 9000);
+function stopAuto(){ auto = false; clearTimeout(timer); caseBox.querySelectorAll('.case').forEach(b => b.classList.remove('timing')); }
+function cycle(){ if (!auto) return; mode = 'raw'; setCase(ci); timer = setTimeout(() => { if (!auto) return; setMode('clean'); timer = setTimeout(() => { if (!auto) return; ci = (ci + 1) % CASES.length; cycle(); }, 6000); }, 4000); }
+if (auto) cycle();
 addEventListener('resize', () => { size(); if (reduce) draw(0); });
 
 /* ---------- TABS ---------- */

@@ -231,6 +231,10 @@ input[type=range]{width:100%;accent-color:var(--accent)}
 .skill-read{margin-top:20px;padding:14px 16px;border-radius:var(--r);background:var(--accent-soft);font-size:15px;min-height:3.2em}
 @media (max-width:820px){.skills{grid-template-columns:1fr}}
 
+.edu{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px;margin-top:28px}
+.edu div{display:grid;gap:6px;border-top:1px solid var(--line);padding-top:12px}
+.edu p{font-size:15px;max-width:52ch}
+@media (max-width:820px){.edu{grid-template-columns:1fr;gap:16px}}
 /* off hours */
 .off{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
 .off article{padding-top:14px;border-top:2px solid var(--ink);display:grid;gap:8px;align-content:start}
@@ -488,6 +492,10 @@ footer{padding-block:28px;font-size:13px;color:var(--muted);font-family:var(--mo
     </div>
     <div class="skills" id="skillGroups"></div>
     <div class="skill-read" id="skillRead" aria-live="polite">Pick a skill to trace it through my career.</div>
+    <div class="edu">
+      <div><span class="label">Education</span><p><b>UNC Charlotte</b>: double major in Marketing and Management, plus Marketing Analytics coursework.</p></div>
+      <div><span class="label">Training</span><p>Tableau, Alteryx and Dataiku courses. Member of Trane's Dataiku Champions group. Most of what I know came from building for real team needs.</p></div>
+    </div>
   </section>
 
   <!-- OFF HOURS -->
@@ -884,7 +892,8 @@ $('#copyEmail').onclick = async e => { const b = e.currentTarget; try { await na
 $('#skimSheet').innerHTML = `<h1>Chase London</h1><p class="sub">Senior Data Asset Manager · Marketing analytics · Charlotte, NC area · chasealondon@gmail.com · <a href="assets/Chase-London-Resume.pdf" download>Download resume (PDF)</a></p>
   <h4>Summary</h4><p>Marketing data leader with nine years in HVAC marketing and digital analytics. I build the pipelines, data models and self-service reporting that let marketers and leadership act on trusted numbers, and I automate the routine work. Today I own 20+ automated data flows behind 12+ Tableau reports, including the dealer ROI dashboard managers use across a 3,000–5,000-dealer network.</p>
   <h4>Experience</h4>` + roles.slice().reverse().map(r => `<div class="sk-job"><div class="top">${r.title}, ${r.co}<span>${r.start}–${r.current?'present':r.end}</span></div><ul>${r.bullets.slice(0,3).map(b => `<li>${b}</li>`).join('')}</ul></div>`).join('') +
-  `<h4>Skills</h4><p>${Object.values(groups).flat().join(' · ')}</p>`;
+  `<h4>Skills</h4><p>${Object.values(groups).flat().join(' · ')}</p>
+  <h4>Education &amp; training</h4><p>UNC Charlotte: double major in Marketing and Management, plus Marketing Analytics coursework. Tableau, Alteryx and Dataiku courses; Trane Dataiku Champions group.</p>`;
 $('#skimBtn').onclick = e => { const on = e.currentTarget.getAttribute('aria-pressed') !== 'true'; e.currentTarget.setAttribute('aria-pressed', on); e.currentTarget.textContent = on ? 'Full site' : '60-second version'; $('#explore').hidden = on; $('#skim').hidden = !on; scrollTo(0,0); if (!on){ size(); } };
 })();
 </script>

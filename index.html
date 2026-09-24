@@ -748,7 +748,7 @@ footer{padding-block:28px;font-size:13px;color:var(--muted);font-family:var(--mo
     <div class="tl" id="toolTl"></div>
     <div class="skill-read" id="skillRead" aria-live="polite">Skills stay in use from the day I pick them up. Tools come and go: Alteryx carried the middle years, and Dataiku and Power Automate took over from there.</div>
     <div class="edu">
-      <div><span class="label">Education</span><p><b>UNC Charlotte</b>: BSBA, double major in Marketing and Management, plus Marketing Analytics coursework.</p></div>
+      <div><span class="label">Education</span><p><b>UNC Charlotte</b>: B.S.B.A., Marketing and Organizational Management.</p></div>
       <div><span class="label">Training</span><p>Tableau, Alteryx and Dataiku courses. Member of Trane's Dataiku Champions group. Most of what I know came from building for real team needs.</p></div>
     </div>
   </section>
@@ -1523,7 +1523,7 @@ $('#skimSheet').innerHTML = `<h1>Chase London</h1><p class="sub">Senior Data Ass
   <h4>Experience</h4>` + roles.slice().reverse().map(r => `<div class="sk-job"><div class="top">${r.title}, ${r.co}<span>${r.start}–${r.current?'present':r.end}</span></div><ul>${r.bullets.slice(0,3).map(b => `<li>${b}</li>`).join('')}</ul></div>`).join('') +
   `<h4>Skills</h4><p>${Object.values(groups).flat().join(' · ')}</p>
   <h4>Leadership &amp; volunteer</h4><p>Finance Chair at a local church (2024–present): turned accounting exports into a monthly report and a three-chart briefing on attendance, spending and reserve runway, giving leadership a shared picture, and now leading the 2027 overhaul: recoded accounts, a new approval process, program-based budgets and self-serve reporting for staff and volunteers.</p>
-  <h4>Education &amp; training</h4><p>UNC Charlotte: BSBA, double major in Marketing and Management, plus Marketing Analytics coursework. Tableau, Alteryx and Dataiku courses; Trane Dataiku Champions group.</p>`;
+  <h4>Education &amp; training</h4><p>UNC Charlotte: B.S.B.A., Marketing and Organizational Management. Tableau, Alteryx and Dataiku courses; Trane Dataiku Champions group.</p>`;
 function setSkim(on){ const b = $('#skimBtn'); b.setAttribute('aria-pressed', on); b.textContent = on ? 'Full site' : '60-second version'; $('#explore').hidden = on; $('#skim').hidden = !on; if (!on){ size(); wfDraw(); } }
 $('#skimBtn').onclick = () => { setSkim($('#skimBtn').getAttribute('aria-pressed') !== 'true'); scrollTo(0,0); };
 // nav links and the name always return to the full site, then go to their section

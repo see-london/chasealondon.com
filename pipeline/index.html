@@ -78,7 +78,8 @@ header p{color:var(--muted);max-width:60ch;margin-top:8px}
 .stage{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;display:grid;gap:10px;align-content:start;position:relative;transition:border-color .3s,box-shadow .3s}
 .stage.bneck{border-color:var(--heat);box-shadow:0 0 0 3px color-mix(in srgb,var(--heat) 18%,transparent)}
 .stage-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
-.stage h2{font-size:19px;font-weight:800}
+.stage h2{font-size:19px;font-weight:800;display:flex;align-items:center;gap:7px}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--dc);flex:none}
 .stage .count{font-family:var(--display);font-weight:800;font-size:26px;font-variant-numeric:tabular-nums}
 .stage .rate{font-family:var(--mono);font-size:12px;color:var(--muted);min-height:1.5em}
 .tag{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;border-radius:999px;padding:2px 8px;background:var(--heat);color:#fff}
@@ -97,18 +98,25 @@ header p{color:var(--muted);max-width:60ch;margin-top:8px}
 .pop.neu{color:var(--accent)}
 @keyframes pop{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-34px)}}
 .bad{font-family:var(--mono);font-size:12px;color:var(--heat)}
+.pause{margin-top:14px;background:var(--accent-soft);color:var(--ink);border-radius:10px;padding:10px 14px;font-size:14px}
 @media (max-width:760px){.line{gap:6px}.stage{padding:10px;gap:6px}.stage h2{font-size:15px}.stage .count{font-size:20px}.stage .label,.stage .rate,.act kbd,.tag{display:none}.files{height:34px;padding:4px;gap:3px}.file{width:10px;height:13px}.file::after{top:4px;box-shadow:0 3px 0 var(--fc,var(--muted))}.act{padding:12px 8px;font-size:13px;justify-content:center;text-align:center}.bad{font-size:10.5px}.arrow{display:none}}
 
 /* shop */
 .lower{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:14px;margin-top:14px;align-items:start;padding-bottom:40px}
 .shop{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;display:grid;gap:8px}
 .shop-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
-.up{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;border:1px solid var(--line);border-left:4px solid var(--lc);border-radius:10px;padding:10px 12px;background:var(--surface);cursor:pointer;text-align:left;width:100%}
+.up{display:grid;grid-template-columns:76px 1fr auto;gap:12px;align-items:center;border:1px solid var(--line);border-left:4px solid var(--lc);border-radius:10px;padding:10px 12px;background:var(--surface);cursor:pointer;text-align:left;width:100%}
 .up:hover:not(:disabled){background:var(--surface-2)}
 .up:disabled{cursor:default}
 .up.cant{opacity:.62}
 .up.locked{opacity:.4}
 .up.owned{background:var(--surface-2);border-left-color:var(--good);cursor:default}
+.up .chips{display:grid;gap:4px;justify-items:start}
+.stg{font-family:var(--mono);font-size:9.5px;font-weight:700;border-radius:4px;padding:1px 5px;white-space:nowrap;background:var(--surface-2);color:var(--muted)}
+.stg-inbox{background:var(--heat-soft);color:var(--heat)}
+.stg-clean{background:var(--accent-soft);color:var(--accent)}
+.stg-dash{background:color-mix(in srgb,var(--good) 16%,transparent);color:var(--good)}
+.stg-credits{background:var(--ink);color:var(--bg)}
 .up .lv{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--lc);border:1.5px solid var(--lc);border-radius:6px;padding:2px 5px;white-space:nowrap}
 .up .nm{font-weight:700;font-size:15px}
 .up .nm small{font-weight:400;color:var(--muted);font-size:12px;font-family:var(--mono);margin-left:6px}
@@ -160,23 +168,24 @@ header p{color:var(--muted);max-width:60ch;margin-top:8px}
     <div class="side-stats"><span><b id="perSec">0</b> credits/sec</span><span><b id="shipped">0</b> files shipped</span><span><b id="clock">0:00</b> elapsed</span></div>
   </section>
 
+  <p class="pause" id="pauseNote" hidden></p>
   <section class="line" id="line">
     <div class="stage" id="stFetch">
-      <div class="stage-top"><h2>Inbox</h2><span class="tag" id="tagFetch">manual</span></div>
+      <div class="stage-top"><h2><span class="dot" style="--dc:var(--heat)"></span>Inbox</h2><span class="tag" id="tagFetch">manual</span></div>
       <div class="stage-top"><span class="count" id="cntRaw">0</span><span class="label">files waiting to clean</span></div>
       <div class="files" id="filesRaw"></div>
       <div class="rate" id="rateFetch">Files arrive when you drag them in.</div>
       <button class="act" id="btnFetch">Drag file in <kbd>1</kbd></button>
     </div>
     <div class="stage" id="stClean">
-      <div class="stage-top"><h2>Clean</h2><span class="tag" id="tagClean">manual</span></div>
+      <div class="stage-top"><h2><span class="dot" style="--dc:var(--accent)"></span>Clean</h2><span class="tag" id="tagClean">manual</span></div>
       <div class="stage-top"><span class="count" id="cntClean">0</span><span class="label">clean files ready</span></div>
       <div class="files" id="filesClean"></div>
       <div class="rate" id="rateClean">Fix headers, dates and duplicates by hand.</div>
       <button class="act" id="btnClean">Clean file <kbd>2</kbd></button>
     </div>
     <div class="stage" id="stUp">
-      <div class="stage-top"><h2>Dashboard</h2><span class="tag" id="tagUp">manual</span></div>
+      <div class="stage-top"><h2><span class="dot" style="--dc:var(--good)"></span>Dashboard</h2><span class="tag" id="tagUp">manual</span></div>
       <div class="stage-top"><span class="count" id="cntShip">0</span><span class="label">files shipped</span></div>
       <div class="files" id="filesShip"></div>
       <div class="rate" id="rateUp">Upload each file to the report.</div>
@@ -224,19 +233,19 @@ const LEVELS = ['Manual','Delivered','Scheduled','Connected','Report-ready','Aut
 
 // Tools are named after (not quite) the real ones.
 const UP = [
-  {id:'macros',   lv:0, name:'Excelerator Macros',     hint:'Excel',          cost:10,   ds:'Clean 3 files per click instead of 1.',                         fx:s => { s.cleanClick = 3; }},
-  {id:'automate', lv:0, name:'Power Auto-Mate',        hint:'Power Automate', cost:18,   ds:'Files move from the source folder to your inbox on their own: 2 files/sec.', fx:s => { s.fetchAuto += 2; }},
-  {id:'dropbox',  lv:1, name:'SFTP Drop Zone',         hint:'SFTP',           cost:30,   ds:'Sources deliver on a schedule. +2 files/sec into the inbox.', fx:s => { s.fetchAuto += 2; }},
-  {id:'alteryx',  lv:2, name:'Alter-Why Workflow',     hint:'Alteryx',        cost:45,   ds:'A saved prep flow cleans 3 files/sec automatically.',          fx:s => { s.cleanAuto += 3; }},
-  {id:'tabserver',lv:2, name:'Tab-Low Server',         hint:'Tableau',        cost:65,   ds:'Scheduled refresh uploads 2 files/sec to the dashboard.',     fx:s => { s.uploadAuto += 2; }},
-  {id:'python',   lv:2, name:'Pie-thon Scripts',       hint:'Python',         cost:110,  ds:'Script the glue. Every automated step runs 2× faster.',        fx:s => { s.mult *= 2; }},
-  {id:'sql',      lv:3, name:'SQueaL Queries',         hint:'SQL',            cost:180,  ds:'Joined data is worth more: 2× credits per file. Unlocks connections.', fx:s => { s.value *= 2; }},
-  {id:'api',      lv:3, name:'API Hook-up',            hint:'API',            cost:280,  req:'sql', ds:'Direct connection: +8 files/sec with no files to fetch.', fx:s => { s.fetchAuto += 8; }},
-  {id:'dataiku',  lv:3, name:'Data-I-Queue Recipes',   hint:'Dataiku',        cost:400,  ds:'Scheduled recipes clean +6 files/sec.',                          fx:s => { s.cleanAuto += 6; }},
-  {id:'gcc',      lv:4, name:'Gee-See-See Cloud',      hint:'Google Cloud',   cost:580,  req:'sql', ds:'Land data in the cloud warehouse: +4 uploads/sec.',   fx:s => { s.uploadAuto += 4; }},
-  {id:'qa',       lv:4, name:'Auto-QA Checks',         hint:'data checks',    cost:800,  ds:'Automated checks catch bad rows. No more wasted files.',        fx:s => { s.err = 0; }},
-  {id:'sot',      lv:4, name:'One Source of Truth',    hint:'data model',     cost:1100, ds:'Every source keyed to one ID and date: 3× credits per file.',   fx:s => { s.value *= 3; }},
-  {id:'loa5',     lv:5, name:'Autonomous Pipeline',    hint:'LoA 5',          cost:2400, req:'all', ds:'Self-validating, near real time, fully documented. No routine oversight.', fx:s => { s.won = true; }},
+  {id:'macros', st:'clean',   lv:0, name:'Excelerator Macros',     hint:'Excel',          cost:10,   ds:'Clean 3 files per click instead of 1.',                         fx:s => { s.cleanClick = 3; }},
+  {id:'automate', st:'inbox', lv:0, name:'Power Auto-Mate',        hint:'Power Automate', cost:18,   ds:'Files move from the source folder to your inbox on their own: 2 files/sec.', fx:s => { s.fetchAuto += 2; }},
+  {id:'dropbox', st:'inbox',  lv:1, name:'SFTP Drop Zone',         hint:'SFTP',           cost:30,   ds:'Sources deliver on a schedule. +2 files/sec into the inbox.', fx:s => { s.fetchAuto += 2; }},
+  {id:'alteryx', st:'clean',  lv:2, name:'Alter-Why Workflow',     hint:'Alteryx',        cost:45,   ds:'A saved prep flow cleans 3 files/sec automatically.',          fx:s => { s.cleanAuto += 3; }},
+  {id:'tabserver', st:'dash',lv:2, name:'Tab-Low Server',         hint:'Tableau',        cost:65,   ds:'Scheduled refresh uploads 2 files/sec to the dashboard.',     fx:s => { s.uploadAuto += 2; }},
+  {id:'python', st:'all',   lv:2, name:'Pie-thon Scripts',       hint:'Python',         cost:110,  ds:'Script the glue. Every automated step runs 2× faster.',        fx:s => { s.mult *= 2; }},
+  {id:'sql', st:'credits',      lv:3, name:'SQueaL Queries',         hint:'SQL',            cost:180,  ds:'Join sources together so every shipped file is worth 2× credits. Unlocks API and cloud connections.', fx:s => { s.value *= 2; }},
+  {id:'api', st:'inbox',      lv:3, name:'API Hook-up',            hint:'API',            cost:280,  req:'sql', ds:'Direct connection: +8 files/sec with no files to fetch.', fx:s => { s.fetchAuto += 8; }},
+  {id:'dataiku', st:'clean',  lv:3, name:'Data-I-Queue Recipes',   hint:'Dataiku',        cost:400,  ds:'Scheduled recipes clean +6 files/sec.',                          fx:s => { s.cleanAuto += 6; }},
+  {id:'gcc', st:'dash',      lv:4, name:'Gee-See-See Cloud',      hint:'Google Cloud',   cost:580,  req:'sql', ds:'Land data in the cloud warehouse: +4 uploads/sec.',   fx:s => { s.uploadAuto += 4; }},
+  {id:'qa', st:'dash',       lv:4, name:'Auto-QA Checks',         hint:'data checks',    cost:800,  ds:'Automated checks catch bad rows. No more wasted files.',        fx:s => { s.err = 0; }},
+  {id:'sot', st:'credits',      lv:4, name:'One Source of Truth',    hint:'data model',     cost:1100, ds:'Every source keyed to one ID and date: 3× credits per file.',   fx:s => { s.value *= 3; }},
+  {id:'loa5', st:'all',     lv:5, name:'Autonomous Pipeline',    hint:'LoA 5',          cost:2400, req:'all', ds:'Self-validating, near real time, fully documented. No routine oversight.', fx:s => { s.won = true; }},
 ];
 
 const fresh = () => ({carry:0, credits:0, raw:0, clean:0, shipped:0, bad:0, clicks:0, fetchAuto:0, cleanAuto:0, uploadAuto:0, mult:1, value:1, err:.2, cleanClick:1, owned:[], won:false, elapsed:0, winSeen:false, log:['Day one. Your first report needs data, and it all has to be moved by hand.']});
@@ -285,12 +294,13 @@ function buy(u){
 function unlocked(u){ if (!u.req) return true; if (u.req === 'all') return UP.filter(x => x.id !== 'loa5').every(x => has(x.id)); return has(u.req); }
 
 // ---- shop ----
+const STG = {inbox:'Inbox', clean:'Clean', dash:'Dashboard', credits:'Credits', all:'All stages'};
 function buildShop(){
   $('#shop').innerHTML = UP.map(u => {
     const own = has(u.id), lock = !own && !unlocked(u);
     const need = lock ? (u.req === 'all' ? 'Own every other tool first' : `Needs ${UP.find(x => x.id === u.req).name}`) : u.ds;
     return `<button class="up ${own ? 'owned' : lock ? 'locked' : ''}" data-id="${u.id}" style="--lc:var(--l${u.lv})" ${own || lock ? 'disabled' : ''}>
-      <span class="lv">L${u.lv}</span>
+      <span class="chips"><span class="lv">L${u.lv}</span><span class="stg stg-${u.st}">${STG[u.st]}</span></span>
       <span><span class="nm">${u.name}<small>${u.hint}</small></span><span class="ds" style="display:block">${need}</span></span>
       <span class="cost">${own ? 'owned' : fmt(u.cost)}</span></button>`;
   }).join('');
@@ -323,8 +333,14 @@ function draw(){
 }
 
 // ---- loop ----
-let last = performance.now(), acc = 0;
+let last = performance.now(), acc = 0, lastInput = Date.now(), paused = false, wonAt = 0;
+const IDLE_MS = 5 * 60 * 1000, AFTER_WIN_MS = 2 * 60 * 1000;
+function wake(){ lastInput = Date.now(); if (paused){ if (S.won) wonAt = Date.now(); paused = false; $('#pauseNote').hidden = true; last = performance.now(); requestAnimationFrame(tick); } }
+['pointerdown','keydown'].forEach(ev => addEventListener(ev, wake, true));
 function tick(now){
+  // pause the simulation when no one is playing, so an open tab isn't doing work forever
+  const idle = Date.now() - lastInput > IDLE_MS, done = S.won && wonAt && Date.now() - wonAt > AFTER_WIN_MS;
+  if (idle || done){ paused = true; draw(); $('#pauseNote').hidden = false; $('#pauseNote').textContent = done ? 'The pipeline is finished and paused. Click anywhere to watch it run again.' : 'Paused while you were away. Click anywhere to resume.'; save(); return; }
   const dt = Math.min(1, (now - last) / 1000); last = now;
   {
     if (!S.won) S.elapsed += dt;
@@ -348,7 +364,8 @@ setInterval(() => {
   if (pend.bad >= 1){ pop($('#cntShip'), '+0 ×' + Math.floor(pend.bad) + ' bad', 'bad'); pend.bad = 0; }
 }, 650); addEventListener('pagehide', save);
 
-function showWin(){ $('#wTime').textContent = clock(S.elapsed); $('#wClicks').textContent = fmt(S.clicks); $('#wFiles').textContent = fmt(S.shipped); $('#win').hidden = false; S.winSeen = true; save(); }
+function showWin(){ wonAt = Date.now(); $('#wTime').textContent = clock(S.elapsed); $('#wClicks').textContent = fmt(S.clicks); $('#wFiles').textContent = fmt(S.shipped); $('#win').hidden = false; S.winSeen = true; save(); }
+if (S.won) wonAt = Date.now();
 $('#winClose').onclick = () => { $('#win').hidden = true; };
 $('#resetBtn').onclick = () => { $('#resetConfirm').hidden = false; };
 $('#resetNo').onclick = () => { $('#resetConfirm').hidden = true; };

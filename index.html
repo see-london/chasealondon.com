@@ -763,55 +763,53 @@ selectRole('t2');
 /* ---------- HERO PIPELINE ---------- */
 const cv = $('#pipeCanvas'), ctx = cv.getContext('2d');
 const CASES = [
-  {id:'roi', name:'Dealer ROI', tab:'t-roi',
+  {id:'roi', kind:'flow', name:'Dealer ROI', tab:'t-roi',
    src:['Enrollment','Purchases','Financing','Lead programs','Warranty','Partner files'],
-   hub:{raw:['table per','source'], clean:['1 dealer key','+ date']},
-   out:{raw:['1 year at a time','days to refresh','distributors blind'], clean:['year over year','90% automated','3,000+ dealers']},
+   hub:{raw:['table per','source'], clean:['source','of truth']},
+   out:{raw:['1 year at a time','days to refresh','distributors blind'], clean:['future-proof','90% automated','3,000+ dealers']},
    cap:{raw:'Before: a separate table for every source, rebuilt every year. The dashboard could only show one year, and each refresh took days.',
-        clean:'After: every source keyed to one dealer ID and a date. Data appends monthly, the refresh is about 90% automated, and managers use it across 3,000+ dealers.'}},
-  {id:'loc', name:'Dealer locator', tab:'t-loc',
-   src:['Feedback','Response speed','Google reviews','Dealer level','Search logs'],
-   hub:{raw:['closest','= first'], clean:['dealer','score']},
-   out:{raw:['nearest, not best','fake "frustration"','empty results'], clean:['best dealer first','clean search data','3 choices, always']},
-   cap:{raw:'Before: dealers ranked by distance, and search logs made it look like homeowners kept searching in frustration.',
-        clean:'After: a score from feedback, response speed, reviews and dealer level. The "frustration" was searches logged on page load, and empty results now show a contact card.'}},
-  {id:'call', name:'Call tracking', tab:'t-call',
-   src:['Web sessions','Number pool','Bot dials','Dealer calls','Lead records'],
-   hub:{raw:['millions','of numbers'], clean:['few thousand','rotating']},
-   out:{raw:['inflated volume','~30-second calls','hard to trust'], clean:['junk calls gone','~1-minute calls','true lead volume']},
-   cap:{raw:'Before: a pool of millions of tracking numbers. Bots and random dials padded call volume and dragged average call time under 30 seconds.',
-        clean:'After: a few thousand rotating numbers. The "lost" calls were almost all junk, and average dealer call time doubled to about a minute.'}},
-  {id:'auto', name:'Automation', tab:'t-auto',
+        clean:'After: every source tied to one dealer source of truth and a date. Data appends monthly, so it runs year after year, and it covers 3,000+ dealers.'}},
+  {id:'loc', kind:'map', name:'Dealer locator', tab:'t-loc',
+   cap:{raw:'Before: the three closest dealers came first, good or not, and the site logged a "search" every time the page loaded, which looked like frustrated homeowners.',
+        clean:'After: dealers are ranked by a score built from customer feedback, response speed, reviews and dealer level. Page-load noise was removed from the data, and there are always three choices.'}},
+  {id:'call', kind:'funnel', name:'Call tracking', tab:'t-call',
+   cap:{raw:'Before: millions of tracking numbers. Bots and random dials padded call volume, and only about 1 in 275 calls became a win.',
+        clean:'After: a few thousand rotating numbers. Calls fell about 80%, wins held flat, and about 1 in 50 calls now becomes a win.'}},
+  {id:'auto', kind:'flow', name:'Automation', tab:'t-auto',
    src:['Exports','Alteryx flows','Emailed files','Manual QA','Tableau refresh'],
    hub:{raw:['by hand,','every cycle'], clean:['designed to','run itself']},
    out:{raw:['days of work','fragile flows','one-person bottleneck'], clean:['15+ decision dashboards','20+ pipelines','~5 hrs/week back']},
    cap:{raw:'Before: recurring reports rebuilt by hand every cycle, on workflows that broke often.',
         clean:'After: I redesigned recurring reporting end to end, from collecting files to checks and publishing, so it runs on schedule. 20+ pipelines across 6 brands and 4 BUs now feed 15+ dashboards leadership uses to make decisions.'}},
 ];
-let ci = 0, mode = 'clean', W = 0, H = 0, parts = [], auto = !reduce, timer = null;
+let ci = 0, mode = 'clean', mix = 1, W = 0, H = 0, parts = [], auto = !reduce, timer = null;
 const cur = () => CASES[ci];
 const caseBox = $('#caseBtns');
 CASES.forEach((c, i) => { const b = document.createElement('button'); b.className = 'case'; b.textContent = c.name; b.onclick = () => { auto = false; clearInterval(timer); setCase(i); }; caseBox.appendChild(b); });
 function size(){ const dpr = devicePixelRatio || 1; const r = cv.getBoundingClientRect(); W = r.width; H = r.height; cv.width = W*dpr; cv.height = H*dpr; ctx.setTransform(dpr,0,0,dpr,0,0); }
+const lerp = (a, b, t) => a + (b - a) * t;
+const mono = (px, w) => `${w || 400} ${px}px "JetBrains Mono", monospace`;
+const disp = (px, w) => `${w || 800} ${px}px "Bricolage Grotesque", sans-serif`;
+const C = () => ({ink:cssv('--ink'), muted:cssv('--muted'), line:cssv('--line'), acc:cssv('--accent'), heat:cssv('--heat'), surf:cssv('--surface-2'), bg:cssv('--surface')});
+
+/* --- flow: messy sources into one fix --- */
 function geo(){
   const c = cur(), small = W < 480, fs = small ? 9 : 12;
-  ctx.font = `${fs}px "JetBrains Mono", monospace`;
+  ctx.font = mono(fs);
   const lw = Math.max(...c.src.map(t => ctx.measureText(t).width)) + 14;
   const rw = Math.max(...c.out.raw.concat(c.out.clean).map(t => ctx.measureText(t).width)) + 16;
   const hw = Math.max(...c.hub.raw.concat(c.hub.clean).map(t => ctx.measureText(t).width)) + (small ? 10 : 18);
   const x0 = lw + 4, x1 = W - rw - 4, hx = x0 + (x1 - x0) * .48, hh = H * .5, n = c.src.length;
   return {fs, x0, x1, hx, hw, hh, n, sy: i => 20 + i * (H - 40) / (n - 1), hy: i => H/2 + (i - (n - 1) / 2) * hh / (n + 1), oy: i => H*.22 + i * H*.28};
 }
-function spawn(){ const c = cur(); return {s: Math.random()*c.src.length|0, o: Math.random()*3|0, t: Math.random()*2, v: .004 + Math.random()*.004, ph: Math.random()*6.28}; }
+function spawn(){ const c = cur(); return {s: Math.random()*(c.src ? c.src.length : 1)|0, o: Math.random()*3|0, t: Math.random()*2, v: .004 + Math.random()*.004, ph: Math.random()*6.28}; }
 function resetParts(){ parts = []; for (let i = 0; i < 80; i++) parts.push(spawn()); }
 function bez(a,b,t){ const cx = (a[0]+b[0])/2; const u = 1-t; return [u*u*u*a[0]+3*u*u*t*cx+3*u*t*t*cx+t*t*t*b[0], u*u*u*a[1]+3*u*u*t*a[1]+3*u*t*t*b[1]+t*t*t*b[1]]; }
-function draw(time){
-  const c = cur(), g = geo(), ink = cssv('--ink'), muted = cssv('--muted'), line = cssv('--line'), acc = cssv('--accent'), heat = cssv('--heat'), surf = cssv('--surface-2');
-  const clean = mode === 'clean';
-  ctx.clearRect(0,0,W,H);
-  ctx.font = `${g.fs}px "JetBrains Mono", monospace`; ctx.textBaseline = 'middle';
+function drawFlow(time, k){
+  const c = cur(), g = geo(), clean = mode === 'clean';
+  ctx.font = mono(g.fs); ctx.textBaseline = 'middle';
   const hub = [g.hx - g.hw/2, H/2 - g.hh/2];
-  ctx.lineWidth = 1; ctx.strokeStyle = line;
+  ctx.lineWidth = 1; ctx.strokeStyle = k.line;
   c.src.forEach((s,i) => { ctx.beginPath(); const a=[g.x0,g.sy(i)], b=[hub[0], g.hy(i)]; ctx.moveTo(...a); ctx.bezierCurveTo((a[0]+b[0])/2,a[1],(a[0]+b[0])/2,b[1],...b); ctx.stroke(); });
   [0,1,2].forEach(i => { ctx.beginPath(); const a=[hub[0]+g.hw, H/2 + (i-1)*g.hh/4], b=[g.x1,g.oy(i)]; ctx.moveTo(...a); ctx.bezierCurveTo((a[0]+b[0])/2,a[1],(a[0]+b[0])/2,b[1],...b); ctx.stroke(); });
   parts.forEach(p => {
@@ -821,23 +819,101 @@ function draw(time){
     if (p.t < 1){
       [x,y] = bez([g.x0,g.sy(p.s)], [hub[0], g.hy(p.s)], p.t);
       if (!clean){ y += Math.sin(time/300 + p.ph) * 12 * p.t; x += Math.cos(time/400 + p.ph) * 7 * p.t; }
-      ctx.fillStyle = clean ? muted : heat;
+      ctx.fillStyle = clean ? k.muted : k.heat;
     } else {
       [x,y] = bez([hub[0]+g.hw, H/2 + (p.o-1)*g.hh/4], [g.x1,g.oy(p.o)], p.t-1);
       if (!clean){ y += Math.sin(time/250 + p.ph) * 6; }
-      ctx.fillStyle = clean ? acc : heat; ctx.globalAlpha = clean ? 1 : .5;
+      ctx.fillStyle = clean ? k.acc : k.heat; ctx.globalAlpha = clean ? 1 : .5;
     }
     ctx.beginPath(); ctx.arc(x,y,2.2,0,6.283); ctx.fill(); ctx.globalAlpha = 1;
   });
-  ctx.fillStyle = surf; ctx.strokeStyle = clean ? acc : heat; ctx.lineWidth = 1.5;
+  ctx.fillStyle = k.surf; ctx.strokeStyle = clean ? k.acc : k.heat; ctx.lineWidth = 1.5;
   ctx.beginPath(); ctx.roundRect(hub[0],hub[1],g.hw,g.hh,10); ctx.fill(); ctx.stroke();
-  ctx.fillStyle = ink; ctx.textAlign = 'center';
+  ctx.fillStyle = k.ink; ctx.textAlign = 'center';
   const hl = c.hub[mode];
   ctx.fillText(hl[0], g.hx, H/2 - g.fs*.75); ctx.fillText(hl[1], g.hx, H/2 + g.fs*.75);
-  ctx.textAlign = 'right'; ctx.fillStyle = muted;
+  ctx.textAlign = 'right'; ctx.fillStyle = k.muted;
   c.src.forEach((s,i) => { ctx.fillText(s, g.x0 - 8, g.sy(i)); ctx.beginPath(); ctx.arc(g.x0, g.sy(i), 3, 0, 6.283); ctx.fill(); });
   ctx.textAlign = 'left';
-  c.out[mode].forEach((o,i) => { ctx.fillStyle = clean ? acc : heat; ctx.beginPath(); ctx.arc(g.x1, g.oy(i), 3.5, 0, 6.283); ctx.fill(); ctx.fillStyle = clean ? ink : heat; ctx.font = `${clean ? 600 : 400} ${g.fs}px "JetBrains Mono", monospace`; ctx.fillText(o, g.x1 + 8, g.oy(i)); });
+  c.out[mode].forEach((o,i) => { ctx.fillStyle = clean ? k.acc : k.heat; ctx.beginPath(); ctx.arc(g.x1, g.oy(i), 3.5, 0, 6.283); ctx.fill(); ctx.fillStyle = clean ? k.ink : k.heat; ctx.font = mono(g.fs, clean ? 600 : 400); ctx.fillText(o, g.x1 + 8, g.oy(i)); });
+}
+
+/* --- map: distance ranking vs dealer score --- */
+const DEALERS = [[-.10,.06,41],[.12,-.10,58],[-.06,-.18,62],[.20,.14,93],[-.24,-.04,88],[.05,.26,70],[-.30,.22,52],[.34,-.20,79],[.40,.10,45],[-.38,-.26,66],[.28,-.34,55],[-.16,.34,81]];
+function drawMap(time, k){
+  const small = W < 480, fs = small ? 9 : 11, hx = W * .42, hy = H * .52, sc = Math.min(W * .78, H * 1.5), R = sc * .30;
+  ctx.textBaseline = 'middle';
+  // radius
+  ctx.fillStyle = k.surf; ctx.beginPath(); ctx.arc(hx, hy, R, 0, 6.283); ctx.fill();
+  ctx.setLineDash([4,4]); ctx.strokeStyle = k.line; ctx.lineWidth = 1; ctx.stroke(); ctx.setLineDash([]);
+  const ds = DEALERS.map(([dx, dy, s], i) => ({i, x: hx + dx * sc, y: hy + dy * sc, s, d: Math.hypot(dx, dy)})).filter(d => Math.hypot(d.x - hx, d.y - hy) <= R * 1.25);
+  const inR = ds.filter(d => Math.hypot(d.x - hx, d.y - hy) <= R);
+  const byDist = inR.slice().sort((a,b) => a.d - b.d).slice(0,3), byScore = inR.slice().sort((a,b) => b.s - a.s).slice(0,3);
+  // page-load search noise (before only)
+  if (mix < .5 && !reduce){ for (let j = 0; j < 3; j++){ const ph = ((time / 1400) + j / 3) % 1; ctx.strokeStyle = k.heat; ctx.globalAlpha = (1 - ph) * .6 * (1 - mix * 2); ctx.beginPath(); ctx.arc(hx, hy, 8 + ph * 34, 0, 6.283); ctx.stroke(); } ctx.globalAlpha = 1; }
+  ds.forEach(d => {
+    const rd = byDist.indexOf(d), rs = byScore.indexOf(d);
+    const rb = lerp(3 + (rd >= 0 ? 2 : 0), 2.5 + d.s / 22, mix);
+    const hot = mix < .5 ? rd >= 0 : rs >= 0;
+    ctx.fillStyle = hot ? (mix < .5 ? k.heat : k.acc) : k.muted; ctx.globalAlpha = hot ? 1 : .45;
+    ctx.beginPath(); ctx.arc(d.x, d.y, rb, 0, 6.283); ctx.fill(); ctx.globalAlpha = 1;
+    const rank = mix < .5 ? rd : rs;
+    if (rank >= 0){
+      ctx.fillStyle = k.bg; ctx.strokeStyle = hot ? (mix < .5 ? k.heat : k.acc) : k.muted; ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.arc(d.x + rb + 8, d.y - rb - 6, 8, 0, 6.283); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = k.ink; ctx.font = mono(fs, 700); ctx.textAlign = 'center'; ctx.fillText(rank + 1, d.x + rb + 8, d.y - rb - 5.5);
+    }
+    if (mix >= .5 || rd >= 0){ ctx.font = mono(fs - 1); ctx.fillStyle = k.muted; ctx.textAlign = 'center'; ctx.globalAlpha = mix >= .5 ? 1 : .8; ctx.fillText(mix >= .5 ? d.s : Math.round(d.d * 100) + ' mi', d.x, d.y + rb + 9); ctx.globalAlpha = 1; }
+  });
+  // homeowner
+  ctx.fillStyle = k.heat; ctx.strokeStyle = k.bg; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(hx, hy, 6, 0, 6.283); ctx.fill(); ctx.stroke();
+  // legend
+  const lx = W - (small ? 118 : 160), ly = 18;
+  ctx.textAlign = 'left'; ctx.font = mono(fs, 600); ctx.fillStyle = mix < .5 ? k.heat : k.acc;
+  ctx.fillText(mix < .5 ? 'Ranked by distance' : 'Ranked by dealer score', lx - (small ? 8 : 20), ly);
+  ctx.font = mono(fs - 1); ctx.fillStyle = k.muted;
+  const lines = mix < .5 ? ['closest 3 first,', 'good or not', '', 'rings: a "search"', 'logged on page load'] : ['feedback, response', 'speed, reviews,', 'dealer level', '', 'always 3 choices'];
+  lines.forEach((t, i) => ctx.fillText(t, lx - (small ? 8 : 20), ly + 16 + i * 13));
+  ctx.fillStyle = k.heat; ctx.beginPath(); ctx.arc(14, H - 14, 5, 0, 6.283); ctx.fill();
+  ctx.fillStyle = k.muted; ctx.font = mono(fs - 1); ctx.fillText('homeowner', 24, H - 13.5);
+}
+
+/* --- funnel: junk calls vs wins --- */
+const FUN = {calls:[110000,21000], junk:[88000,2500], leads:[7000,4400], wins:[400,400]};
+function drawFunnel(time, k){
+  const small = W < 480, fs = small ? 9.5 : 12, L = small ? 70 : 96, R = small ? 70 : 92, bw = W - L - R, bh = small ? 22 : 28;
+  const v = key => lerp(FUN[key][0], FUN[key][1], mix), max = FUN.calls[0];
+  const rows = [['Calls', 'calls'], ['Leads', 'leads'], ['Wins', 'wins']];
+  const top = 26, gap = small ? 20 : 26;
+  ctx.textBaseline = 'middle';
+  ctx.font = mono(fs - 1); ctx.fillStyle = k.muted; ctx.textAlign = 'left';
+  ctx.fillText(mix < .5 ? 'Pool of millions of numbers' : 'A few thousand rotating numbers', L, 10);
+  rows.forEach(([lab, key], i) => {
+    const y = top + i * (bh + gap), val = v(key);
+    ctx.fillStyle = k.surf; ctx.beginPath(); ctx.roundRect(L, y, bw, bh, 4); ctx.fill();
+    if (key === 'calls'){
+      const junk = v('junk'), real = val - junk;
+      ctx.fillStyle = k.acc; ctx.beginPath(); ctx.roundRect(L, y, Math.max(2, real / max * bw), bh, 4); ctx.fill();
+      ctx.fillStyle = k.heat; ctx.globalAlpha = .75; ctx.fillRect(L + real / max * bw, y, junk / max * bw, bh); ctx.globalAlpha = 1;
+      if (junk / max * bw > 70){ ctx.fillStyle = k.bg; ctx.font = mono(fs - 1, 600); ctx.textAlign = 'left'; ctx.fillText('bots + random dials', L + real / max * bw + 8, y + bh / 2); }
+    } else {
+      ctx.fillStyle = k.acc; ctx.beginPath(); ctx.roundRect(L, y, Math.max(3, val / max * bw), bh, 4); ctx.fill();
+    }
+    ctx.textAlign = 'right'; ctx.font = mono(fs); ctx.fillStyle = k.muted; ctx.fillText(lab, L - 10, y + bh / 2);
+    ctx.textAlign = 'left'; ctx.font = mono(fs, 700); ctx.fillStyle = k.ink; ctx.fillText(val >= 10000 ? Math.round(val / 1000) + 'k' : val >= 1000 ? (val / 1000).toFixed(1) + 'k' : Math.round(val), L + bw + 8, y + bh / 2);
+  });
+  const rate = v('wins') / v('calls') * 100, y = top + 3 * (bh + gap) + 6;
+  ctx.textAlign = 'left'; ctx.font = mono(fs - 1); ctx.fillStyle = k.muted; ctx.fillText('calls that became a win', L, y);
+  ctx.font = disp(small ? 26 : 34); ctx.fillStyle = mix < .5 ? k.heat : k.acc; ctx.fillText(rate.toFixed(1) + '%', L, y + (small ? 24 : 30));
+  ctx.font = mono(fs - 1); ctx.fillStyle = k.muted; ctx.fillText('wins held flat', L + (small ? 90 : 120), y + (small ? 26 : 32));
+}
+
+function draw(time){
+  const k = C();
+  { const tgt = mode === 'clean' ? 1 : 0; mix += (tgt - mix) * (reduce ? 1 : .12); if (Math.abs(tgt - mix) < .01) mix = tgt; }
+  ctx.clearRect(0,0,W,H);
+  const kind = cur().kind;
+  if (kind === 'flow') drawFlow(time, k); else if (kind === 'map') drawMap(time, k); else drawFunnel(time, k);
   if (!reduce) requestAnimationFrame(draw);
 }
 function refresh(){

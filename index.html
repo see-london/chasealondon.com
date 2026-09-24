@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Chase London | Marketing Analytics</title>
-<meta name="description" content="Chase London, Senior Data Asset Manager. Marketing analytics, data architecture and self-service dashboards, with working project demos.">
+<meta name="description" content="Chase London, data leader at Trane Technologies. I find where data is failing the business, design the fix and lead the people who deliver it. Career, working project demos and contact.">
 <meta property="og:title" content="Chase London | Marketing Analytics">
-<meta property="og:description" content="Messy marketing data in. Clear decisions out. Career, project demos and contact.">
+<meta property="og:description" content="Messy problems in. Clear decisions out. Career, working project demos and contact.">
 <meta property="og:url" content="https://chasealondon.com">
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://chasealondon.com/assets/og.png">
@@ -124,6 +124,17 @@ section:last-of-type{border-bottom:0}
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
 .chip{font-family:var(--mono);font-size:12px;border:1px solid var(--line);border-radius:999px;padding:3px 10px;background:var(--surface)}
 @media (max-width:820px){.role{grid-template-columns:1fr}}
+
+/* how I work */
+.how{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.how-card{text-align:left;font:inherit;color:inherit;background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--accent);border-radius:12px;padding:18px;display:grid;gap:10px;align-content:start;cursor:pointer;transition:transform .15s,box-shadow .15s}
+.how-card:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgb(0 0 0/.08)}
+.how-n{font-family:var(--mono);font-size:12px;color:var(--accent);font-weight:600}
+.how-card h3{font-size:19px}
+.how-card p{font-size:14.5px;color:var(--muted)}
+.how-link{font-family:var(--mono);font-size:12px;color:var(--accent)}
+@media (max-width:980px){.how{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.how{grid-template-columns:1fr}}
 
 /* projects */
 .tabs{display:flex;gap:6px;flex-wrap:wrap;border-bottom:1px solid var(--line);margin-bottom:24px}
@@ -296,7 +307,7 @@ footer{padding-block:28px;font-size:13px;color:var(--muted);font-family:var(--mo
   <div class="wrap">
     <a class="brand" href="#top">Chase London</a>
     <div class="nav-links">
-      <a href="#career">career</a><a href="#projects">projects</a><a href="#skills">skills</a><a href="#off">off the clock</a><a href="#contact">contact</a>
+      <a href="#career">career</a><a href="#how">how I work</a><a href="#projects">projects</a><a href="#skills">skills</a><a href="#off">off the clock</a><a href="#contact">contact</a>
     </div>
     <button class="skim-btn" id="skimBtn" aria-pressed="false">60-second version</button>
   </div>
@@ -307,8 +318,8 @@ footer{padding-block:28px;font-size:13px;color:var(--muted);font-family:var(--mo
   <section class="hero" id="top">
     <div>
       <div class="label">Senior Data Asset Manager · Trane Technologies</div>
-      <h1>Messy marketing data in. <em>Clear decisions</em> out.</h1>
-      <p class="lede">I build the pipelines, data models and self-service reporting that show marketers what's working across every channel, and I automate the routine work so the numbers stay current. Nine years in HVAC marketing, digital and dealer analytics.</p>
+      <h1>Messy problems in. <em>Clear decisions</em> out.</h1>
+      <p class="lede">I find where data is failing the business, design the fix, and lead the analysts, developers and stakeholders who deliver it. Nine years at Trane, most of it in marketing and dealer analytics, and ready to bring that to new problems.</p>
       <div class="hero-actions">
         <a class="btn primary" href="#projects">Try the project demos</a>
         <a class="btn" href="assets/Chase-London-Resume.pdf" download>Resume (PDF)</a>
@@ -341,6 +352,21 @@ footer{padding-block:28px;font-size:13px;color:var(--muted);font-family:var(--mo
     </div>
     <div class="gantt" id="gantt" role="tablist" aria-label="Roles"></div>
     <div class="role" id="roleDetail" role="tabpanel"></div>
+  </section>
+
+  <!-- HOW I WORK -->
+  <section id="how">
+    <div class="sec-head">
+      <div class="label">How I work</div>
+      <h2>Find the gap, design the fix, lead it home.</h2>
+      <p>The same four steps show up in almost everything I've done. Each card opens the project where it happened.</p>
+    </div>
+    <div class="how">
+      <button class="how-card" data-tab="t-loc"><span class="how-n">01</span><h3>Find the real problem</h3><p>The locator data said homeowners were searching over and over in frustration. I dug in and found the site was logging a search on every page load. Thousands of "problems" weren't real.</p><span class="how-link">Dealer locator →</span></button>
+      <button class="how-card" data-tab="t-roi"><span class="how-n">02</span><h3>Design a fix that lasts</h3><p>The dealer ROI dashboard was a pile of separate tables rebuilt every year. I redesigned it around one dealer source of truth and a date key, so it now grows month by month instead of starting over.</p><span class="how-link">Dealer ROI dashboard →</span></button>
+      <button class="how-card" data-tab="t-auto"><span class="how-n">03</span><h3>Lead people through it</h3><p>I led my team's move from Alteryx to Dataiku as part of the company's Dataiku Champions group: testing features early, teaching the team and being the go-to person while everyone learned.</p><span class="how-link">Reporting automation →</span></button>
+      <button class="how-card" data-tab="t-ab"><span class="how-n">04</span><h3>Check it after it ships</h3><p>A test said removing a contact-dealer card had no impact. A month later I traced a lasting lead drop back to it, and the card went back. An inconclusive result isn't a neutral one.</p><span class="how-link">A/B testing →</span></button>
+    </div>
   </section>
 
   <!-- PROJECTS -->
@@ -580,7 +606,7 @@ footer{padding-block:28px;font-size:13px;color:var(--muted);font-family:var(--mo
       <div>
         <div class="label">Contact</div>
         <h2 style="margin-top:12px">Need your marketing data to make sense? Let's talk.</h2>
-        <p style="margin-top:14px;color:var(--muted);max-width:52ch">I'm interested in marketing analytics, data strategy and analytics leadership roles.</p>
+        <p style="margin-top:14px;color:var(--muted);max-width:52ch">I'm looking for data lead and analytics consulting roles: the person teams bring a problem to, who figures out the gap, designs the solution and directs the analysts and engineers who build it. Marketing, supply chain, operations or finance, inside Trane or out.</p>
       </div>
       <div class="card">
         <div>
@@ -979,12 +1005,15 @@ function pickSkill(s){
   $('#skillRead').innerHTML = s ? `<b>${s}</b>: used in ${used.length} of ${roles.length} roles (${used.map(r => r.title + ', ' + r.start).join('; ')}). <a href="#career">See it on the career chart ↑</a>` : 'Pick a skill to trace it through my career.';
 }
 
+/* ---------- HOW I WORK LINKS ---------- */
+document.querySelectorAll('.how-card').forEach(c => c.addEventListener('click', () => { $('#' + c.dataset.tab).click(); $('#projects').scrollIntoView({behavior: reduce ? 'auto' : 'smooth'}); }));
+
 /* ---------- COPY ---------- */
 $('#copyEmail').onclick = async e => { const b = e.currentTarget; try { await navigator.clipboard.writeText($('#email').textContent); b.textContent = 'Copied'; } catch { const r = document.createRange(); r.selectNodeContents($('#email')); const s = getSelection(); s.removeAllRanges(); s.addRange(r); b.textContent = 'Selected'; } setTimeout(() => b.textContent = 'Copy', 1600); };
 
 /* ---------- SKIM MODE ---------- */
 $('#skimSheet').innerHTML = `<h1>Chase London</h1><p class="sub">Senior Data Asset Manager · Marketing analytics · Charlotte, NC area · chasealondon@gmail.com · <a href="assets/Chase-London-Resume.pdf" download>Download resume (PDF)</a></p>
-  <h4>Summary</h4><p>Marketing data leader with nine years in HVAC marketing and digital analytics. I build the pipelines, data models and self-service reporting that let marketers and leadership act on trusted numbers, and I automate the routine work. Today I own 20+ automated data flows behind 12+ Tableau reports, including the dealer ROI dashboard managers use across a 3,000–5,000-dealer network.</p>
+  <h4>Summary</h4><p>Data leader who turns messy business problems into working data solutions. In nine years at Trane Technologies and a Trane venture, I've found where data was failing the business, designed the fix and led analysts, developers and stakeholders to deliver it. Today I own 20+ automated data flows and the dealer ROI dashboard managers use across a 3,000–5,000-dealer network. Looking for a data lead or analytics consulting role.</p>
   <h4>Experience</h4>` + roles.slice().reverse().map(r => `<div class="sk-job"><div class="top">${r.title}, ${r.co}<span>${r.start}–${r.current?'present':r.end}</span></div><ul>${r.bullets.slice(0,3).map(b => `<li>${b}</li>`).join('')}</ul></div>`).join('') +
   `<h4>Skills</h4><p>${Object.values(groups).flat().join(' · ')}</p>
   <h4>Education &amp; training</h4><p>UNC Charlotte: double major in Marketing and Management, plus Marketing Analytics coursework. Tableau, Alteryx and Dataiku courses; Trane Dataiku Champions group.</p>`;

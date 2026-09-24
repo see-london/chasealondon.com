@@ -234,6 +234,36 @@ section:last-of-type{border-bottom:0}
 .roi-row.unused span:last-child{font-style:italic}
 .roi-note{font-size:13px;color:var(--muted);margin-top:12px}
 @media (max-width:520px){.roi-kpis{gap:6px}.roi-kpi{padding:8px}.roi-kpi b{font-size:19px}.roi-kpi span,.roi-kpi small{font-size:9.5px}.roi-cats{grid-template-columns:1fr}}
+/* levels of automation */
+.loa{grid-column:1/-1;margin-top:6px;padding-top:22px;border-top:1px solid var(--line);display:grid;gap:18px}
+.loa-head h3{margin-top:8px}
+.loa-head p{margin-top:10px;max-width:78ch;color:var(--muted)}
+.loa-scale{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px}
+.loa-lv{border:1px solid var(--line);border-top:5px solid var(--lc);border-radius:10px;background:var(--surface);padding:12px;display:grid;gap:6px;align-content:start;transition:transform .25s,box-shadow .25s,opacity .25s;cursor:pointer;text-align:left;font:inherit;color:inherit}
+.loa-lv .n{font-family:var(--display);font-weight:800;font-size:30px;line-height:1;color:var(--lc)}
+.loa-lv b{font-size:15px}
+.loa-lv p{font-size:13px;color:var(--muted);line-height:1.45}
+.loa-lv .who{font-family:var(--mono);font-size:11px;color:var(--ink);background:var(--surface-2);border-radius:6px;padding:4px 6px;margin-top:2px}
+.loa-lv.on{transform:translateY(-4px);box-shadow:0 8px 20px rgb(0 0 0/.10);border-color:var(--lc)}
+.loa-scale.pick .loa-lv:not(.on){opacity:.45}
+.loa-grade{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:22px;align-items:start;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px}
+.loa-rule{font-size:14px;color:var(--muted);margin-top:6px}
+.loa-ex{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.loa-ex button{border:1px dashed var(--line);background:var(--surface-2);border-radius:999px;padding:4px 10px;font-size:12px;cursor:pointer;color:var(--muted);font-family:var(--mono)}
+.loa-ex button[aria-pressed="true"]{border-style:solid;border-color:var(--ink);color:var(--ink)}
+.loa-qs{display:grid;gap:12px;margin-top:14px}
+.loa-q span{font-size:14px;font-weight:600}
+.loa-q .opts{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+.loa-q .opt[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);color:var(--ink)}
+.loa-q .opt.limit{border-color:var(--heat);background:var(--heat-soft);outline:2px solid var(--heat);outline-offset:1px}
+.loa-result{position:sticky;top:80px;border-radius:12px;padding:16px;background:var(--surface-2);display:grid;gap:8px}
+.loa-result .big{font-family:var(--display);font-weight:800;font-size:44px;line-height:1}
+.loa-result .nm{font-weight:700;font-size:17px}
+.loa-result p{font-size:14px;color:var(--muted)}
+.loa-result .next{color:var(--ink);background:var(--surface);border-radius:8px;padding:10px 12px;font-size:14px}
+@media (max-width:980px){.loa-scale{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:760px){.loa-grade{grid-template-columns:1fr}.loa-result{position:static}}
+@media (max-width:520px){.loa-scale{grid-template-columns:repeat(2,minmax(0,1fr))}}
 /* automation demo */
 .auto-steps{display:grid;gap:8px;margin-top:16px}
 .a-step{display:grid;grid-template-columns:minmax(0,150px) 1fr;gap:10px;align-items:center;font-size:13px}
@@ -532,6 +562,25 @@ footer{padding-block:28px;font-size:13px;color:var(--muted);font-family:var(--mo
         </div>
         <div class="auto-steps" id="autoSteps"></div>
         <div class="kv" id="autoKv"></div>
+      </div>
+      <div class="loa">
+        <div class="loa-head">
+          <div>
+            <span class="label">Framework I created · Levels of Automation</span>
+            <h3>A shared scale for "how good is this data source?"</h3>
+            <p>When I started this role, most of marketing didn't have a way to talk about data sources beyond "it works" or "it's a pain." Borrowing from the levels used for self-driving cars, I built a 0–5 scale that grades every source by how much a person still has to do to use it. It gave the team a common language for where each source stands, what the next step is and where to invest.</p>
+          </div>
+        </div>
+        <div class="loa-scale" id="loaScale"></div>
+        <div class="loa-grade">
+          <div>
+            <span class="label">Grade a source</span>
+            <p class="loa-rule">A source's level is the lowest level it fully meets on all four questions. The weakest step sets the grade.</p>
+            <div class="loa-ex" id="loaEx"></div>
+            <div class="loa-qs" id="loaQs"></div>
+          </div>
+          <div class="loa-result" id="loaResult" aria-live="polite"></div>
+        </div>
       </div>
     </div>
 
@@ -1066,6 +1115,40 @@ function renderRoi(){
 roiSel.addEventListener('change', renderRoi);
 $('#roiPot').onclick = () => { roiPot = !roiPot; renderRoi(); };
 renderRoi();
+
+/* ---------- LEVELS OF AUTOMATION ---------- */
+const LOAC = ['#D96A22','#C98A2E','#A39335','#4E8B63','#1D7C8E','#0E6A87'];
+const LOA = [
+  {n:'Manual', d:'Someone has to ask for the data, then download and clean it by hand.', who:'People do every step'},
+  {n:'Delivered', d:'The source sends files on a schedule to a shared location, but loading and prep are still by hand.', who:'People load and prep'},
+  {n:'Scheduled', d:'Files are picked up automatically on a schedule or trigger and run through a saved, repeatable prep flow.', who:'People supervise'},
+  {n:'Connected', d:'A direct API or database connection brings data in on its own in a consistent structure.', who:'People supervise'},
+  {n:'Report-ready', d:'Data lands in the central platform clean and modeled, and automated checks flag anything unusual.', who:'People handle exceptions'},
+  {n:'Autonomous', d:'Near real time, self-validating and fully documented. It can be used with no oversight.', who:'No routine oversight'},
+];
+const LOAQ = [
+  {q:'How does the data arrive?', o:[['Someone requests it',0],['Sent to a shared folder',1],['Picked up automatically',2],['Direct API or database',5]], next:'Next step: set up an automated pickup or a direct connection so no one has to fetch the data.'},
+  {q:'How is it prepped?', o:[['By hand each time',1],['Saved, repeatable flow',3],['Arrives ready to use',5]], next:'Next step: land it in the central platform already cleaned and modeled, so reports can use it as is.'},
+  {q:'How are issues caught?', o:[['Someone reviews it',3],['Automated checks flag them',4],['Self-validating',5]], next:'Next step: add automated checks so problems are flagged before anyone looks at a report.'},
+  {q:'How fresh is it?', o:[['Whenever someone asks',0],['On a set schedule',4],['Near real time',5]], next:'Next step: put it on a set schedule so it refreshes without a request.'},
+];
+const LOAEX = [['Emailed vendor report',[0,0,0,0]],['Partner files on SFTP',[1,0,0,1]],['Dropzone + saved flow',[2,1,0,1]],['Ad platform API',[3,1,0,1]],['Cloud warehouse table',[3,2,1,1]]];
+let loaA = [1,0,0,1];
+$('#loaScale').innerHTML = LOA.map((l, i) => `<button class="loa-lv" style="--lc:${LOAC[i]}" data-i="${i}"><span class="n">${i}</span><b>${l.n}</b><p>${l.d}</p><span class="who">${l.who}</span></button>`).join('');
+$('#loaEx').innerHTML = LOAEX.map(([n], i) => `<button data-i="${i}">${n}</button>`).join('');
+$('#loaQs').innerHTML = LOAQ.map((q, qi) => `<div class="loa-q"><span>${q.q}</span><div class="opts">${q.o.map(([t], oi) => `<button class="opt" data-q="${qi}" data-o="${oi}">${t}</button>`).join('')}</div></div>`).join('');
+function loaRender(){
+  const vals = loaA.map((o, qi) => LOAQ[qi].o[o][1]), lv = Math.min(...vals), lim = vals.indexOf(lv);
+  document.querySelectorAll('#loaQs .opt').forEach(b => { const q = +b.dataset.q, o = +b.dataset.o; b.setAttribute('aria-pressed', loaA[q] === o); b.classList.toggle('limit', loaA[q] === o && q === lim && lv < 5); });
+  $('#loaScale').classList.add('pick'); document.querySelectorAll('.loa-lv').forEach(b => b.classList.toggle('on', +b.dataset.i === lv));
+  document.querySelectorAll('#loaEx button').forEach(b => b.setAttribute('aria-pressed', LOAEX[+b.dataset.i][1].every((v, k) => v === loaA[k])));
+  const col = LOAC[lv];
+  $('#loaResult').innerHTML = `<span class="label">This source grades at</span><div class="big" style="color:${col}">Level ${lv}</div><div class="nm">${LOA[lv].n}</div><p>${LOA[lv].d}</p>` + (lv < 5 ? `<div class="next"><b>Held back by:</b> ${LOAQ[lim].q.replace('?', '').toLowerCase()} (highlighted in orange).<br>${LOAQ[lim].next}</div>` : `<div class="next">This is the goal state. Few sources ever get here, and that's fine. Level 4 is the practical target for most.</div>`);
+}
+document.querySelectorAll('#loaQs .opt').forEach(b => b.onclick = () => { loaA[+b.dataset.q] = +b.dataset.o; loaRender(); });
+document.querySelectorAll('#loaEx button').forEach(b => b.onclick = () => { loaA = LOAEX[+b.dataset.i][1].slice(); loaRender(); });
+document.querySelectorAll('.loa-lv').forEach(b => b.onclick = () => { const t = +b.dataset.i; const ex = LOAEX.find(([, a]) => Math.min(...a.map((o, qi) => LOAQ[qi].o[o][1])) === t); if (ex){ loaA = ex[1].slice(); loaRender(); } });
+loaRender();
 
 /* ---------- AUTOMATION DEMO ---------- */
 const autoSteps = [

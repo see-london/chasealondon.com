@@ -9,6 +9,7 @@ A learning game for a 4-year-old, built as a single self-contained `index.html` 
 - **Trace** — trace dinos, vehicles and animals; Big level types and traces your name
 - **Dino Jump** — endless runner with a jump counter and best score
 - **Parking Lot** — slide cars to free the red car (5×5 Little, 8×8 Big), with a help button
+- **Blocks** — stack bricks with gravity and tipping physics; Little fills in see-through shadows, Big copies a picture
 - **Map Maker** — sand-table island builder: mountains, water, volcanoes, roads and trucks, rain, day/night, treasure hunt
 - **Mix It Up** — a little of everything
 

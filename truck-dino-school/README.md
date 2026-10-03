@@ -15,7 +15,6 @@ A learning game for a 4-year-old, built as a single self-contained `index.html` 
 - **Brick Smash** — breakout with a monster-truck paddle (finger or ← →); Little has 10 balls at one slow speed, Big has 5 balls, bigger walls, tough bricks and a ball that speeds up
 - **Paint** — paint by number with 8 pictures; Little is a chunky grid with 4 colors, Big is a finer grid with 6–10 colors and more detail
 - **Sky Flyer** — tap-to-fly biplane through air-race towers with a best score; Big adds a fuel gauge and gas cans to collect
-- **Mix It Up** — a little of everything
 
 Little kid / Big kid buttons on the menu set the difficulty.
 

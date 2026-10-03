@@ -21,13 +21,13 @@ button:focus-visible{outline:5px solid var(--ink);outline-offset:4px}
 /* ---------- MENU ---------- */
 .logo{font-family:var(--display);font-size:clamp(40px,7vw,88px);line-height:.95;margin:0;text-align:center;letter-spacing:.01em;
   color:var(--sun);-webkit-text-stroke:3px var(--ink);paint-order:stroke fill;text-shadow:0 6px 0 var(--ink);text-wrap:balance}
-.tiles{flex:1;display:grid;grid-template-columns:repeat(7,1fr);gap:clamp(12px,2vw,24px);align-content:center}
+.tiles{flex:1;display:grid;grid-template-columns:repeat(6,1fr);gap:clamp(12px,2vw,24px);align-content:center}
 .tile{background:var(--paper);border:5px solid var(--ink);border-radius:28px;box-shadow:0 10px 0 var(--ink);
   padding:18px 12px 14px;display:flex;flex-direction:column;align-items:center;gap:8px;transition:transform .08s}
 .tile:active{transform:translateY(8px);box-shadow:0 2px 0 var(--ink)}
 .tile svg,.tile .emo{height:clamp(56px,11vh,120px);width:auto;max-width:100%}
 .tile{padding:12px 10px 10px;gap:4px;min-width:0}
-.tiles .tile b{font-size:clamp(16px,1.85vw,28px);line-height:1.05;white-space:nowrap}
+.tiles .tile b{font-size:clamp(17px,2.1vw,30px);line-height:1.05;white-space:nowrap}
 .tile small{font-size:13px;line-height:1.15}
 .tile svg,.tile .emo{height:clamp(46px,8.5vh,96px)}
 .tiles .tile .emo{font-size:clamp(36px,6.4vh,76px);line-height:1.15;height:auto}
@@ -37,7 +37,7 @@ button:focus-visible{outline:5px solid var(--ink);outline-offset:4px}
 .tile .emo{font-size:clamp(50px,9.5vh,104px);line-height:1}
 .tile b{font-family:var(--display);font-size:clamp(28px,4vw,44px);font-weight:400}
 .tile small{font-size:18px;font-weight:600;opacity:.75}
-.tile.t1{background:#ffe7a8}.tile.t2{background:#ffd0cb}.tile.t3{background:#cdf3d2}.tile.t4{background:#e2d6ff;grid-column:span 2}.tile.t13{background:#cdeeff}.tile.t12{background:#fff0b3}.tile.t11{background:#d6f5c8}.tile.t10{background:#ffd0e8}.tile.t9{background:#ffd9b8}.tile.t8{background:#c8f0e6}.tile.t7{background:#d9dee8}.tile.t5{background:#cfe9ff}.tile.t6{background:#ffe0c2}
+.tile.t1{background:#ffe7a8}.tile.t2{background:#ffd0cb}.tile.t3{background:#cdf3d2}.tile.t4{background:#e2d6ff}.tile.t13{background:#cdeeff}.tile.t12{background:#fff0b3}.tile.t11{background:#d6f5c8}.tile.t10{background:#ffd0e8}.tile.t9{background:#ffd9b8}.tile.t8{background:#c8f0e6}.tile.t7{background:#d9dee8}.tile.t5{background:#cfe9ff}.tile.t6{background:#ffe0c2}
 .menubar{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;align-items:center}
 .chip{font-weight:700;font-size:20px;padding:10px 20px;border-radius:999px;border:4px solid var(--ink);background:var(--paper)}
 .chip[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
@@ -185,7 +185,6 @@ button:focus-visible{outline:5px solid var(--ink);outline-offset:4px}
     <button class="tile t11" data-mode="brick" id="t-brick"><span class="emo">🏐</span><b>Brick Smash</b><small>Bounce the ball, break the wall</small></button>
     <button class="tile t12" data-mode="paint" id="t-paint"><span class="emo">🎨</span><b>Paint</b><small>Paint by number</small></button>
     <button class="tile t13" data-mode="fly" id="t-fly"><span class="emo">✈️</span><b>Sky Flyer</b><small>Fly the biplane</small></button>
-    <button class="tile t4" data-mode="mix" id="t-mix"><span class="emo">💥</span><b>Mix It Up</b><small>A little of everything</small></button>
   </div>
   <div class="menubar">
     <button class="lvl" id="lv-little" aria-pressed="true" aria-label="Little kid level"><span class="kid" id="kid-little"></span><small>Little</small></button>

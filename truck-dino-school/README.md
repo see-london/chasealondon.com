@@ -12,6 +12,7 @@ A learning game for a 4-year-old, built as a single self-contained `index.html` 
 - **Blocks** — stack bricks with gravity and tipping physics; Little fills in see-through shadows, Big copies a picture or free-builds
 - **Map Maker** — sand-table island builder: mountains, water, volcanoes, roads and trucks, rain, day/night, treasure hunt
 - **Beats** — drum machine with Rock, Robot, Silly, Truck and Dino kits; Little is 4×8 always on the beat, Big is 6×16 with loud hits, drum rolls, bouncy swing, sound swapping and quantized live recording
+- **Brick Smash** — breakout with a monster-truck paddle (finger or ← →); Little has 10 balls at one slow speed, Big has 5 balls, bigger walls, tough bricks and a ball that speeds up
 - **Mix It Up** — a little of everything
 
 Little kid / Big kid buttons on the menu set the difficulty.

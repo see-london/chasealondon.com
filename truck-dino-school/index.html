@@ -21,7 +21,7 @@ button:focus-visible{outline:5px solid var(--ink);outline-offset:4px}
 /* ---------- MENU ---------- */
 .logo{font-family:var(--display);font-size:clamp(40px,7vw,88px);line-height:.95;margin:0;text-align:center;letter-spacing:.01em;
   color:var(--sun);-webkit-text-stroke:3px var(--ink);paint-order:stroke fill;text-shadow:0 6px 0 var(--ink);text-wrap:balance}
-.tiles{flex:1;display:grid;grid-template-columns:repeat(5,1fr);gap:clamp(12px,2vw,24px);align-content:center}
+.tiles{flex:1;display:grid;grid-template-columns:repeat(6,1fr);gap:clamp(12px,2vw,24px);align-content:center}
 .tile{background:var(--paper);border:5px solid var(--ink);border-radius:28px;box-shadow:0 10px 0 var(--ink);
   padding:18px 12px 14px;display:flex;flex-direction:column;align-items:center;gap:8px;transition:transform .08s}
 .tile:active{transform:translateY(8px);box-shadow:0 2px 0 var(--ink)}
@@ -37,7 +37,7 @@ button:focus-visible{outline:5px solid var(--ink);outline-offset:4px}
 .tile .emo{font-size:clamp(50px,9.5vh,104px);line-height:1}
 .tile b{font-family:var(--display);font-size:clamp(28px,4vw,44px);font-weight:400}
 .tile small{font-size:18px;font-weight:600;opacity:.75}
-.tile.t1{background:#ffe7a8}.tile.t2{background:#ffd0cb}.tile.t3{background:#cdf3d2}.tile.t4{background:#e2d6ff}.tile.t10{background:#ffd0e8}.tile.t9{background:#ffd9b8}.tile.t8{background:#c8f0e6}.tile.t7{background:#d9dee8}.tile.t5{background:#cfe9ff}.tile.t6{background:#ffe0c2}
+.tile.t1{background:#ffe7a8}.tile.t2{background:#ffd0cb}.tile.t3{background:#cdf3d2}.tile.t4{background:#e2d6ff;grid-column:span 2}.tile.t11{background:#d6f5c8}.tile.t10{background:#ffd0e8}.tile.t9{background:#ffd9b8}.tile.t8{background:#c8f0e6}.tile.t7{background:#d9dee8}.tile.t5{background:#cfe9ff}.tile.t6{background:#ffe0c2}
 .menubar{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;align-items:center}
 .chip{font-weight:700;font-size:20px;padding:10px 20px;border-radius:999px;border:4px solid var(--ink);background:var(--paper)}
 .chip[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
@@ -177,6 +177,7 @@ button:focus-visible{outline:5px solid var(--ink);outline-offset:4px}
     <button class="tile t8" data-mode="map" id="t-map"><span class="emo">🏝️</span><b>Map Maker</b><small>Mountains, water &amp; volcanoes</small></button>
     <button class="tile t9" data-mode="blocks" id="t-blocks"><span class="emo">🧱</span><b>Blocks</b><small>Stack it, don't let it fall</small></button>
     <button class="tile t10" data-mode="beats" id="t-beats"><span class="emo">🥁</span><b>Beats</b><small>Make your own drum beat</small></button>
+    <button class="tile t11" data-mode="brick" id="t-brick"><span class="emo">🏐</span><b>Brick Smash</b><small>Bounce the ball, break the wall</small></button>
     <button class="tile t4" data-mode="mix" id="t-mix"><span class="emo">💥</span><b>Mix It Up</b><small>A little of everything</small></button>
   </div>
   <div class="menubar">
@@ -276,7 +277,7 @@ function show(id){$('menu').hidden=id!=='menu';$('play').hidden=id!=='play';}
 function setPrompt(html,speech){$('prompt').innerHTML=html;state.say=speech;speak(speech,250)}
 function updateTrack(){$('racer').style.setProperty('--pct',Math.min(state.score/GOAL,1))}
 function start(mode){audio();state.mode=mode;state.score=0;updateTrack();show('play');newRound()}
-function newRound(){state.busy=false;state.fb=null;state.typer=null;state.mapCtx=null;state.drum=null;document.querySelector('.track').style.visibility='';const stage=$('stage'),ans=$('answers');stage.innerHTML='';stage.className='stage';ans.innerHTML='';
+function newRound(){state.busy=false;state.fb=null;state.typer=null;state.mapCtx=null;state.drum=null;state.brk=null;document.querySelector('.track').style.visibility='';const stage=$('stage'),ans=$('answers');stage.innerHTML='';stage.className='stage';ans.innerHTML='';
   const m=state.mode==='mix'?pick(['count','color','shape']):state.mode;
   if(state.mode==='count'){roundMission();return}
   if(state.mode==='color'){roundDrive();return}
@@ -285,6 +286,7 @@ function newRound(){state.busy=false;state.fb=null;state.typer=null;state.mapCtx
   if(state.mode==='map'){roundMap();return}
   if(state.mode==='blocks'){roundBlocks();return}
   if(state.mode==='beats'){roundBeats();return}
+  if(state.mode==='brick'){roundBrick();return}
   if(state.mode==='trace'){state.level==='big'?roundTraceType():roundTrace();return}
   if(state.mode==='run'){roundRun();return}
   ({count:roundCount,color:roundColor,shape:roundShape})[m]()}
@@ -444,7 +446,7 @@ function roundDrive(){const big=state.level==='big',n=big?5:3,k=3,minGap=big?165
 const keys={left:false,right:false};
 function keycapOn(k,on){const el=document.querySelector(`.keycap[data-k="${k}"]`);el&&el.classList.toggle('on',on)}
 function keyName(e){if(e.key==='ArrowLeft')return 'left';if(e.key==='ArrowRight')return 'right';if(e.code==='Space'||e.key===' '||e.key==='ArrowUp')return 'space';return null}
-document.addEventListener('keydown',e=>{if(state.drum&&!$('play').hidden){state.drum.key(e);return}if(state.typer&&!$('play').hidden){state.typer.key(e);return}
+document.addEventListener('keydown',e=>{if(state.brk&&!$('play').hidden){state.brk.key(e,true);return}if(state.drum&&!$('play').hidden){state.drum.key(e);return}if(state.typer&&!$('play').hidden){state.typer.key(e);return}
   const k=keyName(e);if(!k||$('play').hidden||!state.fb)return;e.preventDefault();keycapOn(k,true);
   if(k==='space'){if(!e.repeat)state.fb.throw()}else keys[k]=true});
 document.addEventListener('keyup',e=>{const k=keyName(e);if(!k||!state.fb)return;e.preventDefault();keycapOn(k,false);if(k!=='space')keys[k]=false});
@@ -1078,6 +1080,77 @@ function roundBeats(){const me={},big=state.level==='big',R=big?6:4,N=big?16:8,k
   const intro=!state[big?'beatIntroB':'beatIntroL'];state[big?'beatIntroB':'beatIntroL']=true;
   setPrompt('Make a beat!',intro?(big?'Make a beat! Tap a square once for a hit, two times for a loud hit, three times for a drum roll. Press record and tap the drums to play along!':'Tap the squares to make a beat, then press play! Tap the big drums to play them yourself!'):'Make a beat!');
   if(document.activeElement&&document.activeElement.blur)document.activeElement.blur()}
+
+/* ---------- BRICK SMASH: breakout with a monster-truck paddle ---------- */
+document.addEventListener('keyup',e=>{if(state.brk&&!$('play').hidden)state.brk.key(e,false)});
+function roundBrick(){const big=state.level==='big',wall=state.brkWall||0;
+  const st=$('stage');st.className='stage scene';st.innerHTML='<canvas class="mapcv" aria-label="Brick wall"></canvas>';
+  const cv=st.querySelector('canvas'),g=cv.getContext('2d'),r0=st.getBoundingClientRect(),H=400,W=Math.max(560,Math.round(H*r0.width/Math.max(1,r0.height)));
+  const COLS=['#e5352b','#ff8a1f','#ffcc1f','#2fa84f','#2f6fe0','#8a4fd8'];
+  const startBalls=big?5:10,pw=big?120:190,ph=20,py=H-36,br=big?9:11,baseSpeed=big?290:240,maxSpeed=520;
+  let balls=startBalls,launched=false,over=false,won=false,px=W/2,tx=null,bx=px,by=0,vx=0,vy=0,speed=baseSpeed,last=performance.now(),idle=0,parts=[],flash=0;const keys={l:false,r:false};
+  let bricks=[];
+  function build(){bricks=[];const cols=big?13:9,rows=big?6:3,top=58,bw=(W-40)/cols,bh=big?24:32,pat=wall%4;
+    for(let r=0;r<rows;r++)for(let c=0;c<cols;c++){let keep=true;
+      if(pat===1)keep=c>=r&&c<cols-r;else if(pat===2)keep=(r+c)%2===0||r===0;else if(pat===3)keep=c!==Math.floor(cols/2)&&c!==Math.floor(cols/2)-(cols%2?0:1);
+      if(keep)bricks.push({x:20+c*bw+2,y:top+r*bh+2,w:bw-4,h:bh-4,c:COLS[(r+wall)%6],hp:big&&wall>0&&r<2?2:1,row:r})}}
+  build();
+  const resetBall=()=>{launched=false;idle=0;speed=big?Math.max(baseSpeed,speed*.85):baseSpeed;bx=px;by=py-ph/2-br};resetBall();
+  function launch(){if(launched||over||won)return;launched=true;const a=(Math.random()-.5)*.6;vx=Math.sin(a)*speed;vy=-Math.cos(a)*speed;ding(660)}
+  function restart(){over=false;balls=startBalls;build();speed=baseSpeed;resetBall();speak('Here we go!')}
+  const toX=e=>{const r=cv.getBoundingClientRect();return(e.clientX-r.left)/r.width*W};
+  cv.addEventListener('pointerdown',e=>{e.preventDefault();audio();tx=toX(e);if(over){restart();return}launch()});
+  cv.addEventListener('pointermove',e=>{if(e.pointerType==='mouse'||e.buttons||e.pointerType==='touch')tx=toX(e)});
+  const ctl={key(e,down){const k=e.key;if(k==='ArrowLeft'||k==='a'){e.preventDefault();keys.l=down;tx=null}else if(k==='ArrowRight'||k==='d'){e.preventDefault();keys.r=down;tx=null}
+    else if((e.code==='Space'||k===' '||k==='ArrowUp')&&down){e.preventDefault();audio();if(over)restart();else launch()}}};state.brk=ctl;
+  function burst(b){for(let i=0;i<10;i++)parts.push({x:b.x+b.w/2,y:b.y+b.h/2,vx:(Math.random()-.5)*260,vy:(Math.random()-.8)*220,life:.6,c:b.c})}
+  function update(dt){const sp=big?760:620;if(keys.l)px-=sp*dt;if(keys.r)px+=sp*dt;if(tx!==null)px+=(tx-px)*Math.min(1,dt*18);px=Math.max(pw/2,Math.min(W-pw/2,px));
+    for(const p of parts){p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=600*dt;p.life-=dt}parts=parts.filter(p=>p.life>0);flash=Math.max(0,flash-dt);
+    if(over||won)return;
+    if(!launched){bx=px;by=py-ph/2-br;idle+=dt;if(!big&&idle>3)launch();return}
+    if(big)speed=Math.min(maxSpeed,speed+2.5*dt);
+    const m=Math.hypot(vx,vy)||1;vx=vx/m*speed;vy=vy/m*speed;
+    const n=Math.ceil(speed*dt/5);for(let s=0;s<n;s++){bx+=vx*dt/n;by+=vy*dt/n;
+      if(bx<br){bx=br;vx=Math.abs(vx)}if(bx>W-br){bx=W-br;vx=-Math.abs(vx)}if(by<br+30){by=br+30;vy=Math.abs(vy)}
+      if(vy>0&&by+br>=py-ph/2&&by-br<=py+ph/2&&bx>=px-pw/2-br&&bx<=px+pw/2+br){const rel=Math.max(-1,Math.min(1,(bx-px)/(pw/2))),a=rel*1.05;vx=Math.sin(a)*speed;vy=-Math.cos(a)*speed;by=py-ph/2-br;
+        if(ac){const t0=ac.currentTime,o=ac.createOscillator(),gg=ac.createGain();o.type='triangle';o.frequency.setValueAtTime(260,t0);env(gg,t0,.25,.12);o.connect(gg).connect(ac.destination);o.start(t0);o.stop(t0+.15)}}
+      for(const b of bricks){if(b.hp<=0)continue;const cx=Math.max(b.x,Math.min(bx,b.x+b.w)),cy=Math.max(b.y,Math.min(by,b.y+b.h));if((bx-cx)**2+(by-cy)**2>br*br)continue;
+        const ox=Math.min(bx+br-b.x,b.x+b.w-(bx-br)),oy=Math.min(by+br-b.y,b.y+b.h-(by-br));if(ox<oy){vx=bx<b.x+b.w/2?-Math.abs(vx):Math.abs(vx)}else{vy=by<b.y+b.h/2?-Math.abs(vy):Math.abs(vy)}
+        b.hp--;if(b.hp<=0){burst(b);ding(520+(6-b.row)*90)}else{ding(300)}
+        if(big)speed=Math.min(maxSpeed,speed+1.5);break}
+      if(Math.abs(vy)<speed*.32){vy=Math.sign(vy||-1)*speed*.32;vx=Math.sign(vx||1)*Math.sqrt(speed*speed-vy*vy)}}
+    bricks=bricks.filter(b=>b.hp>0);
+    if(!bricks.length){won=true;launched=false;vroom();crash();fxText='🎉';speak('You smashed the whole wall!',200);state.brkWall=wall+1;scoreWin(2600);return}
+    if(by>H+br*2){balls--;crash();flash=.4;if(balls<=0){over=true;speak('Out of balls! Tap to try again.',150)}else{speak(balls===1?'Last ball!':`${balls} balls left!`,150);resetBall()}}}
+  let fxText='';
+  function rr(x,y,w,h,r){g.beginPath();g.moveTo(x+r,y);g.arcTo(x+w,y,x+w,y+h,r);g.arcTo(x+w,y+h,x,y+h,r);g.arcTo(x,y+h,x,y,r);g.arcTo(x,y,x+w,y,r);g.closePath()}
+  function draw(){const dpr=Math.min(2,window.devicePixelRatio||1),cw=Math.max(1,st.clientWidth*dpr|0),ch=Math.max(1,st.clientHeight*dpr|0);if(cv.width!==cw||cv.height!==ch){cv.width=cw;cv.height=ch}
+    g.setTransform(cw/W,0,0,ch/H,0,0);const sky=g.createLinearGradient(0,0,0,H);sky.addColorStop(0,'#1d2b53');sky.addColorStop(1,'#3b4f8a');g.fillStyle=sky;g.fillRect(0,0,W,H);
+    if(flash>0){g.fillStyle=`rgba(229,53,43,${flash*.6})`;g.fillRect(0,0,W,H)}
+    for(const b of bricks){rr(b.x,b.y,b.w,b.h,6);g.fillStyle=b.c;g.fill();g.lineWidth=3;g.strokeStyle='#141820';g.stroke();g.fillStyle='rgba(255,255,255,.3)';g.fillRect(b.x+5,b.y+4,b.w-10,4);
+      if(b.hp>1){g.strokeStyle='rgba(20,24,32,.75)';g.lineWidth=3;g.beginPath();g.moveTo(b.x+6,b.y+6);g.lineTo(b.x+b.w-6,b.y+b.h-6);g.moveTo(b.x+b.w-6,b.y+6);g.lineTo(b.x+6,b.y+b.h-6);g.stroke()}}
+    for(const p of parts){g.globalAlpha=Math.max(0,p.life/.6);g.fillStyle=p.c;g.fillRect(p.x-4,p.y-4,8,8)}g.globalAlpha=1;
+    // monster-truck paddle
+    const x0=px-pw/2;rr(x0,py-ph/2,pw,ph,9);g.fillStyle='#ff8a1f';g.fill();g.lineWidth=4;g.strokeStyle='#141820';g.stroke();
+    g.fillStyle='#cfeaff';rr(px-pw*.18,py-ph/2-12,pw*.36,14,5);g.fill();g.stroke();
+    for(const wx of[x0+pw*.18,x0+pw*.82]){g.beginPath();g.arc(wx,py+ph/2+4,11,0,6.29);g.fillStyle='#1b1b1b';g.fill();g.beginPath();g.arc(wx,py+ph/2+4,4,0,6.29);g.fillStyle='#c9ced8';g.fill()}
+    // ball
+    if(!over){g.beginPath();g.arc(bx,by,br,0,6.29);g.fillStyle='#ffffff';g.fill();g.lineWidth=3;g.strokeStyle='#141820';g.stroke();g.beginPath();g.arc(bx,by,br*.55,0,6.29);g.fillStyle='#e5352b';g.fill()}
+    // HUD
+    g.font='bold 22px Fredoka, Arial, sans-serif';g.textBaseline='middle';g.textAlign='left';
+    for(let i=0;i<balls;i++){g.beginPath();g.arc(22+i*24,22,8,0,6.29);g.fillStyle='#fff';g.fill();g.lineWidth=2;g.strokeStyle='#141820';g.stroke()}
+    g.textAlign='right';g.fillStyle='#fff';g.fillText(`🧱 ${bricks.length}`,W-16,22);
+    if(!launched&&!over&&!won){g.textAlign='center';g.fillStyle='rgba(255,255,255,.9)';g.font='bold 24px Fredoka, Arial, sans-serif';g.fillText('Tap or press SPACE to launch!',W/2,H*.62)}
+    if(over){g.fillStyle='rgba(10,14,30,.6)';g.fillRect(0,0,W,H);g.textAlign='center';g.fillStyle='#fff';g.font='bold 44px Fredoka, Arial, sans-serif';g.fillText('Out of balls!',W/2,H*.42);g.font='bold 26px Fredoka, Arial, sans-serif';g.fillStyle='#ffd23f';g.fillText('Tap to try again',W/2,H*.56)}
+    if(won){g.textAlign='center';g.font='96px "Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif';g.fillText('🎉',W/2,H*.45)}}
+  function frame(now){if(state.brk!==ctl||$('play').hidden)return;const dt=Math.min(.033,(now-last)/1000);last=now;update(dt);draw();requestAnimationFrame(frame)}
+  const intro=!state.brkIntro;state.brkIntro=true;
+  setPrompt('Smash the wall!',(intro?'Move the truck with your finger or the arrow keys. Bounce the ball to break all the bricks! ':'')+'Smash the wall!');
+  $('answers').innerHTML=`<div class="keys"><button class="keycap" id="bk-left" aria-label="Left">◀<small>Left</small></button><button class="keycap space" id="bk-go" aria-label="Launch">SPACE<small>Launch</small></button><button class="keycap" id="bk-right" aria-label="Right">▶<small>Right</small></button></div>`;
+  const hold=(id,k)=>{const el=$(id);el.addEventListener('pointerdown',e=>{e.preventDefault();audio();keys[k]=true;tx=null;el.classList.add('on')});['pointerup','pointerleave','pointercancel'].forEach(ev=>el.addEventListener(ev,()=>{keys[k]=false;el.classList.remove('on')}))};
+  hold('bk-left','l');hold('bk-right','r');$('bk-go').addEventListener('pointerdown',e=>{e.preventDefault();audio();if(over)restart();else launch()});
+  if(document.activeElement&&document.activeElement.blur)document.activeElement.blur();
+  requestAnimationFrame(frame)}
 
 function finish(){crash();setTimeout(vroom,400);$('win').hidden=false;speak('You won the race! Great job!',600);
   const cs=Object.values(COLORS);for(let i=0;i<60;i++){const c=document.createElement('div');c.className='confetti';c.style.left=Math.random()*100+'vw';c.style.background=pick(cs);c.style.animationDuration=(1.8+Math.random()*2)+'s';c.style.animationDelay=Math.random()*.6+'s';document.body.appendChild(c);setTimeout(()=>c.remove(),4600)}}

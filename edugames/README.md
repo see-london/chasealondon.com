@@ -19,7 +19,7 @@ A learning game for a 4-year-old, built as a single self-contained `index.html` 
 Little kid / Big kid buttons on the menu set the difficulty.
 
 ## Play
-Open `index.html` in a browser. For a locked-down kid mode on Windows, make a shortcut:
+Online at https://chasealondon.com/edugames/ (not linked from the site and marked noindex), or open `index.html` in a browser. For a locked-down kid mode on Windows, make a shortcut:
 
 ```
 "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --kiosk "file:///C:/path/to/index.html" --edge-kiosk-type=fullscreen

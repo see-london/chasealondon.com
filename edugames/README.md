@@ -1,4 +1,4 @@
-# Truck & Dino School
+# Baylor's Games
 
 A learning game for a 4-year-old, built as a single self-contained `index.html` (no installs, no build step). Every prompt is read aloud, so no reading is needed.
 
@@ -26,3 +26,4 @@ Online at https://chasealondon.com/edugames/ (not linked from the site and marke
 ```
 
 Edge gives the most natural-sounding voices. Grown-ups exit a game by holding the 🏠 button for 2 seconds; Alt+F4 closes kiosk mode.
+- **Dominoes** — draw a line of dominoes, push, and watch them fall; count them, make color/number patterns, and knock over targets.

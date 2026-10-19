@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <meta name="robots" content="noindex,nofollow">
-<title>Truck &amp; Dino School</title>
+<title>Baylor&#39;s Games</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Fredoka:wght@500;600;700&display=swap">
 <style>
 /* Layout: one-screen toy playmat. Top bar (exit lock, race-track progress, repeat), big spoken prompt, asphalt stage, giant answer buttons. Deliberately single bright look. */
@@ -22,7 +22,7 @@ button:focus-visible{outline:5px solid var(--ink);outline-offset:4px}
 /* ---------- MENU ---------- */
 .logo{font-family:var(--display);font-size:clamp(40px,7vw,88px);line-height:.95;margin:0;text-align:center;letter-spacing:.01em;
   color:var(--sun);-webkit-text-stroke:3px var(--ink);paint-order:stroke fill;text-shadow:0 6px 0 var(--ink);text-wrap:balance}
-.tiles{flex:1;display:grid;grid-template-columns:repeat(6,1fr);gap:clamp(12px,2vw,24px);align-content:center}
+.tiles{flex:1;display:grid;grid-template-columns:repeat(7,1fr);gap:clamp(12px,2vw,24px);align-content:center}
 .tile{background:var(--paper);border:5px solid var(--ink);border-radius:28px;box-shadow:0 10px 0 var(--ink);
   padding:18px 12px 14px;display:flex;flex-direction:column;align-items:center;gap:8px;transition:transform .08s}
 .tile:active{transform:translateY(8px);box-shadow:0 2px 0 var(--ink)}
@@ -38,7 +38,7 @@ button:focus-visible{outline:5px solid var(--ink);outline-offset:4px}
 .tile .emo{font-size:clamp(50px,9.5vh,104px);line-height:1}
 .tile b{font-family:var(--display);font-size:clamp(28px,4vw,44px);font-weight:400}
 .tile small{font-size:18px;font-weight:600;opacity:.75}
-.tile.t1{background:#ffe7a8}.tile.t2{background:#ffd0cb}.tile.t3{background:#cdf3d2}.tile.t4{background:#e2d6ff}.tile.t13{background:#cdeeff}.tile.t12{background:#fff0b3}.tile.t11{background:#d6f5c8}.tile.t10{background:#ffd0e8}.tile.t9{background:#ffd9b8}.tile.t8{background:#c8f0e6}.tile.t7{background:#d9dee8}.tile.t5{background:#cfe9ff}.tile.t6{background:#ffe0c2}
+.tile.t1{background:#ffe7a8}.tile.t2{background:#ffd0cb}.tile.t3{background:#cdf3d2}.tile.t4{background:#e2d6ff}.tile.t14{background:#ffe2c7;grid-column:span 2}.tile.t13{background:#cdeeff}.tile.t12{background:#fff0b3}.tile.t11{background:#d6f5c8}.tile.t10{background:#ffd0e8}.tile.t9{background:#ffd9b8}.tile.t8{background:#c8f0e6}.tile.t7{background:#d9dee8}.tile.t5{background:#cfe9ff}.tile.t6{background:#ffe0c2}
 .menubar{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;align-items:center}
 .chip{font-weight:700;font-size:20px;padding:10px 20px;border-radius:999px;border:4px solid var(--ink);background:var(--paper)}
 .chip[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
@@ -172,7 +172,7 @@ button:focus-visible{outline:5px solid var(--ink);outline-offset:4px}
 
 <!-- MENU -->
 <section class="screen" id="menu">
-  <h1 class="logo">Truck &amp; Dino School</h1>
+  <h1 class="logo">Baylor&#39;s Games</h1>
   <div class="tiles">
     <button class="tile t1" data-mode="count" id="t-count"><span id="ic-truck"></span><b>Numbers</b><small>Jump, crash &amp; boost</small></button>
     <button class="tile t2" data-mode="color" id="t-color"><span id="ic-car"></span><b>Colors</b><small>Draw a road to the colors</small></button>
@@ -185,6 +185,7 @@ button:focus-visible{outline:5px solid var(--ink);outline-offset:4px}
     <button class="tile t10" data-mode="beats" id="t-beats"><span class="emo">🥁</span><b>Beats</b><small>Make your own drum beat</small></button>
     <button class="tile t11" data-mode="brick" id="t-brick"><span class="emo">🏐</span><b>Brick Smash</b><small>Bounce the ball, break the wall</small></button>
     <button class="tile t12" data-mode="paint" id="t-paint"><span class="emo">🎨</span><b>Paint</b><small>Paint by number</small></button>
+    <button class="tile t14" data-mode="domino" id="t-domino"><span id="ic-dom"></span><b>Dominoes</b><small>Line them up, knock them down</small></button>
     <button class="tile t13" data-mode="fly" id="t-fly"><span class="emo">✈️</span><b>Sky Flyer</b><small>Fly the biplane</small></button>
   </div>
   <div class="menubar">
@@ -284,7 +285,7 @@ function show(id){$('menu').hidden=id!=='menu';$('play').hidden=id!=='play';}
 function setPrompt(html,speech){$('prompt').innerHTML=html;state.say=speech;speak(speech,250)}
 function updateTrack(){$('racer').style.setProperty('--pct',Math.min(state.score/GOAL,1))}
 function start(mode){audio();state.mode=mode;state.score=0;updateTrack();show('play');newRound()}
-function newRound(){state.busy=false;state.fb=null;state.typer=null;state.mapCtx=null;state.drum=null;state.brk=null;state.paintCtx=null;state.fly=null;$('stage').style.background='';document.querySelector('.track').style.visibility='';const stage=$('stage'),ans=$('answers');stage.innerHTML='';stage.className='stage';ans.innerHTML='';
+function newRound(){state.busy=false;state.fb=null;state.typer=null;state.mapCtx=null;state.drum=null;state.brk=null;state.paintCtx=null;state.fly=null;state.domCtx=null;$('stage').style.background='';document.querySelector('.track').style.visibility='';const stage=$('stage'),ans=$('answers');stage.innerHTML='';stage.className='stage';ans.innerHTML='';
   const m=state.mode==='mix'?pick(['count','color','shape']):state.mode;
   if(state.mode==='count'){roundMission();return}
   if(state.mode==='color'){roundDrive();return}
@@ -296,6 +297,7 @@ function newRound(){state.busy=false;state.fb=null;state.typer=null;state.mapCtx
   if(state.mode==='brick'){roundBrick();return}
   if(state.mode==='paint'){roundPaint();return}
   if(state.mode==='fly'){roundFly();return}
+  if(state.mode==='domino'){roundDomino();return}
   if(state.mode==='trace'){state.level==='big'?roundTraceType():roundTrace();return}
   if(state.mode==='run'){roundRun();return}
   ({count:roundCount,color:roundColor,shape:roundShape})[m]()}
@@ -1303,6 +1305,96 @@ function roundFly(){const big=state.level==='big';document.querySelector('.track
   $('answers').innerHTML=`<div class="keys"><button class="keycap space" id="fl-go" aria-label="Fly">SPACE<small>Fly up</small></button></div>`;
   const b=$('fl-go');b.addEventListener('pointerdown',e=>{e.preventDefault();b.classList.add('on');flap()});['pointerup','pointerleave','pointercancel'].forEach(ev=>b.addEventListener(ev,()=>b.classList.remove('on')));
   if(document.activeElement&&document.activeElement.blur)document.activeElement.blur();
+  requestAnimationFrame(frame)}
+
+/* ---------- DOMINOES: draw a line of dominoes, push, watch them fall ---------- */
+$('ic-dom').innerHTML=`<svg viewBox="0 0 120 70"><g stroke="#141820" stroke-width="3" stroke-linejoin="round">${[0,1,2,3,4].map(i=>{const a=[0,0,18,40,62][i],x=8+i*22;return `<g transform="translate(${x} 64) rotate(${a})"><rect x="-6" y="-46" width="12" height="46" rx="3" fill="${['#e5352b','#ff8a1f','#ffcc1f','#2fa84f','#2f6fe0'][i]}"/><circle cx="0" cy="-34" r="2" fill="#fff" stroke="none"/><circle cx="0" cy="-12" r="2" fill="#fff" stroke="none"/></g>`}).join('')}</g><line x1="2" y1="65" x2="118" y2="65" stroke="#141820" stroke-width="3"/></svg>`;
+function roundDomino(){const big=state.level==='big',me={};state.domCtx=me;if(!state.domMode)state.domMode='free';if(!state.domPat)state.domPat='rainbow';
+  const mode=state.domMode;document.querySelector('.track').style.visibility=mode==='free'?'hidden':'';
+  const st=$('stage');st.className='stage scene';st.innerHTML='<canvas class="mapcv" aria-label="Domino table"></canvas>';
+  const cv=st.querySelector('canvas'),g=cv.getContext('2d'),r0=st.getBoundingClientRect(),H=400,W=Math.max(600,Math.round(H*r0.width/Math.max(1,r0.height)));
+  const S=15,TH=6,WD=20,HD=34,THC=Math.asin((S-TH)/HD);
+  const RB=['#e5352b','#ff8a1f','#ffcc1f','#2fa84f','#2f6fe0','#8a4fd8'],PATS={rainbow:RB,ab:['#e5352b','#2f6fe0'],abc:['#e5352b','#2f6fe0','#ffcc1f']};
+  let doms=[],targets=[],stroke=null,fallen=0,moving=false,quiet=0,reported=true,won=false,last=performance.now(),fx=[];
+  const col=i=>{const p=state.domPat;return PATS[p]?PATS[p][i%PATS[p].length]:'#fffaf0'};
+  const recolor=()=>doms.forEach((d,i)=>{d.i=i;d.c=col(i)});
+  function addDom(x,y,dx,dy){if(doms.length>=450)return null;const d={x,y,dx,dy,th:0,om:0,st:0,max:1.5,i:doms.length};d.c=col(d.i);doms.push(d);return d}
+  function setupChallenge(){const sy=H*(.3+Math.random()*.4);let p=null;for(let k=0;k<3;k++)p=addDom(50+k*S,sy,1,0);
+    const kinds=shuffle([['🔔','bell','Ding ding!'],['🦖','dinosaur','Roar!'],['🚚','truck','Vroom!'],['🎈','balloon','Pop!'],['🏰','castle','Crash!']]);
+    const n=big?3:1,spots=[];for(let k=0;k<n;k++){let x,y,t=0;do{x=W*(big?.38:.55)+Math.random()*(W*(big?.58:.4)-40);y=60+Math.random()*(H-120);t++}while(t<200&&(spots.some(s=>Math.hypot(s.x-x,s.y-y)<150)||Math.hypot(x-50,y-sy)<220));spots.push({x,y})}
+    targets=spots.map((s,k)=>({...s,e:kinds[k][0],name:kinds[k][1],snd:kinds[k][2],hit:false,t:0}))}
+  if(mode==='challenge')setupChallenge();
+  const toW=e=>{const r=cv.getBoundingClientRect();return{x:(e.clientX-r.left)/r.width*W,y:(e.clientY-r.top)/r.height*H}};
+  const near=(p,rad)=>{let best=null,bd=rad;for(const d of doms){const dd=Math.hypot(d.x-p.x,d.y-p.y);if(dd<bd){bd=dd;best=d}}return best};
+  function tick(){if(!ac)return;const t0=ac.currentTime,o=ac.createOscillator(),gg=ac.createGain();o.type='triangle';o.frequency.setValueAtTime(900+Math.random()*300,t0);env(gg,t0,.06,.04);o.connect(gg).connect(ac.destination);o.start(t0);o.stop(t0+.06)}
+  let lastClack=0;function clack(d){if(!ac)return;const now=ac.currentTime;if(now-lastClack<.012)return;lastClack=now;const o=ac.createOscillator(),gg=ac.createGain();o.type='square';o.frequency.setValueAtTime(1400+((d.i*37)%5)*120,now);o.frequency.exponentialRampToValueAtTime(500,now+.03);env(gg,now,.07,.045);o.connect(gg).connect(ac.destination);o.start(now);o.stop(now+.06)}
+  cv.addEventListener('pointerdown',e=>{e.preventDefault();audio();try{cv.setPointerCapture(e.pointerId)}catch(_){}const p=toW(e);
+    const hit=near(p,16);stroke={sx:p.x,sy:p.y,moved:false,last:hit||null,tapDom:hit,pts:[p],newChain:!hit};
+    if(!hit){if(near(p,S*.7))return;const d=addDom(p.x,p.y,1,0);if(d){stroke.last=d;stroke.first=d;tick()}}});
+  cv.addEventListener('pointermove',e=>{if(!stroke)return;const p=toW(e);if(Math.hypot(p.x-stroke.sx,p.y-stroke.sy)>8)stroke.moved=true;if(!stroke.moved)return;
+    let L=stroke.last;if(!L)return;let dist=Math.hypot(p.x-L.x,p.y-L.y);
+    while(dist>=S){const ux=(p.x-L.x)/dist,uy=(p.y-L.y)/dist,nx=L.x+ux*S,ny=L.y+uy*S;
+      if(doms.some(d=>d!==L&&Math.hypot(d.x-nx,d.y-ny)<S*.7)){L={x:nx,y:ny,dx:ux,dy:uy,ghost:true};stroke.last=L;dist=Math.hypot(p.x-L.x,p.y-L.y);continue}
+      if(stroke.first&&doms.length&&stroke.first===L&&!stroke.dirSet){L.dx=ux;L.dy=uy;stroke.dirSet=true}
+      const d=addDom(nx,ny,ux,uy);if(!d)break;stroke.last=d;L=d;tick();dist=Math.hypot(p.x-L.x,p.y-L.y)}});
+  const up=()=>{if(!stroke)return;const s=stroke;stroke=null;if(!s.moved&&s.tapDom)push(s.tapDom);else if(!s.moved&&!s.tapDom&&s.first){/* single tap placed one domino */}};
+  cv.addEventListener('pointerup',up);cv.addEventListener('pointercancel',up);
+  function push(d){if(!d||d.st)return;audio();d.st=1;d.om=2.2;clack(d);reported=false;moving=true}
+  function pushFirst(){const d=doms.find(d=>!d.st);if(!d){boop();speak(doms.length?'They all fell! Press stand up to build them again.':'Draw a line of dominoes first!');return}push(d)}
+  function update(dt){let any=false;
+    for(const d of doms){if(d.st!==1)continue;any=true;d.om+=16*Math.sin(d.th+.12)*dt;d.th+=d.om*dt;
+      if(!d.trig&&d.th>=THC){d.trig=true;let front=false;
+        for(const o of doms){if(o===d)continue;const vx=o.x-d.x,vy=o.y-d.y,dist=Math.hypot(vx,vy);if(dist>S*1.75||dist<1)continue;const dot=(vx*d.dx+vy*d.dy)/dist;if(dot<.35)continue;front=true;
+          if(o.st===0){o.st=1;o.om=d.om*.6+1;if(o.dx*vx+o.dy*vy<0){o.dx=-o.dx;o.dy=-o.dy}clack(o)}}
+        d.max=front?1.12:1.5}
+      if(d.th>=d.max){d.th=d.max;d.om=0;d.st=2;fallen++}}
+    for(const t of targets){if(t.hit){t.t+=dt;continue}for(const d of doms){if(!d.st)continue;const tx=d.x+d.dx*Math.sin(d.th)*HD,ty=d.y+d.dy*Math.sin(d.th)*HD;if(Math.hypot(tx-t.x,ty-t.y)<26){t.hit=true;t.t=0;crash();if(t.name==='dinosaur')roar();else if(t.name==='truck')vroom();else ding(1200);speak(t.snd);break}}}
+    for(const f of fx)f.t+=dt;fx=fx.filter(f=>f.t<f.life);
+    if(any){quiet=0;moving=true}else if(moving){quiet+=dt;if(quiet>.6){moving=false;if(!reported){reported=true;report()}}}}
+  function report(){const n=doms.filter(d=>d.st).length;
+    if(mode==='challenge'){const left=targets.filter(t=>!t.hit);
+      if(!left.length&&!won){won=true;fx.push({e:'🎉',x:W/2,y:H/2,t:0,life:1.6});speak(`You did it! ${n} dominoes fell and knocked over ${targets.length===1?'the '+targets[0].name:'everything'}!`,300);scoreWin(3200);return}
+      if(left.length)speak(`${n} dominoes fell! Almost! Draw more dominoes to reach the ${left[0].name}, then press stand up and try again!`,300);return}
+    const extra=state.domPat==='num'?` The last one was number ${Math.max(...doms.filter(d=>d.st).map(d=>d.i+1))}!`:'';speak(`Crash! ${n} ${n===1?'domino':'dominoes'} fell down!${extra}`,300)}
+  function standUp(){doms.forEach(d=>{d.th=0;d.om=0;d.st=0;d.trig=false;d.max=1.5});targets.forEach(t=>{t.hit=false;t.t=0});fallen=0;moving=false;reported=true;won=false;ding(600);speak('Stand up!')}
+  function pipDots(n){return {1:[[0,0]],2:[[-.5,-.5],[.5,.5]],3:[[-.5,-.5],[0,0],[.5,.5]],4:[[-.5,-.5],[.5,-.5],[-.5,.5],[.5,.5]],5:[[-.5,-.5],[.5,-.5],[0,0],[-.5,.5],[.5,.5]],6:[[-.5,-.6],[.5,-.6],[-.5,0],[.5,0],[-.5,.6],[.5,.6]]}[n]}
+  const shade=(c,k)=>{const n=parseInt(c.slice(1),16);const f=v=>Math.max(0,Math.min(255,Math.round(v*k)));return `rgb(${f(n>>16)},${f(n>>8&255)},${f(n&255)})`};
+  const VW=[.34,.85,1];
+  function drawDom(d){const s=Math.sin(d.th),c=Math.cos(d.th),u=[d.dx,d.dy,0],n=[-d.dy,d.dx,0],h=[u[0]*s,u[1]*s,c],t=[u[0]*c,u[1]*c,-s];
+    const P=(a,b,e)=>{const x=d.x+n[0]*a*WD/2+t[0]*(b-.5)*TH+h[0]*e*HD,y=d.y+n[1]*a*WD/2+t[1]*(b-.5)*TH+h[1]*e*HD,z=n[2]*a*WD/2+t[2]*(b-.5)*TH+h[2]*e*HD;return [x-z*.34,y-z*.85]};
+    const mid=P(0,.5,.5);g.fillStyle='rgba(60,40,20,.2)';g.beginPath();g.ellipse(d.x+u[0]*s*HD*.5,d.y+u[1]*s*HD*.5+3,WD/2+3,4+s*HD*.35,Math.atan2(d.dy,d.dx)+Math.PI/2,0,6.29);g.fill();
+    const faces=[[t,[[-1,1,0],[1,1,0],[1,1,1],[-1,1,1]],'big'],[[-t[0],-t[1],-t[2]],[[-1,0,0],[1,0,0],[1,0,1],[-1,0,1]],'big'],[n,[[1,0,0],[1,1,0],[1,1,1],[1,0,1]],.62],[[-n[0],-n[1],-n[2]],[[-1,0,0],[-1,1,0],[-1,1,1],[-1,0,1]],.62],[h,[[-1,0,1],[1,0,1],[1,1,1],[-1,1,1]],.8]];
+    const dot=v=>v[0]*VW[0]+v[1]*VW[1]+v[2]*VW[2];let front=null;
+    g.lineWidth=1.2;g.lineJoin='round';
+    for(const [nv,cs,k] of faces){if(dot(nv)<=.001)continue;const q=cs.map(([a,b,e])=>P(a,b,e));g.fillStyle=k==='big'?d.c:shade(d.c,k);g.strokeStyle=d.c==='#fffaf0'?'#6b5a48':shade(d.c,.45);g.beginPath();g.moveTo(q[0][0],q[0][1]);for(let i=1;i<4;i++)g.lineTo(q[i][0],q[i][1]);g.closePath();g.fill();g.stroke();if(k==='big')front={b:cs[0][1],vis:dot(nv)/2}}
+    if(!front||front.vis<.12)return;const fb=front.b,F=(a,e)=>P(a,fb,e);
+    const lineCol=state.domPat==='num'||state.domPat==='dots'?'#141820':'rgba(255,255,255,.75)';g.strokeStyle=lineCol;g.lineWidth=1.3;const l1=F(-.8,.5),l2=F(.8,.5);g.beginPath();g.moveTo(l1[0],l1[1]);g.lineTo(l2[0],l2[1]);g.stroke();
+    if(state.domPat==='num'){const q=F(0,.74),sz=front.vis>.3?11:9;g.fillStyle='#141820';g.font=`bold ${d.i+1>99?sz-2:sz}px Fredoka, Arial, sans-serif`;g.textAlign='center';g.textBaseline='middle';g.fillText(d.i+1,q[0],q[1]+1)}
+    else{const pts=state.domPat==='dots'?pipDots(d.i%6+1).map(([a,e])=>[a*.95,.74+e*.38]):[[0,.27],[0,.74]];g.fillStyle=state.domPat==='dots'?'#141820':'rgba(255,255,255,.9)';for(const [a,e] of pts){const q=F(a,e);g.beginPath();g.arc(q[0],q[1],state.domPat==='dots'?1.5:1.8,0,6.29);g.fill()}}}
+  function draw(){const dpr=Math.min(2,window.devicePixelRatio||1),cw=Math.max(1,st.clientWidth*dpr|0),ch=Math.max(1,st.clientHeight*dpr|0);if(cv.width!==cw||cv.height!==ch){cv.width=cw;cv.height=ch}
+    g.setTransform(cw/W,0,0,ch/H,0,0);g.fillStyle='#e9c79a';g.fillRect(0,0,W,H);g.strokeStyle='rgba(150,100,50,.18)';g.lineWidth=2;for(let y=18;y<H;y+=36){g.beginPath();g.moveTo(0,y);for(let x=0;x<=W;x+=60)g.lineTo(x,y+Math.sin(x/90+y)*3);g.stroke()}
+    for(const t of targets){g.save();g.translate(t.x,t.y);g.fillStyle=t.hit?'rgba(47,191,90,.35)':'rgba(255,255,255,.6)';g.strokeStyle=t.hit?'#2fbf5a':'#141820';g.lineWidth=3;g.setLineDash(t.hit?[]:[6,5]);g.beginPath();g.arc(0,0,30,0,6.29);g.fill();g.stroke();g.setLineDash([]);
+      let ox=0,oy=0,rot=0,sc=1;if(t.hit){const k=Math.min(1,t.t/.6);if(t.name==='truck')ox=k*k*400;else if(t.name==='balloon'){sc=1+k*.6;oy=-k*40}else if(t.name==='bell')rot=Math.sin(t.t*25)*.4*(1-Math.min(1,t.t/1.5));else if(t.name==='dinosaur')oy=-Math.abs(Math.sin(t.t*10))*10*(1-Math.min(1,t.t/1.5));else rot=k*1.3}
+      g.translate(ox,oy);g.rotate(rot);g.scale(sc,sc);g.font='36px "Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif';g.textAlign='center';g.textBaseline='middle';if(!(t.hit&&t.name==='balloon'&&t.t>.4))g.fillText(t.e,0,2);
+      if(t.hit&&t.name==='balloon'&&t.t>.4)g.fillText('💥',0,2);g.restore();if(t.hit){g.font='bold 22px Fredoka, Arial';g.fillStyle='#2fbf5a';g.fillText('✓',t.x+26,t.y-26)}}
+    if(mode==='challenge'&&doms.length){const s0=doms[0];g.font='bold 15px Fredoka, Arial';g.fillStyle='#141820';g.textAlign='center';g.fillText('START',s0.x+S,s0.y+26);g.fillStyle='#2fbf5a';g.beginPath();g.moveTo(s0.x-26,s0.y-8);g.lineTo(s0.x-12,s0.y);g.lineTo(s0.x-26,s0.y+8);g.fill()}
+    for(const d of [...doms].sort((a,b)=>a.y-b.y))drawDom(d);
+    const n=doms.length,f=doms.filter(d=>d.st).length;g.textAlign='left';g.textBaseline='middle';g.font='bold 26px Fredoka, Arial, sans-serif';g.lineWidth=5;g.strokeStyle='#141820';g.fillStyle='#fff';
+    const m=f?`${f} fell of ${n}`:`${n} ${n===1?'domino':'dominoes'}`;g.strokeText(m,14,24);g.fillText(m,14,24);
+    if(!n){g.textAlign='center';g.font='bold 26px Fredoka, Arial, sans-serif';const t='Draw a line with your finger to set up dominoes!';g.strokeText(t,W/2,H*.5);g.fillText(t,W/2,H*.5)}
+    for(const e of fx){g.globalAlpha=1-e.t/e.life;g.font=`${80+e.t*60}px "Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif`;g.textAlign='center';g.fillText(e.e,e.x,e.y);g.globalAlpha=1}}
+  function frame(now){if(state.domCtx!==me||$('play').hidden)return;const dt=Math.min(.033,(now-last)/1000);last=now;for(let k=0;k<2;k++)update(dt/2);draw();requestAnimationFrame(frame)}
+  const P=[['rainbow','🌈','Rainbow','Rainbow dominoes!'],['ab','🔴🔵','A B','Red, blue, red, blue! A pattern!'],['abc','🔴🔵🟡','A B C','Red, blue, yellow, red, blue, yellow! A pattern!'],['num','🔢','Numbers','Number dominoes! One, two, three, four!'],['dots','🎲','Dots','Dot dominoes! Count the dots!']];
+  $('answers').innerHTML=`<div class="tools"><button class="tool play" id="dm-push" aria-label="Push">👉<small>Push</small></button><button class="tool act" id="dm-up" aria-label="Stand up">🔁<small>Stand up</small></button><button class="tool act" id="dm-clear" aria-label="Clear">🧹<small>Clear</small></button><span class="toolgap"></span>
+    ${P.map(p=>`<button class="tool${state.domPat===p[0]?' on':''}" data-p="${p[0]}" aria-label="${p[2]}">${p[1]}<small>${p[2]}</small></button>`).join('')}<span class="toolgap"></span>
+    <button class="tool act" id="dm-mode" aria-label="Switch mode">${mode==='free'?'🎯<small>Challenge</small>':'🎨<small>Free build</small>'}</button></div>`;
+  $('dm-push').onclick=()=>{audio();pushFirst()};$('dm-up').onclick=()=>{audio();standUp()};
+  $('dm-clear').onclick=()=>{audio();if(mode==='challenge'){doms=doms.slice(0,3);standUp();doms.length=3}else{doms=[];fallen=0}targets.forEach(t=>t.hit=false);boop();speak('All clear!')};
+  document.querySelectorAll('.tool[data-p]').forEach(b=>b.onclick=()=>{audio();state.domPat=b.dataset.p;recolor();document.querySelectorAll('.tool[data-p]').forEach(x=>x.classList.toggle('on',x===b));ding(800);speak(P.find(p=>p[0]===state.domPat)[3])});
+  $('dm-mode').onclick=()=>{audio();state.domMode=mode==='free'?'challenge':'free';ding(700);newRound()};
+  const intro=!state['domIntro'+mode];state['domIntro'+mode]=true;
+  if(mode==='free')setPrompt('Build a domino run!',intro?'Draw lines with your finger to set up dominoes. Then tap the first one, or press push, and watch them fall!':'Build a domino run!');
+  else setPrompt(big?'Knock over all three!':`Knock over the ${targets[0].name}!`,(intro?'Draw dominoes from the start to the target, then press push! ':'')+(big?'Knock over the '+targets.map(t=>t.name).join(', the ')+'! You can make the line split.':`Knock over the ${targets[0].name}!`));
   requestAnimationFrame(frame)}
 
 function finish(){crash();setTimeout(vroom,400);$('win').hidden=false;speak('You won the race! Great job!',600);

@@ -27,3 +27,4 @@ Online at https://chasealondon.com/edugames/ (not linked from the site and marke
 
 Edge gives the most natural-sounding voices. Grown-ups exit a game by holding the 🏠 button for 2 seconds; Alt+F4 closes kiosk mode.
 - **Dominoes** — draw a line of dominoes, push, and watch them fall; count them, make color/number patterns, and knock over targets.
+- **Marble Run** — place ramps, logs, bouncers, funnels and loops to roll the marble into the cup; Little matches parts to sparkles, Big solves real puzzles; free-build sandbox too.

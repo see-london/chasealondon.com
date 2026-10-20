@@ -1318,10 +1318,12 @@ let cadence = 1;
 const fmtH = m => m >= 60 ? (m/60).toFixed(m % 60 ? 1 : 0) + ' h' : Math.round(m) + ' min';
 function renderAuto(){
   document.querySelectorAll('#cadence button').forEach(b => b.setAttribute('aria-pressed', +b.dataset.n === cadence));
-  const max = Math.max(...autoSteps.map(s => s[2]));
-  $('#autoSteps').innerHTML = autoSteps.map(([n, d, man, aut]) => `<div class="a-step"><div class="nm">${n}<small>${d}</small></div><div class="a-bars">
-    <div class="a-bar"><i style="width:${man/max*100}%;background:var(--heat)"></i><span>${fmtH(man)}</span></div>
-    <div class="a-bar"><i style="width:${aut/max*100}%;background:var(--accent)"></i><span>${aut ? fmtH(aut) : 'auto'}</span></div></div></div>`).join('') +
+  // bars show total minutes per month at the chosen cadence, on a fixed scale (weekly = full width) so they visibly change
+  const max = Math.max(...autoSteps.map(s => s[2])) * 4;
+  const per = v => v * cadence;
+  $('#autoSteps').innerHTML = '<div class="label">Time per month at this cadence</div>' + autoSteps.map(([n, d, man, aut]) => `<div class="a-step"><div class="nm">${n}<small>${d}</small></div><div class="a-bars">
+    <div class="a-bar"><i style="width:${per(man)/max*100}%;background:var(--heat)"></i><span>${fmtH(per(man))}</span></div>
+    <div class="a-bar"><i style="width:${per(aut)/max*100}%;background:var(--accent)"></i><span>${aut ? fmtH(per(aut)) : 'auto'}</span></div></div></div>`).join('') +
     '<div class="a-key"><span><b style="background:var(--heat)"></b>manual</span><span><b style="background:var(--accent)"></b>automated</span></div>';
   const man = autoSteps.reduce((a, s) => a + s[2], 0), aut = autoSteps.reduce((a, s) => a + s[3], 0);
   const perYear = (man - aut) * cadence * 12 / 60;

@@ -12,32 +12,31 @@
 <meta property="og:image" content="https://chasealondon.com/assets/og.png">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="canonical" href="https://chasealondon.com/btu/">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230E6A87'/%3E%3Ctext x='16' y='22' font-family='Arial' font-weight='700' font-size='15' fill='white' text-anchor='middle'%3ECL%3C/text%3E%3C/svg%3E">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Public+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231A56C4'/%3E%3Ctext x='16' y='22' font-family='Arial' font-weight='700' font-size='15' fill='white' text-anchor='middle'%3ECL%3C/text%3E%3C/svg%3E">
+<link rel="preload" href="../assets/fonts/archivo.woff2" as="font" type="font/woff2" crossorigin>
+<style>@font-face{font-family:"Archivo";src:url(../assets/fonts/archivo.woff2) format("woff2");font-weight:100 900;font-display:swap}</style>
 <style>
 :root{
-  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E6ECEB; --ink:#15212B; --muted:#56646E; --line:#D2DAD9;
-  --accent:#0E6A87; --accent-soft:#D5E8EE; --heat:#D96A22; --heat-soft:#F7E1D1;
-  --s-keep:#D96A22; --s-good:#6F7F8A; --s-better:#A8416F; --s-best:#0E6A87;
-  --display:"Bricolage Grotesque", "Avenir Next", "Segoe UI", sans-serif;
-  --body:"Public Sans", "Segoe UI", system-ui, sans-serif;
-  --mono:"JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --bg:#FFFFFF; --surface:#F5F7F9; --surface-2:#E7EBF0; --ink:#16202A; --muted:#55606B; --line:#D3D9E0;
+  --accent:#1A56C4; --accent-soft:#E3ECFB; --heat:#C9471A; --heat-soft:#FBE6DC;
+  --s-keep:#C9471A; --s-good:#6F7F8A; --s-better:#A8416F; --s-best:#1A56C4;
+  --display:"Archivo", "Avenir Next", "Segoe UI", sans-serif;
+  --body:"Archivo", "Segoe UI", system-ui, sans-serif;
+  --mono:"Archivo", ui-monospace, "SFMono-Regular", Menlo, monospace;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
     color-scheme:dark;
-    --bg:#0D1419; --surface:#151F26; --surface-2:#1C2830; --ink:#E4EBEE; --muted:#93A3AD; --line:#2A3740;
-    --accent:#56B6D4; --accent-soft:#16333E; --heat:#F0924F; --heat-soft:#3A2518;
-    --s-keep:#F0924F; --s-good:#9AAAB4; --s-better:#D47AA2; --s-best:#56B6D4;
+    --bg:#101418; --surface:#171D23; --surface-2:#1F2730; --ink:#E6EAEE; --muted:#98A4AF; --line:#2B3540;
+    --accent:#7FAEF5; --accent-soft:#1B2C47; --heat:#F0834F; --heat-soft:#3A2318;
+    --s-keep:#F0834F; --s-good:#9AAAB4; --s-better:#D47AA2; --s-best:#7FAEF5;
   }
 }
 :root[data-theme="dark"]{
   color-scheme:dark;
-  --bg:#0D1419; --surface:#151F26; --surface-2:#1C2830; --ink:#E4EBEE; --muted:#93A3AD; --line:#2A3740;
-  --accent:#56B6D4; --accent-soft:#16333E; --heat:#F0924F; --heat-soft:#3A2518;
-  --s-keep:#F0924F; --s-good:#9AAAB4; --s-better:#D47AA2; --s-best:#56B6D4;
+  --bg:#101418; --surface:#171D23; --surface-2:#1F2730; --ink:#E6EAEE; --muted:#98A4AF; --line:#2B3540;
+  --accent:#7FAEF5; --accent-soft:#1B2C47; --heat:#F0834F; --heat-soft:#3A2318;
+  --s-keep:#F0834F; --s-good:#9AAAB4; --s-better:#D47AA2; --s-best:#7FAEF5;
 }
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
@@ -48,7 +47,7 @@ p{margin:0}
 a{color:var(--accent)}
 button,input,select{font:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.label{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.label{font-family:var(--mono);font-size:12px;color:var(--muted)}
 .mono{font-family:var(--mono)}
 .nav{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);margin-inline:-20px;padding:12px 20px}
 .nav .wrap{display:flex;justify-content:space-between;align-items:center;gap:12px}
@@ -86,7 +85,7 @@ header p{margin-top:14px;color:var(--muted);font-size:18px}
 .drv span:last-child{font-family:var(--mono);text-align:right;color:var(--muted);font-variant-numeric:tabular-nums}
 .tiers{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:14px}
 .tier{border:1px solid var(--line);border-radius:10px;padding:12px;display:grid;gap:4px;align-content:start;background:var(--surface-2);border-top:4px solid var(--c)}
-.tier .t{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.tier .t{font-family:var(--mono);font-size:11px;color:var(--muted)}
 .tier b{font-family:var(--display);font-size:20px;font-weight:800}
 .tier .n{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
 .tier .n strong{color:var(--ink);font-weight:600}
@@ -284,8 +283,8 @@ function drawChart(r){
   const line = cssv('--line'), muted = cssv('--muted');
   let h = '';
   const step = maxV > 40000 ? 10000 : 5000;
-  for (let v = 0; v <= maxV; v += step) h += `<line x1="${L}" x2="${W - R}" y1="${yv(v)}" y2="${yv(v)}" stroke="${line}"/><text x="${L - 8}" y="${yv(v) + 4}" text-anchor="end" font-size="13" font-family="JetBrains Mono, monospace" fill="${muted}">$${v / 1000}k</text>`;
-  for (let y = 0; y <= years; y += 5) h += `<text x="${x(y)}" y="${H - 12}" text-anchor="middle" font-size="13" font-family="JetBrains Mono, monospace" fill="${muted}">yr ${y}</text>`;
+  for (let v = 0; v <= maxV; v += step) h += `<line x1="${L}" x2="${W - R}" y1="${yv(v)}" y2="${yv(v)}" stroke="${line}"/><text x="${L - 8}" y="${yv(v) + 4}" text-anchor="end" font-size="13" font-family="Archivo, monospace" fill="${muted}">$${v / 1000}k</text>`;
+  for (let y = 0; y <= years; y += 5) h += `<text x="${x(y)}" y="${H - 12}" text-anchor="middle" font-size="13" font-family="Archivo, monospace" fill="${muted}">yr ${y}</text>`;
   const ends = [];
   r.series.forEach(s => {
     const c = cssv(s.c);
@@ -293,7 +292,7 @@ function drawChart(r){
     ends.push({y: yv(s.total), c, t: s.name});
   });
   ends.sort((a, b) => a.y - b.y); for (let i = 1; i < ends.length; i++) if (ends[i].y - ends[i - 1].y < 14) ends[i].y = ends[i - 1].y + 14;
-  ends.forEach(e => h += `<text x="${W - R + 8}" y="${e.y + 4}" font-size="14" font-weight="600" font-family="Public Sans, sans-serif" fill="${e.c}">${e.t}</text>`);
+  ends.forEach(e => h += `<text x="${W - R + 8}" y="${e.y + 4}" font-size="14" font-weight="600" font-family="Archivo, sans-serif" fill="${e.c}">${e.t}</text>`);
   $('#chart').innerHTML = h;
 }
 
